@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v13-voice-6"
+const CACHE_NAME = "mylists-v14-qr"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
@@ -7,6 +7,7 @@ const FILES = [
   "./icon-192.svg",
   "./icon-192.png",
   "https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js",
+  "https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js",
   "https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
 ]
 

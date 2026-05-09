@@ -1413,12 +1413,12 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
 // v3 string extensions
 ;(function(){
   const ext = {
-    pt: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Desmarcar", uncheckAllConfirm:"Desmarcar todos os itens (manter na lista)?", uncheckedAll:"Tudo desmarcado 🔄", renameCatPrompt:"Renomear categoria", copyTitle:"Compartilhar lista", copyOnlyItems:"📝 Lista simples", copyOnlyItemsDesc:"Sem marcações — pra colar onde quiser", copyWithStatus:"📋 Com marcações", copyWithStatusDesc:"Mantém ✅ 🤔 ⚪ atuais — se importar em outro celular vem já marcado", copyShare:"🔗 Sem marcações", copyShareDesc:"Tudo ⚪ — quem importar começa do zero", emojiLabel:"EMOJI", printBtn:"🖨️ Imprimir", printOption:"🖨️ Imprimir / PDF", printOptionDesc:"Versão pra impressora ou salvar como PDF", voiceTooltip:"Falar itens (toque pra começar/parar)", voiceUnsupported:"Reconhecimento de voz não suportado neste navegador", voiceError:"Erro no microfone", voiceListening:"Escutando...", voiceNetworkError:"Erro de rede", voiceNeedsInternet:"tente janela anônima ou desative extensões/adblock", voicePermissionDenied:"Permissão de microfone negada", templateNewListName:"Nome da nova lista", newVersion:"Nova versão disponível", reload:"Recarregar", helpBtnTitle:"Ajuda", refreshBtn:"🔄 Atualizar app", refreshConfirm:"Buscar versão mais recente? O app vai recarregar.", refreshing:"Atualizando...", bgTitle:"Plano de fundo", bgNone:"Nenhum", bgDots:"Pontos", bgGrid:"Grade", bgPaws:"Patinhas", bgStars:"Estrelas", bgHearts:"Corações", bgLeaves:"Folhas", editItemTitle:"Editar item", itemNamePh:"Nome do item", qtyPh:"1", unitPh:"kg", pricePh:"12,50", listTotal:t => `Total: ${t}`, currencySymbol:"R$", qtyHint:"💡 Toque ✏️ no item pra adicionar quantidade, unidade ou preço", frequentsTitle:"✨ MAIS USADOS — toque pra adicionar", nameLabel:"NOME", qtyLabel:"QTD", unitLabel:"UNIDADE", priceLabel:"PREÇO", pasteListBtn:"📥 Colar lista de texto", pasteImportTitle:"Importar de texto", pastePh:"Cole aqui o texto da lista (WhatsApp, notas, receita...)", importLabel:"Importar", pasteEmpty:"Nada para importar", pasteImported:n => `${n} ${n===1?"item importado":"itens importados"} ✅`, newListNamePrompt:"Nome da nova lista", importedListDefault:"Lista importada", pasteHint:"Detecta linhas, ✅ 🤔 ⚪, marcadores - * • ▸, cabeçalhos # e quantidade tipo '2 kg arroz'", detected:n => `${n} ${n===1?"item":"itens"} detectado${n===1?"":"s"}` },
-    en: { okLabel:"OK", cancelLabel:"Cancel", uncheckAllBtn:"🔄 Reset", uncheckAllConfirm:"Uncheck all items (keep on list)?", uncheckedAll:"All unchecked 🔄", renameCatPrompt:"Rename category", copyTitle:"Share list", copyOnlyItems:"📝 Plain list", copyOnlyItemsDesc:"No marks — paste anywhere", copyWithStatus:"📋 With marks", copyWithStatusDesc:"Keeps ✅ 🤔 ⚪ as-is — importing elsewhere preserves the marks", copyShare:"🔗 No marks", copyShareDesc:"All ⚪ — whoever imports starts fresh", emojiLabel:"EMOJI", printBtn:"🖨️ Print", printOption:"🖨️ Print / PDF", printOptionDesc:"Printer-friendly layout or save as PDF", voiceTooltip:"Speak items (tap to start/stop)", voiceUnsupported:"Speech recognition not supported in this browser", voiceError:"Microphone error", voiceListening:"Listening...", voiceNetworkError:"Network error", voiceNeedsInternet:"try incognito window or disable extensions/adblock", voicePermissionDenied:"Microphone permission denied", templateNewListName:"New list name", newVersion:"New version available", reload:"Reload", helpBtnTitle:"Help", refreshBtn:"🔄 Refresh app", refreshConfirm:"Fetch latest version? App will reload.", refreshing:"Refreshing...", bgTitle:"Background", bgNone:"None", bgDots:"Dots", bgGrid:"Grid", bgPaws:"Paws", bgStars:"Stars", bgHearts:"Hearts", bgLeaves:"Leaves", editItemTitle:"Edit item", itemNamePh:"Item name", qtyPh:"1", unitPh:"kg", pricePh:"12.50", listTotal:t => `Total: ${t}`, currencySymbol:"$", qtyHint:"💡 Tap ✏️ on an item to add quantity, unit or price", frequentsTitle:"✨ FREQUENTS — tap to add", nameLabel:"NAME", qtyLabel:"QTY", unitLabel:"UNIT", priceLabel:"PRICE", pasteListBtn:"📥 Paste list from text", pasteImportTitle:"Import from text", pastePh:"Paste your list text here (WhatsApp, notes, recipe...)", importLabel:"Import", pasteEmpty:"Nothing to import", pasteImported:n => `${n} ${n===1?"item imported":"items imported"} ✅`, newListNamePrompt:"New list name", importedListDefault:"Imported list", pasteHint:"Detects lines, ✅ 🤔 ⚪, bullets - * • ▸, headers # and quantities like '2 kg rice'", detected:n => `${n} ${n===1?"item":"items"} detected` },
-    es: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Resetear", uncheckAllConfirm:"¿Desmarcar todos los ítems (mantenerlos)?", uncheckedAll:"Todo desmarcado 🔄", renameCatPrompt:"Renombrar categoría", copyTitle:"Compartir lista", copyOnlyItems:"📝 Lista simple", copyOnlyItemsDesc:"Sin marcas — pega donde quieras", copyWithStatus:"📋 Con marcas", copyWithStatusDesc:"Mantiene ✅ 🤔 ⚪ actuales — al importar conserva las marcas", copyShare:"🔗 Sin marcas", copyShareDesc:"Todo ⚪ — quien importe empieza desde cero", emojiLabel:"EMOJI", printBtn:"🖨️ Imprimir", printOption:"🖨️ Imprimir / PDF", printOptionDesc:"Versión para impresora o guardar como PDF", voiceTooltip:"Hablar ítems (toca para empezar/parar)", voiceUnsupported:"Reconocimiento de voz no soportado en este navegador", voiceError:"Error de micrófono", voiceListening:"Escuchando...", voiceNetworkError:"Error de red", voiceNeedsInternet:"el reconocimiento de voz requiere internet", voicePermissionDenied:"Permiso de micrófono denegado", templateNewListName:"Nombre de la nueva lista", newVersion:"Nueva versión disponible", reload:"Recargar", helpBtnTitle:"Ayuda", refreshBtn:"🔄 Actualizar app", refreshConfirm:"¿Buscar la última versión? La app se recargará.", refreshing:"Actualizando...", bgTitle:"Fondo", bgNone:"Ninguno", bgDots:"Puntos", bgGrid:"Cuadrícula", bgPaws:"Patitas", bgStars:"Estrellas", bgHearts:"Corazones", bgLeaves:"Hojas", editItemTitle:"Editar ítem", itemNamePh:"Nombre del ítem", qtyPh:"1", unitPh:"kg", pricePh:"12,50", listTotal:t => `Total: ${t}`, currencySymbol:"$", qtyHint:"💡 Toca ✏️ en un ítem para añadir cantidad, unidad o precio", frequentsTitle:"✨ FRECUENTES — toca para añadir", nameLabel:"NOMBRE", qtyLabel:"CANT", unitLabel:"UNIDAD", priceLabel:"PRECIO", pasteListBtn:"📥 Pegar lista de texto", pasteImportTitle:"Importar de texto", pastePh:"Pega aquí el texto de tu lista (WhatsApp, notas, receta...)", importLabel:"Importar", pasteEmpty:"Nada para importar", pasteImported:n => `${n} ${n===1?"ítem importado":"ítems importados"} ✅`, newListNamePrompt:"Nombre de la nueva lista", importedListDefault:"Lista importada", pasteHint:"Detecta líneas, ✅ 🤔 ⚪, viñetas - * • ▸, encabezados # y cantidades como '2 kg arroz'", detected:n => `${n} ${n===1?"ítem":"ítems"} detectado${n===1?"":"s"}` },
-    ja: { okLabel:"OK", cancelLabel:"キャンセル", uncheckAllBtn:"🔄 リセット", uncheckAllConfirm:"すべてのアイテムのチェックを外しますか（リストには残ります）？", uncheckedAll:"すべてリセット 🔄", renameCatPrompt:"カテゴリ名を変更", copyTitle:"リストを共有", copyOnlyItems:"📝 シンプルなリスト", copyOnlyItemsDesc:"マークなし — どこにでも貼り付け可能", copyWithStatus:"📋 マーク付き", copyWithStatusDesc:"✅ 🤔 ⚪ を保持 — 別端末でインポートしても状態が保たれる", copyShare:"🔗 マークなし", copyShareDesc:"すべて ⚪ — 受け取った人が一から始める", emojiLabel:"絵文字", printBtn:"🖨️ 印刷", printOption:"🖨️ 印刷 / PDF", printOptionDesc:"印刷用レイアウト・PDFとして保存", voiceTooltip:"音声入力（タップで開始/停止）", voiceUnsupported:"このブラウザは音声認識に対応していません", voiceError:"マイクエラー", voiceListening:"聞き取り中...", voiceNetworkError:"ネットワークエラー", voiceNeedsInternet:"音声認識にはインターネットが必要です", voicePermissionDenied:"マイクの許可が拒否されました", templateNewListName:"新しいリスト名", newVersion:"新しいバージョンがあります", reload:"再読込", helpBtnTitle:"ヘルプ", refreshBtn:"🔄 更新", refreshConfirm:"最新バージョンを取得しますか？再読み込みされます。", refreshing:"更新中...", bgTitle:"背景", bgNone:"なし", bgDots:"ドット", bgGrid:"グリッド", bgPaws:"肉球", bgStars:"星", bgHearts:"ハート", bgLeaves:"葉", editItemTitle:"アイテム編集", itemNamePh:"アイテム名", qtyPh:"1", unitPh:"kg", pricePh:"100", listTotal:t => `合計: ${t}`, currencySymbol:"¥", qtyHint:"💡 ✏️をタップして数量・単位・価格を追加", frequentsTitle:"✨ よく使う — タップで追加", nameLabel:"名前", qtyLabel:"数量", unitLabel:"単位", priceLabel:"価格", pasteListBtn:"📥 テキストを貼り付け", pasteImportTitle:"テキストからインポート", pastePh:"リストのテキストを貼り付け（WhatsApp、メモ、レシピなど）", importLabel:"インポート", pasteEmpty:"インポート対象なし", pasteImported:n => `${n}件をインポート ✅`, newListNamePrompt:"新しいリスト名", importedListDefault:"インポートしたリスト", pasteHint:"行・✅ 🤔 ⚪・- * • ▸ 箇条書き・# 見出し・「2 kg ご飯」など数量を検出", detected:n => `${n}件検出` },
-    he: { okLabel:"אישור", cancelLabel:"ביטול", uncheckAllBtn:"🔄 איפוס", uncheckAllConfirm:"לבטל סימון כל הפריטים (להשאיר ברשימה)?", uncheckedAll:"הכל אופס 🔄", renameCatPrompt:"שינוי שם קטגוריה", copyTitle:"שיתוף רשימה", copyOnlyItems:"📝 רשימה פשוטה", copyOnlyItemsDesc:"ללא סימונים — להדבקה בכל מקום", copyWithStatus:"📋 עם סימונים", copyWithStatusDesc:"שומר ✅ 🤔 ⚪ — בייבוא במכשיר אחר הסימונים נשמרים", copyShare:"🔗 ללא סימונים", copyShareDesc:"הכל ⚪ — מי שמייבא מתחיל מאפס", emojiLabel:"אמוג׳י", printBtn:"🖨️ הדפס", printOption:"🖨️ הדפסה / PDF", printOptionDesc:"פריסה להדפסה או שמירה כ-PDF", voiceTooltip:"הקלטת קול (הקש להתחלה/עצירה)", voiceUnsupported:"זיהוי דיבור לא נתמך בדפדפן זה", voiceError:"שגיאת מיקרופון", voiceListening:"מקשיב...", voiceNetworkError:"שגיאת רשת", voiceNeedsInternet:"זיהוי קולי דורש אינטרנט", voicePermissionDenied:"הרשאת מיקרופון נדחתה", templateNewListName:"שם הרשימה החדשה", newVersion:"גרסה חדשה זמינה", reload:"טען מחדש", helpBtnTitle:"עזרה", refreshBtn:"🔄 עדכן אפליקציה", refreshConfirm:"לבדוק גרסה חדשה? האפליקציה תיטען מחדש.", refreshing:"מעדכן...", bgTitle:"רקע", bgNone:"ללא", bgDots:"נקודות", bgGrid:"רשת", bgPaws:"כפות", bgStars:"כוכבים", bgHearts:"לבבות", bgLeaves:"עלים", editItemTitle:"ערוך פריט", itemNamePh:"שם הפריט", qtyPh:"1", unitPh:"ק״ג", pricePh:"12.50", listTotal:t => `סה״כ: ${t}`, currencySymbol:"₪", qtyHint:"💡 הקש על ✏️ להוספת כמות, יחידה או מחיר", frequentsTitle:"✨ נפוצים — הקש להוספה", nameLabel:"שם", qtyLabel:"כמות", unitLabel:"יחידה", priceLabel:"מחיר", pasteListBtn:"📥 הדבק רשימה מטקסט", pasteImportTitle:"ייבוא מטקסט", pastePh:"הדבק כאן את טקסט הרשימה (WhatsApp, פתקים, מתכון...)", importLabel:"ייבא", pasteEmpty:"אין מה לייבא", pasteImported:n => `${n} פריטים יובאו ✅`, newListNamePrompt:"שם הרשימה החדשה", importedListDefault:"רשימה מיובאת", pasteHint:"מזהה שורות, ✅ 🤔 ⚪, תבליטים - * • ▸, כותרות # וכמויות כמו '2 ק״ג אורז'", detected:n => `${n} פריטים זוהו` },
-    ko: { okLabel:"확인", cancelLabel:"취소", uncheckAllBtn:"🔄 초기화", uncheckAllConfirm:"모든 항목의 선택을 해제할까요 (목록은 유지)?", uncheckedAll:"모두 초기화됨 🔄", renameCatPrompt:"카테고리 이름 변경", copyTitle:"목록 공유", copyOnlyItems:"📝 단순 목록", copyOnlyItemsDesc:"표시 없음 — 어디든 붙여넣기", copyWithStatus:"📋 표시 포함", copyWithStatusDesc:"✅ 🤔 ⚪ 유지 — 다른 기기에 가져와도 표시 보존", copyShare:"🔗 표시 없음", copyShareDesc:"모두 ⚪ — 가져오는 사람이 처음부터 시작", emojiLabel:"이모지", printBtn:"🖨️ 인쇄", printOption:"🖨️ 인쇄 / PDF", printOptionDesc:"인쇄용 레이아웃 또는 PDF로 저장", voiceTooltip:"음성 입력 (탭하여 시작/중지)", voiceUnsupported:"이 브라우저는 음성 인식을 지원하지 않습니다", voiceError:"마이크 오류", voiceListening:"듣는 중...", voiceNetworkError:"네트워크 오류", voiceNeedsInternet:"음성 인식에 인터넷 필요", voicePermissionDenied:"마이크 권한 거부됨", templateNewListName:"새 목록 이름", newVersion:"새 버전 사용 가능", reload:"새로고침", helpBtnTitle:"도움말", refreshBtn:"🔄 앱 새로고침", refreshConfirm:"최신 버전을 가져올까요? 앱이 다시 로드됩니다.", refreshing:"새로고침 중...", bgTitle:"배경", bgNone:"없음", bgDots:"점", bgGrid:"격자", bgPaws:"발자국", bgStars:"별", bgHearts:"하트", bgLeaves:"잎", editItemTitle:"항목 편집", itemNamePh:"항목 이름", qtyPh:"1", unitPh:"kg", pricePh:"12500", listTotal:t => `합계: ${t}`, currencySymbol:"₩", qtyHint:"💡 ✏️를 눌러 수량, 단위 또는 가격 추가", frequentsTitle:"✨ 자주 사용 — 눌러서 추가", nameLabel:"이름", qtyLabel:"수량", unitLabel:"단위", priceLabel:"가격", pasteListBtn:"📥 텍스트로 목록 붙여넣기", pasteImportTitle:"텍스트에서 가져오기", pastePh:"여기에 목록 텍스트를 붙여넣으세요 (WhatsApp, 메모, 레시피 등)", importLabel:"가져오기", pasteEmpty:"가져올 것이 없습니다", pasteImported:n => `${n}개 항목 가져옴 ✅`, newListNamePrompt:"새 목록 이름", importedListDefault:"가져온 목록", pasteHint:"줄·✅ 🤔 ⚪·- * • ▸ 글머리·# 제목·'2 kg 쌀' 같은 수량 감지", detected:n => `${n}개 감지됨` },
+    pt: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Desmarcar", uncheckAllConfirm:"Desmarcar todos os itens (manter na lista)?", uncheckedAll:"Tudo desmarcado 🔄", renameCatPrompt:"Renomear categoria", copyTitle:"Compartilhar lista", copyOnlyItems:"📝 Lista simples", copyOnlyItemsDesc:"Sem marcações — pra colar onde quiser", copyWithStatus:"📋 Com marcações", copyWithStatusDesc:"Mantém ✅ 🤔 ⚪ atuais — se importar em outro celular vem já marcado", copyShare:"🔗 Sem marcações", copyShareDesc:"Tudo ⚪ — quem importar começa do zero", emojiLabel:"EMOJI", printBtn:"🖨️ Imprimir", printOption:"🖨️ Imprimir / PDF", printOptionDesc:"Versão pra impressora ou salvar como PDF", voiceTooltip:"Falar itens (toque pra começar/parar)", voiceUnsupported:"Reconhecimento de voz não suportado neste navegador", voiceError:"Erro no microfone", voiceListening:"Escutando...", voiceNetworkError:"Erro de rede", voiceNeedsInternet:"tente janela anônima ou desative extensões/adblock", voicePermissionDenied:"Permissão de microfone negada", qrOption:"📲 QR code", qrOptionDesc:"Outro celular escaneia e importa direto (PRO)", qrTitle:"Escaneie pra importar", qrInstructions:"Aponte a câmera de outro celular. Lista vai abrir já preenchida.", qrLibError:"Falha ao carregar gerador de QR", qrTooLarge:"Lista grande demais pra QR — use compartilhar texto", copyLink:"📋 Copiar link", templateNewListName:"Nome da nova lista", newVersion:"Nova versão disponível", reload:"Recarregar", helpBtnTitle:"Ajuda", refreshBtn:"🔄 Atualizar app", refreshConfirm:"Buscar versão mais recente? O app vai recarregar.", refreshing:"Atualizando...", bgTitle:"Plano de fundo", bgNone:"Nenhum", bgDots:"Pontos", bgGrid:"Grade", bgPaws:"Patinhas", bgStars:"Estrelas", bgHearts:"Corações", bgLeaves:"Folhas", editItemTitle:"Editar item", itemNamePh:"Nome do item", qtyPh:"1", unitPh:"kg", pricePh:"12,50", listTotal:t => `Total: ${t}`, currencySymbol:"R$", qtyHint:"💡 Toque ✏️ no item pra adicionar quantidade, unidade ou preço", frequentsTitle:"✨ MAIS USADOS — toque pra adicionar", nameLabel:"NOME", qtyLabel:"QTD", unitLabel:"UNIDADE", priceLabel:"PREÇO", pasteListBtn:"📥 Colar lista de texto", pasteImportTitle:"Importar de texto", pastePh:"Cole aqui o texto da lista (WhatsApp, notas, receita...)", importLabel:"Importar", pasteEmpty:"Nada para importar", pasteImported:n => `${n} ${n===1?"item importado":"itens importados"} ✅`, newListNamePrompt:"Nome da nova lista", importedListDefault:"Lista importada", pasteHint:"Detecta linhas, ✅ 🤔 ⚪, marcadores - * • ▸, cabeçalhos # e quantidade tipo '2 kg arroz'", detected:n => `${n} ${n===1?"item":"itens"} detectado${n===1?"":"s"}` },
+    en: { okLabel:"OK", cancelLabel:"Cancel", uncheckAllBtn:"🔄 Reset", uncheckAllConfirm:"Uncheck all items (keep on list)?", uncheckedAll:"All unchecked 🔄", renameCatPrompt:"Rename category", copyTitle:"Share list", copyOnlyItems:"📝 Plain list", copyOnlyItemsDesc:"No marks — paste anywhere", copyWithStatus:"📋 With marks", copyWithStatusDesc:"Keeps ✅ 🤔 ⚪ as-is — importing elsewhere preserves the marks", copyShare:"🔗 No marks", copyShareDesc:"All ⚪ — whoever imports starts fresh", emojiLabel:"EMOJI", printBtn:"🖨️ Print", printOption:"🖨️ Print / PDF", printOptionDesc:"Printer-friendly layout or save as PDF", voiceTooltip:"Speak items (tap to start/stop)", voiceUnsupported:"Speech recognition not supported in this browser", voiceError:"Microphone error", voiceListening:"Listening...", voiceNetworkError:"Network error", voiceNeedsInternet:"try incognito window or disable extensions/adblock", voicePermissionDenied:"Microphone permission denied", qrOption:"📲 QR code", qrOptionDesc:"Another phone scans and imports (PRO)", qrTitle:"Scan to import", qrInstructions:"Point another phone's camera. List opens pre-filled.", qrLibError:"Failed to load QR generator", qrTooLarge:"List too large for QR — use share text instead", copyLink:"📋 Copy link", templateNewListName:"New list name", newVersion:"New version available", reload:"Reload", helpBtnTitle:"Help", refreshBtn:"🔄 Refresh app", refreshConfirm:"Fetch latest version? App will reload.", refreshing:"Refreshing...", bgTitle:"Background", bgNone:"None", bgDots:"Dots", bgGrid:"Grid", bgPaws:"Paws", bgStars:"Stars", bgHearts:"Hearts", bgLeaves:"Leaves", editItemTitle:"Edit item", itemNamePh:"Item name", qtyPh:"1", unitPh:"kg", pricePh:"12.50", listTotal:t => `Total: ${t}`, currencySymbol:"$", qtyHint:"💡 Tap ✏️ on an item to add quantity, unit or price", frequentsTitle:"✨ FREQUENTS — tap to add", nameLabel:"NAME", qtyLabel:"QTY", unitLabel:"UNIT", priceLabel:"PRICE", pasteListBtn:"📥 Paste list from text", pasteImportTitle:"Import from text", pastePh:"Paste your list text here (WhatsApp, notes, recipe...)", importLabel:"Import", pasteEmpty:"Nothing to import", pasteImported:n => `${n} ${n===1?"item imported":"items imported"} ✅`, newListNamePrompt:"New list name", importedListDefault:"Imported list", pasteHint:"Detects lines, ✅ 🤔 ⚪, bullets - * • ▸, headers # and quantities like '2 kg rice'", detected:n => `${n} ${n===1?"item":"items"} detected` },
+    es: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Resetear", uncheckAllConfirm:"¿Desmarcar todos los ítems (mantenerlos)?", uncheckedAll:"Todo desmarcado 🔄", renameCatPrompt:"Renombrar categoría", copyTitle:"Compartir lista", copyOnlyItems:"📝 Lista simple", copyOnlyItemsDesc:"Sin marcas — pega donde quieras", copyWithStatus:"📋 Con marcas", copyWithStatusDesc:"Mantiene ✅ 🤔 ⚪ actuales — al importar conserva las marcas", copyShare:"🔗 Sin marcas", copyShareDesc:"Todo ⚪ — quien importe empieza desde cero", emojiLabel:"EMOJI", printBtn:"🖨️ Imprimir", printOption:"🖨️ Imprimir / PDF", printOptionDesc:"Versión para impresora o guardar como PDF", voiceTooltip:"Hablar ítems (toca para empezar/parar)", voiceUnsupported:"Reconocimiento de voz no soportado en este navegador", voiceError:"Error de micrófono", voiceListening:"Escuchando...", voiceNetworkError:"Error de red", voiceNeedsInternet:"el reconocimiento de voz requiere internet", voicePermissionDenied:"Permiso de micrófono denegado", qrOption:"📲 QR code", qrOptionDesc:"Otro teléfono escanea e importa (PRO)", qrTitle:"Escanea para importar", qrInstructions:"Apunta la cámara de otro teléfono. La lista se abrirá lista para usar.", qrLibError:"Error al cargar generador de QR", qrTooLarge:"Lista muy grande para QR — usa compartir texto", copyLink:"📋 Copiar enlace", templateNewListName:"Nombre de la nueva lista", newVersion:"Nueva versión disponible", reload:"Recargar", helpBtnTitle:"Ayuda", refreshBtn:"🔄 Actualizar app", refreshConfirm:"¿Buscar la última versión? La app se recargará.", refreshing:"Actualizando...", bgTitle:"Fondo", bgNone:"Ninguno", bgDots:"Puntos", bgGrid:"Cuadrícula", bgPaws:"Patitas", bgStars:"Estrellas", bgHearts:"Corazones", bgLeaves:"Hojas", editItemTitle:"Editar ítem", itemNamePh:"Nombre del ítem", qtyPh:"1", unitPh:"kg", pricePh:"12,50", listTotal:t => `Total: ${t}`, currencySymbol:"$", qtyHint:"💡 Toca ✏️ en un ítem para añadir cantidad, unidad o precio", frequentsTitle:"✨ FRECUENTES — toca para añadir", nameLabel:"NOMBRE", qtyLabel:"CANT", unitLabel:"UNIDAD", priceLabel:"PRECIO", pasteListBtn:"📥 Pegar lista de texto", pasteImportTitle:"Importar de texto", pastePh:"Pega aquí el texto de tu lista (WhatsApp, notas, receta...)", importLabel:"Importar", pasteEmpty:"Nada para importar", pasteImported:n => `${n} ${n===1?"ítem importado":"ítems importados"} ✅`, newListNamePrompt:"Nombre de la nueva lista", importedListDefault:"Lista importada", pasteHint:"Detecta líneas, ✅ 🤔 ⚪, viñetas - * • ▸, encabezados # y cantidades como '2 kg arroz'", detected:n => `${n} ${n===1?"ítem":"ítems"} detectado${n===1?"":"s"}` },
+    ja: { okLabel:"OK", cancelLabel:"キャンセル", uncheckAllBtn:"🔄 リセット", uncheckAllConfirm:"すべてのアイテムのチェックを外しますか（リストには残ります）？", uncheckedAll:"すべてリセット 🔄", renameCatPrompt:"カテゴリ名を変更", copyTitle:"リストを共有", copyOnlyItems:"📝 シンプルなリスト", copyOnlyItemsDesc:"マークなし — どこにでも貼り付け可能", copyWithStatus:"📋 マーク付き", copyWithStatusDesc:"✅ 🤔 ⚪ を保持 — 別端末でインポートしても状態が保たれる", copyShare:"🔗 マークなし", copyShareDesc:"すべて ⚪ — 受け取った人が一から始める", emojiLabel:"絵文字", printBtn:"🖨️ 印刷", printOption:"🖨️ 印刷 / PDF", printOptionDesc:"印刷用レイアウト・PDFとして保存", voiceTooltip:"音声入力（タップで開始/停止）", voiceUnsupported:"このブラウザは音声認識に対応していません", voiceError:"マイクエラー", voiceListening:"聞き取り中...", voiceNetworkError:"ネットワークエラー", voiceNeedsInternet:"音声認識にはインターネットが必要です", voicePermissionDenied:"マイクの許可が拒否されました", qrOption:"📲 QRコード", qrOptionDesc:"別のスマホでスキャンしてインポート（PRO）", qrTitle:"スキャンしてインポート", qrInstructions:"別の端末でカメラを向けてください。アプリでリストが自動で開きます。", qrLibError:"QRジェネレーターの読み込みに失敗", qrTooLarge:"リストが大きすぎます — テキスト共有を使ってください", copyLink:"📋 リンクをコピー", templateNewListName:"新しいリスト名", newVersion:"新しいバージョンがあります", reload:"再読込", helpBtnTitle:"ヘルプ", refreshBtn:"🔄 更新", refreshConfirm:"最新バージョンを取得しますか？再読み込みされます。", refreshing:"更新中...", bgTitle:"背景", bgNone:"なし", bgDots:"ドット", bgGrid:"グリッド", bgPaws:"肉球", bgStars:"星", bgHearts:"ハート", bgLeaves:"葉", editItemTitle:"アイテム編集", itemNamePh:"アイテム名", qtyPh:"1", unitPh:"kg", pricePh:"100", listTotal:t => `合計: ${t}`, currencySymbol:"¥", qtyHint:"💡 ✏️をタップして数量・単位・価格を追加", frequentsTitle:"✨ よく使う — タップで追加", nameLabel:"名前", qtyLabel:"数量", unitLabel:"単位", priceLabel:"価格", pasteListBtn:"📥 テキストを貼り付け", pasteImportTitle:"テキストからインポート", pastePh:"リストのテキストを貼り付け（WhatsApp、メモ、レシピなど）", importLabel:"インポート", pasteEmpty:"インポート対象なし", pasteImported:n => `${n}件をインポート ✅`, newListNamePrompt:"新しいリスト名", importedListDefault:"インポートしたリスト", pasteHint:"行・✅ 🤔 ⚪・- * • ▸ 箇条書き・# 見出し・「2 kg ご飯」など数量を検出", detected:n => `${n}件検出` },
+    he: { okLabel:"אישור", cancelLabel:"ביטול", uncheckAllBtn:"🔄 איפוס", uncheckAllConfirm:"לבטל סימון כל הפריטים (להשאיר ברשימה)?", uncheckedAll:"הכל אופס 🔄", renameCatPrompt:"שינוי שם קטגוריה", copyTitle:"שיתוף רשימה", copyOnlyItems:"📝 רשימה פשוטה", copyOnlyItemsDesc:"ללא סימונים — להדבקה בכל מקום", copyWithStatus:"📋 עם סימונים", copyWithStatusDesc:"שומר ✅ 🤔 ⚪ — בייבוא במכשיר אחר הסימונים נשמרים", copyShare:"🔗 ללא סימונים", copyShareDesc:"הכל ⚪ — מי שמייבא מתחיל מאפס", emojiLabel:"אמוג׳י", printBtn:"🖨️ הדפס", printOption:"🖨️ הדפסה / PDF", printOptionDesc:"פריסה להדפסה או שמירה כ-PDF", voiceTooltip:"הקלטת קול (הקש להתחלה/עצירה)", voiceUnsupported:"זיהוי דיבור לא נתמך בדפדפן זה", voiceError:"שגיאת מיקרופון", voiceListening:"מקשיב...", voiceNetworkError:"שגיאת רשת", voiceNeedsInternet:"זיהוי קולי דורש אינטרנט", voicePermissionDenied:"הרשאת מיקרופון נדחתה", qrOption:"📲 קוד QR", qrOptionDesc:"מכשיר אחר סורק ומייבא (PRO)", qrTitle:"סרוק לייבוא", qrInstructions:"כוון את מצלמת המכשיר השני. הרשימה תיפתח באפליקציה.", qrLibError:"טעינת מחולל QR נכשלה", qrTooLarge:"הרשימה גדולה מדי ל-QR — השתמש בשיתוף טקסט", copyLink:"📋 העתק קישור", templateNewListName:"שם הרשימה החדשה", newVersion:"גרסה חדשה זמינה", reload:"טען מחדש", helpBtnTitle:"עזרה", refreshBtn:"🔄 עדכן אפליקציה", refreshConfirm:"לבדוק גרסה חדשה? האפליקציה תיטען מחדש.", refreshing:"מעדכן...", bgTitle:"רקע", bgNone:"ללא", bgDots:"נקודות", bgGrid:"רשת", bgPaws:"כפות", bgStars:"כוכבים", bgHearts:"לבבות", bgLeaves:"עלים", editItemTitle:"ערוך פריט", itemNamePh:"שם הפריט", qtyPh:"1", unitPh:"ק״ג", pricePh:"12.50", listTotal:t => `סה״כ: ${t}`, currencySymbol:"₪", qtyHint:"💡 הקש על ✏️ להוספת כמות, יחידה או מחיר", frequentsTitle:"✨ נפוצים — הקש להוספה", nameLabel:"שם", qtyLabel:"כמות", unitLabel:"יחידה", priceLabel:"מחיר", pasteListBtn:"📥 הדבק רשימה מטקסט", pasteImportTitle:"ייבוא מטקסט", pastePh:"הדבק כאן את טקסט הרשימה (WhatsApp, פתקים, מתכון...)", importLabel:"ייבא", pasteEmpty:"אין מה לייבא", pasteImported:n => `${n} פריטים יובאו ✅`, newListNamePrompt:"שם הרשימה החדשה", importedListDefault:"רשימה מיובאת", pasteHint:"מזהה שורות, ✅ 🤔 ⚪, תבליטים - * • ▸, כותרות # וכמויות כמו '2 ק״ג אורז'", detected:n => `${n} פריטים זוהו` },
+    ko: { okLabel:"확인", cancelLabel:"취소", uncheckAllBtn:"🔄 초기화", uncheckAllConfirm:"모든 항목의 선택을 해제할까요 (목록은 유지)?", uncheckedAll:"모두 초기화됨 🔄", renameCatPrompt:"카테고리 이름 변경", copyTitle:"목록 공유", copyOnlyItems:"📝 단순 목록", copyOnlyItemsDesc:"표시 없음 — 어디든 붙여넣기", copyWithStatus:"📋 표시 포함", copyWithStatusDesc:"✅ 🤔 ⚪ 유지 — 다른 기기에 가져와도 표시 보존", copyShare:"🔗 표시 없음", copyShareDesc:"모두 ⚪ — 가져오는 사람이 처음부터 시작", emojiLabel:"이모지", printBtn:"🖨️ 인쇄", printOption:"🖨️ 인쇄 / PDF", printOptionDesc:"인쇄용 레이아웃 또는 PDF로 저장", voiceTooltip:"음성 입력 (탭하여 시작/중지)", voiceUnsupported:"이 브라우저는 음성 인식을 지원하지 않습니다", voiceError:"마이크 오류", voiceListening:"듣는 중...", voiceNetworkError:"네트워크 오류", voiceNeedsInternet:"음성 인식에 인터넷 필요", voicePermissionDenied:"마이크 권한 거부됨", qrOption:"📲 QR 코드", qrOptionDesc:"다른 폰으로 스캔하여 가져오기 (PRO)", qrTitle:"스캔하여 가져오기", qrInstructions:"다른 기기로 카메라를 비추세요. 목록이 앱에서 자동으로 열립니다.", qrLibError:"QR 생성기 로드 실패", qrTooLarge:"목록이 QR에 비해 너무 큼 — 텍스트 공유를 사용하세요", copyLink:"📋 링크 복사", templateNewListName:"새 목록 이름", newVersion:"새 버전 사용 가능", reload:"새로고침", helpBtnTitle:"도움말", refreshBtn:"🔄 앱 새로고침", refreshConfirm:"최신 버전을 가져올까요? 앱이 다시 로드됩니다.", refreshing:"새로고침 중...", bgTitle:"배경", bgNone:"없음", bgDots:"점", bgGrid:"격자", bgPaws:"발자국", bgStars:"별", bgHearts:"하트", bgLeaves:"잎", editItemTitle:"항목 편집", itemNamePh:"항목 이름", qtyPh:"1", unitPh:"kg", pricePh:"12500", listTotal:t => `합계: ${t}`, currencySymbol:"₩", qtyHint:"💡 ✏️를 눌러 수량, 단위 또는 가격 추가", frequentsTitle:"✨ 자주 사용 — 눌러서 추가", nameLabel:"이름", qtyLabel:"수량", unitLabel:"단위", priceLabel:"가격", pasteListBtn:"📥 텍스트로 목록 붙여넣기", pasteImportTitle:"텍스트에서 가져오기", pastePh:"여기에 목록 텍스트를 붙여넣으세요 (WhatsApp, 메모, 레시피 등)", importLabel:"가져오기", pasteEmpty:"가져올 것이 없습니다", pasteImported:n => `${n}개 항목 가져옴 ✅`, newListNamePrompt:"새 목록 이름", importedListDefault:"가져온 목록", pasteHint:"줄·✅ 🤔 ⚪·- * • ▸ 글머리·# 제목·'2 kg 쌀' 같은 수량 감지", detected:n => `${n}개 감지됨` },
   }
   Object.entries(ext).forEach(([k,v]) => Object.assign(TPRO[k], v))
 })();
@@ -2102,19 +2102,7 @@ function renderItems(){
 
 // ── COPY LIST ─────────────────────────────────────
 
-async function copyList(){
-  const list = lists[currentList]
-  if(!list || !list.items.length){ showToast(t.listEmpty); return }
-  const choice = await uiChoice(tp().copyTitle, [
-    { label: tp().copyOnlyItems, desc: tp().copyOnlyItemsDesc },
-    { label: tp().copyWithStatus, desc: tp().copyWithStatusDesc },
-    { label: tp().copyShare, desc: tp().copyShareDesc },
-    { label: tp().printOption, desc: tp().printOptionDesc },
-  ])
-  if(choice === null) return
-  if(choice === 3){ window.print(); return }
-  const withStatus = choice === 1 || choice === 2
-  const resetStatus = choice === 2
+function buildListText(list, withStatus, resetStatus, includeTotal){
   const statusLabel = ["⚪","✅","🤔"]
   const groups = {}
   list.items.forEach(item => {
@@ -2124,7 +2112,6 @@ async function copyList(){
   })
   const orderedCats = (list.categoryOrder || []).filter(c => groups[c])
   Object.keys(groups).forEach(c => { if(!orderedCats.includes(c)) orderedCats.push(c) })
-
   const lines = [list.emoji + " " + list.name, ""]
   orderedCats.forEach(cat => {
     if(cat){
@@ -2132,8 +2119,8 @@ async function copyList(){
       lines.push("▸ " + (ce ? ce + " " : "") + cat)
     }
     groups[cat].forEach(item => {
-      const effectiveStatus = resetStatus ? 0 : item.status
-      const prefix = withStatus ? statusLabel[effectiveStatus] : "•"
+      const eff = resetStatus ? 0 : item.status
+      const prefix = withStatus ? statusLabel[eff] : "•"
       const qty = item.qty ? `${item.qty}${item.unit ? " " + item.unit : ""} ` : ""
       const price = formatPrice(item.price)
       const priceTail = price ? `  (${price})` : ""
@@ -2141,15 +2128,92 @@ async function copyList(){
     })
     if(cat) lines.push("")
   })
-  const totalPrice = list.items.reduce((s, it) => { const p = parsePrice(it.price); return s + (isFinite(p) ? p : 0) }, 0)
-  if(totalPrice > 0){
-    lines.push("")
-    lines.push(tp().listTotal(formatPrice(totalPrice)))
+  if(includeTotal){
+    const totalPrice = list.items.reduce((s, it) => { const p = parsePrice(it.price); return s + (isFinite(p) ? p : 0) }, 0)
+    if(totalPrice > 0){
+      lines.push("")
+      lines.push(tp().listTotal(formatPrice(totalPrice)))
+    }
   }
-  const text = lines.join("\n")
+  return lines.join("\n")
+}
+
+async function copyList(){
+  const list = lists[currentList]
+  if(!list || !list.items.length){ showToast(t.listEmpty); return }
+  const opts = [
+    { label: tp().copyOnlyItems, desc: tp().copyOnlyItemsDesc },
+    { label: tp().copyWithStatus, desc: tp().copyWithStatusDesc },
+    { label: tp().copyShare, desc: tp().copyShareDesc },
+    { label: tp().printOption, desc: tp().printOptionDesc },
+    { label: tp().qrOption + (pro ? "" : " 🔒"), desc: tp().qrOptionDesc },
+  ]
+  const choice = await uiChoice(tp().copyTitle, opts)
+  if(choice === null) return
+  if(choice === 3){ window.print(); return }
+  if(choice === 4){ generateQR(); return }
+  const withStatus = choice === 1 || choice === 2
+  const resetStatus = choice === 2
+  const text = buildListText(list, withStatus, resetStatus, true)
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(()=>showToast(t.copied)).catch(()=>fallbackCopy(text))
   } else { fallbackCopy(text) }
+}
+
+function loadQRLib(){
+  if(window.qrcode) return Promise.resolve()
+  return new Promise((resolve, reject) => {
+    const s = document.createElement("script")
+    s.src = "https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"
+    s.onload = resolve
+    s.onerror = reject
+    document.head.appendChild(s)
+  })
+}
+
+async function generateQR(){
+  const list = lists[currentList]
+  if(!list || !list.items.length){ showToast(t.listEmpty); return }
+  if(!pro){ openUnlock(); return }
+  try {
+    await loadQRLib()
+  } catch(e){
+    showToast(tp().qrLibError)
+    return
+  }
+  const text = buildListText(list, true, true, false)
+  const baseUrl = "https://myownlists.app/?import="
+  const url = baseUrl + encodeURIComponent(text)
+  let qr
+  try {
+    qr = qrcode(0, "L")
+    qr.addData(url)
+    qr.make()
+  } catch(e){
+    showToast(tp().qrTooLarge)
+    return
+  }
+  const svg = qr.createSvgTag({ cellSize: 6, margin: 4, scalable: true })
+  _uiResolve = null
+  _uiOpen(tp().qrTitle, `
+    <div style="background:white;border-radius:12px;padding:16px;display:flex;justify-content:center;align-items:center;margin-bottom:12px">
+      ${svg}
+    </div>
+    <p style="font-size:13px;line-height:1.5;color:var(--text);margin:0 0 14px;text-align:center">${tp().qrInstructions}</p>
+    <div class="ui-row">
+      <button class="secondary-btn" onclick="closeModal('uiModal')">${tp().okLabel}</button>
+      <button class="primary-btn" onclick="copyShareUrl('${encodeURIComponent(url)}')">${tp().copyLink}</button>
+    </div>
+  `)
+  document.querySelector("#uiModal .ui-box svg").style.maxWidth = "100%"
+  document.querySelector("#uiModal .ui-box svg").style.height = "auto"
+}
+
+function copyShareUrl(encUrl){
+  const url = decodeURIComponent(encUrl)
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(()=>showToast(t.copied)).catch(()=>fallbackCopy(url))
+  } else { fallbackCopy(url) }
 }
 
 function fallbackCopy(text){
@@ -2730,11 +2794,12 @@ function initVoice(){
 function checkShareTarget(){
   try {
     const params = new URLSearchParams(window.location.search)
+    const importText = params.get("import") || ""
     const text = params.get("share_text") || params.get("text") || ""
     const title = params.get("share_title") || params.get("title") || ""
     const url = params.get("share_url") || params.get("url") || ""
-    if(!text && !title && !url) return
-    const combined = [title, text, url].filter(Boolean).join("\n")
+    if(!importText && !text && !title && !url) return
+    const combined = importText || [title, text, url].filter(Boolean).join("\n")
     history.replaceState(null, "", window.location.pathname)
     setTimeout(() => openPasteImport(combined), 200)
   } catch(e){ console.warn("share target:", e) }
