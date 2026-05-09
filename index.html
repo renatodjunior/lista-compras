@@ -2567,6 +2567,16 @@ function parseTextToList(text){
     }
     line = line.replace(/^[•\-\*▸◦▪]\s+/, "").replace(/^\d+[.)]\s+/, "")
     if(!line) continue
+    let price = ""
+    const priceMatch = line.match(/\s*\(([^()]+)\)\s*$/)
+    if(priceMatch){
+      const numMatch = priceMatch[1].match(/(\d+(?:[.,]\d+)?)/)
+      if(numMatch){
+        price = numMatch[1]
+        line = line.slice(0, line.length - priceMatch[0].length).trim()
+      }
+    }
+    if(!line) continue
     let qty = "", unit = ""
     const qm = line.match(/^(\d+(?:[.,]\d+)?)\s*([a-zA-ZáéíóúçÁÉÍÓÚÇ]{1,5})?\s+(.+)$/)
     if(qm && qm[3].length > 0){
@@ -2577,7 +2587,7 @@ function parseTextToList(text){
     if(!line) continue
     firstSeen = true
     if(currentCat && !categoryOrder.includes(currentCat)) categoryOrder.push(currentCat)
-    items.push({ name: line, status, category: currentCat, qty, unit, price: "" })
+    items.push({ name: line, status, category: currentCat, qty, unit, price })
   }
   return { items, categoryOrder, suggestedName, suggestedEmoji, categoryEmojis }
 }
