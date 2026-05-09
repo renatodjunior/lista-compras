@@ -182,6 +182,23 @@ Itens que mudam a categoria do app — provavelmente PRO ou versão paralela:
 - Pode ser feature free (Web Speech é grátis) ou diferencial PRO se precisar de processamento melhor (ex: Whisper local via WASM)
 - Limitação: cobertura desigual entre browsers, especialmente iOS Safari fora do app
 
+### 📈 Histórico de preços + inflação pessoal (PRO)
+- Quando user marca item como ✅ comprado, registra `{data, qty, unit, price}` no histórico daquele item
+- Storage: `localStorage.priceHistory = { "arroz": [{date, qty, unit, price}, ...] }` — chave normalizada por nome
+- **Stats expandidas:**
+  - Preço médio do item ao longo do tempo (sparkline no edit modal)
+  - % variação semana/mês/ano
+  - **Cesta pessoal**: média ponderada das variações de itens marcados como "habituais" → vira IPCA pessoal
+  - Top 5 itens com maior alta / maior queda
+  - Total gasto por período (semana/mês)
+- Exemplo de output: "Sua cesta subiu 4.2% no último mês. Café: +12%, Arroz: -3%"
+- Privacidade preservada — nada sai do device
+- Exportável no backup JSON
+- **Tamanho**: 1000 itens × 50 entradas históricas ≈ 50KB. localStorage aguenta tranquilo
+- Implementação: hook em `toggleStatus()` quando vai pra status 1, append entry com timestamp + preço atual do item
+- Diferencial **enorme** vs AnyList/Bring! que não fazem isso
+- Encaixe: PRO feature natural — "stats avançadas com seu histórico de inflação"
+
 ### 🎨 Mais personalização (parcial nesta branch)
 - Backgrounds "fofinhos" (já implementado: pontos/grade/patinhas/estrelas/corações/folhas)
 - Próximos: reordenar blocos da home (drag-drop dos cards), tipografia (font alternativa), tamanhos
