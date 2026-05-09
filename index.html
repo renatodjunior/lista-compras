@@ -2718,7 +2718,8 @@ function finishVoice(){
   ta.value = (existing ? existing + "\n" : "") + items.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join("\n")
   ta.focus()
 }
-const VOICE_AVAILABLE = !!SR_API && (location.protocol !== "file:")
+const IS_MOBILE = /Android|iPhone|iPad|iPod|BlackBerry|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent || "")
+const VOICE_AVAILABLE = !!SR_API && (location.protocol !== "file:") && IS_MOBILE
 function initVoice(){
   if(!VOICE_AVAILABLE){
     const b = document.getElementById("voiceBtn")
