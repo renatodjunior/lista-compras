@@ -135,10 +135,12 @@ textarea{ resize:none; min-height:82px; }
 .back-btn:active{ transform:scale(.96); }
 .top-actions{ display:flex; gap:6px; }
 .copy-btn, .clear-btn{
-  height:38px; padding:0 12px; background:var(--btn); border-radius:10px;
-  display:flex; align-items:center; justify-content:center; cursor:pointer;
-  border:none; font-family:inherit; font-weight:700; font-size:13px;
-  color:var(--text); gap:4px; transition:transform .1s;
+  width:38px; height:38px; padding:0;
+  background:var(--btn); border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; border:none; font-family:inherit;
+  font-size:18px; color:var(--text); transition:transform .1s;
+  line-height:1; flex-shrink:0;
 }
 .copy-btn:active, .clear-btn:active{ transform:scale(.94); }
 #clearBtn{ color:var(--danger); }
@@ -496,22 +498,15 @@ textarea{ resize:none; min-height:82px; }
   .top-row{ gap:6px; }
   .top-actions{ gap:4px; }
   .back-btn{ height:34px; padding:0 10px; font-size:13px; }
-  .copy-btn, .clear-btn{ height:34px; padding:0 8px; font-size:12px; }
+  .copy-btn, .clear-btn{ width:34px; height:34px; font-size:16px; }
 }
 @media (max-width: 340px){
   .header h2{ font-size:18px; }
   .header h2 #titleIcon{ display:none; }
   .lang-select{ height:30px; padding:0 18px 0 4px; font-size:11px; }
   .theme-btn{ width:30px; height:30px; font-size:14px; }
-  .back-btn{
-    height:32px; padding:0; min-width:32px;
-    font-size:0; justify-content:center;
-  }
-  .back-btn::before{
-    content:"‹"; font-size:22px; font-weight:800; line-height:1;
-  }
-  [dir=rtl] .back-btn::before{ content:"›"; }
-  .copy-btn, .clear-btn{ height:32px; padding:0 7px; font-size:11px; gap:3px; }
+  .back-btn{ height:32px; padding:0 8px; font-size:12px; }
+  .copy-btn, .clear-btn{ width:32px; height:32px; font-size:15px; }
 }
 
 /* ── PRINT ── */
@@ -778,7 +773,7 @@ const T = {
     emptyLists: "Nenhuma lista ainda.<br>Crie a primeira abaixo! 👆",
     itemsBought: (d, t) => `${d}/${t} comprados`,
     emptyList: "Vazia",
-    back: "‹ Voltar",
+    back: "← Voltar",
     clearDone: "🗑️ Limpar",
     copy: "🔗 Compartilhar",
     addItems: "Adicionar itens",
@@ -825,7 +820,7 @@ const T = {
     emptyLists: "No lists yet.<br>Create the first one below! 👆",
     itemsBought: (d, t) => `${d}/${t} purchased`,
     emptyList: "Empty",
-    back: "‹ Back",
+    back: "← Back",
     clearDone: "🗑️ Clear done",
     copy: "🔗 Share",
     addItems: "Add items",
@@ -872,7 +867,7 @@ const T = {
     emptyLists: "Sin listas todavía.<br>¡Crea la primera abajo! 👆",
     itemsBought: (d, t) => `${d}/${t} comprados`,
     emptyList: "Vacía",
-    back: "‹ Volver",
+    back: "← Volver",
     clearDone: "🗑️ Limpiar",
     copy: "🔗 Compartir",
     addItems: "Agregar ítems",
@@ -919,7 +914,7 @@ const T = {
     emptyLists: "リストがまだありません。<br>下に作成してください！ 👆",
     itemsBought: (d, t) => `${d}/${t} 購入済み`,
     emptyList: "空",
-    back: "‹ 戻る",
+    back: "← 戻る",
     clearDone: "🗑️ 削除",
     copy: "🔗 共有",
     addItems: "アイテムを追加",
@@ -966,7 +961,7 @@ const T = {
     emptyLists: "אין רשימות עדיין.<br>צור את הראשונה למטה! 👆",
     itemsBought: (d, t) => `${d}/${t} נרכשו`,
     emptyList: "ריקה",
-    back: "חזרה ›",
+    back: "חזרה →",
     clearDone: "🗑️ נקה",
     copy: "🔗 שתף",
     addItems: "הוסף פריטים",
@@ -1013,7 +1008,7 @@ const T = {
     emptyLists: "아직 목록이 없습니다.<br>아래에서 첫 번째를 만들어보세요! 👆",
     itemsBought: (d, t) => `${d}/${t} 구매 완료`,
     emptyList: "비어 있음",
-    back: "‹ 뒤로",
+    back: "← 뒤로",
     clearDone: "🗑️ 완료 삭제",
     copy: "🔗 공유",
     addItems: "항목 추가",
@@ -1545,6 +1540,15 @@ document.getElementById("themeBtn").textContent = darkMode ? "☀️" : "🌙"
 function save(){ localStorage.setItem("lists", JSON.stringify(lists)) }
 
 let _toastTimer = null
+function setIconBtn(id, fullText){
+  const el = document.getElementById(id)
+  if(!el) return
+  const m = String(fullText || "").match(/^(\S+)/)
+  el.textContent = m ? m[1] : ""
+  el.title = fullText || ""
+  el.setAttribute("aria-label", fullText || "")
+}
+
 function showToast(msg, actionFn, actionLabel){
   const el = document.getElementById("toast")
   el.innerHTML = ""
@@ -1589,8 +1593,8 @@ function applyLang(){
   document.getElementById("exportBtn").textContent = t.exportBackup
   document.getElementById("importBtn").textContent = t.importBackup
   document.getElementById("backBtn").textContent = t.back
-  document.getElementById("clearBtn").textContent = t.clearDone
-  document.getElementById("copyBtn").textContent = t.copy
+  setIconBtn("clearBtn", t.clearDone)
+  setIconBtn("copyBtn", t.copy)
   document.getElementById("sectionAddItems").textContent = t.addItems
   document.getElementById("newCategory").placeholder = t.categoryPlaceholder
   document.getElementById("newItems").placeholder = t.itemsPlaceholder
@@ -2531,8 +2535,8 @@ function refreshProUI(){
   const tt = tp()
   document.getElementById("templatesBtn").textContent = "📦 " + tt.templatesTitle
   document.getElementById("statsBtn").textContent = "📊 " + tt.statsTitle
-  document.getElementById("saveTplBtn").textContent = tt.saveAsTemplate
-  document.getElementById("uncheckBtn").textContent = tt.uncheckAllBtn
+  setIconBtn("saveTplBtn", tt.saveAsTemplate)
+  setIconBtn("uncheckBtn", tt.uncheckAllBtn)
   document.getElementById("helpBtn").title = tt.helpBtnTitle
   document.getElementById("refreshBtn").textContent = tt.refreshBtn
   document.getElementById("pasteListBtn").textContent = tt.pasteListBtn
