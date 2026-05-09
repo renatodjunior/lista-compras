@@ -227,6 +227,19 @@ textarea{ resize:none; min-height:82px; }
 .stat-pill.warn{ background:#fff3d6; color:#a76b00; }
 .dark .stat-pill.warn{ background:#3a2e0a; color:#f5c452; }
 .item-name{ cursor:pointer; user-select:none; }
+.qty-badge{
+  display:inline-block; background:var(--primary-light); color:var(--primary);
+  font-size:11px; font-weight:800; padding:2px 7px; border-radius:99px;
+  margin-right:6px; vertical-align:middle; letter-spacing:.02em;
+}
+.price-badge{
+  font-size:12px; font-weight:700; color:var(--muted);
+  white-space:nowrap; margin:0 6px; flex-shrink:0;
+}
+.item-name.done .qty-badge,
+.item-name.done + .price-badge{ opacity:.5; }
+.stat-pill.money{ background:#e6f5e6; color:#1b6f1b; }
+.dark .stat-pill.money{ background:#1a3a1a; color:#7fdc7f; }
 .backup-row{ display:flex; gap:8px; margin-top:12px; }
 .backup-btn{
   flex:1; padding:10px; border:none; border-radius:10px; background:var(--btn);
@@ -1169,12 +1182,12 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
 // v3 string extensions
 ;(function(){
   const ext = {
-    pt: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Desmarcar", uncheckAllConfirm:"Desmarcar todos os itens (manter na lista)?", uncheckedAll:"Tudo desmarcado 🔄", renameCatPrompt:"Renomear categoria", copyTitle:"Copiar lista", copyOnlyItems:"📝 Apenas itens", copyOnlyItemsDesc:"Lista limpa — ideal para enviar pra alguém comprar", copyWithStatus:"📋 Com status", copyWithStatusDesc:"Mostra ⬜ ✅ 🤔 do estado atual", templateNewListName:"Nome da nova lista", newVersion:"Nova versão disponível", reload:"Recarregar", helpBtnTitle:"Ajuda", refreshBtn:"🔄 Atualizar app", refreshConfirm:"Buscar versão mais recente? O app vai recarregar.", refreshing:"Atualizando...", bgTitle:"Plano de fundo", bgNone:"Nenhum", bgDots:"Pontos", bgGrid:"Grade", bgPaws:"Patinhas", bgStars:"Estrelas", bgHearts:"Corações", bgLeaves:"Folhas" },
-    en: { okLabel:"OK", cancelLabel:"Cancel", uncheckAllBtn:"🔄 Reset", uncheckAllConfirm:"Uncheck all items (keep on list)?", uncheckedAll:"All unchecked 🔄", renameCatPrompt:"Rename category", copyTitle:"Copy list", copyOnlyItems:"📝 Items only", copyOnlyItemsDesc:"Clean list — ideal to send to someone shopping", copyWithStatus:"📋 With status", copyWithStatusDesc:"Shows ⬜ ✅ 🤔 of current state", templateNewListName:"New list name", newVersion:"New version available", reload:"Reload", helpBtnTitle:"Help", refreshBtn:"🔄 Refresh app", refreshConfirm:"Fetch latest version? App will reload.", refreshing:"Refreshing...", bgTitle:"Background", bgNone:"None", bgDots:"Dots", bgGrid:"Grid", bgPaws:"Paws", bgStars:"Stars", bgHearts:"Hearts", bgLeaves:"Leaves" },
-    es: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Resetear", uncheckAllConfirm:"¿Desmarcar todos los ítems (mantenerlos)?", uncheckedAll:"Todo desmarcado 🔄", renameCatPrompt:"Renombrar categoría", copyTitle:"Copiar lista", copyOnlyItems:"📝 Solo ítems", copyOnlyItemsDesc:"Lista limpia — ideal para enviar a alguien", copyWithStatus:"📋 Con estado", copyWithStatusDesc:"Muestra ⬜ ✅ 🤔 del estado actual", templateNewListName:"Nombre de la nueva lista", newVersion:"Nueva versión disponible", reload:"Recargar", helpBtnTitle:"Ayuda", refreshBtn:"🔄 Actualizar app", refreshConfirm:"¿Buscar la última versión? La app se recargará.", refreshing:"Actualizando...", bgTitle:"Fondo", bgNone:"Ninguno", bgDots:"Puntos", bgGrid:"Cuadrícula", bgPaws:"Patitas", bgStars:"Estrellas", bgHearts:"Corazones", bgLeaves:"Hojas" },
-    ja: { okLabel:"OK", cancelLabel:"キャンセル", uncheckAllBtn:"🔄 リセット", uncheckAllConfirm:"すべてのアイテムのチェックを外しますか（リストには残ります）？", uncheckedAll:"すべてリセット 🔄", renameCatPrompt:"カテゴリ名を変更", copyTitle:"リストをコピー", copyOnlyItems:"📝 アイテムのみ", copyOnlyItemsDesc:"クリーンなリスト — 誰かに送るのに最適", copyWithStatus:"📋 ステータス付き", copyWithStatusDesc:"⬜ ✅ 🤔 を表示", templateNewListName:"新しいリスト名", newVersion:"新しいバージョンがあります", reload:"再読込", helpBtnTitle:"ヘルプ", refreshBtn:"🔄 更新", refreshConfirm:"最新バージョンを取得しますか？再読み込みされます。", refreshing:"更新中...", bgTitle:"背景", bgNone:"なし", bgDots:"ドット", bgGrid:"グリッド", bgPaws:"肉球", bgStars:"星", bgHearts:"ハート", bgLeaves:"葉" },
-    he: { okLabel:"אישור", cancelLabel:"ביטול", uncheckAllBtn:"🔄 איפוס", uncheckAllConfirm:"לבטל סימון כל הפריטים (להשאיר ברשימה)?", uncheckedAll:"הכל אופס 🔄", renameCatPrompt:"שינוי שם קטגוריה", copyTitle:"העתק רשימה", copyOnlyItems:"📝 פריטים בלבד", copyOnlyItemsDesc:"רשימה נקייה — מושלם לשליחה למישהו", copyWithStatus:"📋 עם סטטוס", copyWithStatusDesc:"מציג ⬜ ✅ 🤔", templateNewListName:"שם הרשימה החדשה", newVersion:"גרסה חדשה זמינה", reload:"טען מחדש", helpBtnTitle:"עזרה", refreshBtn:"🔄 עדכן אפליקציה", refreshConfirm:"לבדוק גרסה חדשה? האפליקציה תיטען מחדש.", refreshing:"מעדכן...", bgTitle:"רקע", bgNone:"ללא", bgDots:"נקודות", bgGrid:"רשת", bgPaws:"כפות", bgStars:"כוכבים", bgHearts:"לבבות", bgLeaves:"עלים" },
-    ko: { okLabel:"확인", cancelLabel:"취소", uncheckAllBtn:"🔄 초기화", uncheckAllConfirm:"모든 항목의 선택을 해제할까요 (목록은 유지)?", uncheckedAll:"모두 초기화됨 🔄", renameCatPrompt:"카테고리 이름 변경", copyTitle:"목록 복사", copyOnlyItems:"📝 항목만", copyOnlyItemsDesc:"깨끗한 목록 — 다른 사람에게 보내기 좋음", copyWithStatus:"📋 상태 포함", copyWithStatusDesc:"⬜ ✅ 🤔 표시", templateNewListName:"새 목록 이름", newVersion:"새 버전 사용 가능", reload:"새로고침", helpBtnTitle:"도움말", refreshBtn:"🔄 앱 새로고침", refreshConfirm:"최신 버전을 가져올까요? 앱이 다시 로드됩니다.", refreshing:"새로고침 중...", bgTitle:"배경", bgNone:"없음", bgDots:"점", bgGrid:"격자", bgPaws:"발자국", bgStars:"별", bgHearts:"하트", bgLeaves:"잎" },
+    pt: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Desmarcar", uncheckAllConfirm:"Desmarcar todos os itens (manter na lista)?", uncheckedAll:"Tudo desmarcado 🔄", renameCatPrompt:"Renomear categoria", copyTitle:"Copiar lista", copyOnlyItems:"📝 Apenas itens", copyOnlyItemsDesc:"Lista limpa — ideal para enviar pra alguém comprar", copyWithStatus:"📋 Com status", copyWithStatusDesc:"Mostra ⬜ ✅ 🤔 do estado atual", templateNewListName:"Nome da nova lista", newVersion:"Nova versão disponível", reload:"Recarregar", helpBtnTitle:"Ajuda", refreshBtn:"🔄 Atualizar app", refreshConfirm:"Buscar versão mais recente? O app vai recarregar.", refreshing:"Atualizando...", bgTitle:"Plano de fundo", bgNone:"Nenhum", bgDots:"Pontos", bgGrid:"Grade", bgPaws:"Patinhas", bgStars:"Estrelas", bgHearts:"Corações", bgLeaves:"Folhas", editItemTitle:"Editar item", itemNamePh:"Nome do item", qtyPh:"Qtd", unitPh:"Un", pricePh:"Preço", listTotal:t => `Total: ${t}`, currencySymbol:"R$" },
+    en: { okLabel:"OK", cancelLabel:"Cancel", uncheckAllBtn:"🔄 Reset", uncheckAllConfirm:"Uncheck all items (keep on list)?", uncheckedAll:"All unchecked 🔄", renameCatPrompt:"Rename category", copyTitle:"Copy list", copyOnlyItems:"📝 Items only", copyOnlyItemsDesc:"Clean list — ideal to send to someone shopping", copyWithStatus:"📋 With status", copyWithStatusDesc:"Shows ⬜ ✅ 🤔 of current state", templateNewListName:"New list name", newVersion:"New version available", reload:"Reload", helpBtnTitle:"Help", refreshBtn:"🔄 Refresh app", refreshConfirm:"Fetch latest version? App will reload.", refreshing:"Refreshing...", bgTitle:"Background", bgNone:"None", bgDots:"Dots", bgGrid:"Grid", bgPaws:"Paws", bgStars:"Stars", bgHearts:"Hearts", bgLeaves:"Leaves", editItemTitle:"Edit item", itemNamePh:"Item name", qtyPh:"Qty", unitPh:"Unit", pricePh:"Price", listTotal:t => `Total: ${t}`, currencySymbol:"$" },
+    es: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Resetear", uncheckAllConfirm:"¿Desmarcar todos los ítems (mantenerlos)?", uncheckedAll:"Todo desmarcado 🔄", renameCatPrompt:"Renombrar categoría", copyTitle:"Copiar lista", copyOnlyItems:"📝 Solo ítems", copyOnlyItemsDesc:"Lista limpia — ideal para enviar a alguien", copyWithStatus:"📋 Con estado", copyWithStatusDesc:"Muestra ⬜ ✅ 🤔 del estado actual", templateNewListName:"Nombre de la nueva lista", newVersion:"Nueva versión disponible", reload:"Recargar", helpBtnTitle:"Ayuda", refreshBtn:"🔄 Actualizar app", refreshConfirm:"¿Buscar la última versión? La app se recargará.", refreshing:"Actualizando...", bgTitle:"Fondo", bgNone:"Ninguno", bgDots:"Puntos", bgGrid:"Cuadrícula", bgPaws:"Patitas", bgStars:"Estrellas", bgHearts:"Corazones", bgLeaves:"Hojas", editItemTitle:"Editar ítem", itemNamePh:"Nombre del ítem", qtyPh:"Cant", unitPh:"Un", pricePh:"Precio", listTotal:t => `Total: ${t}`, currencySymbol:"$" },
+    ja: { okLabel:"OK", cancelLabel:"キャンセル", uncheckAllBtn:"🔄 リセット", uncheckAllConfirm:"すべてのアイテムのチェックを外しますか（リストには残ります）？", uncheckedAll:"すべてリセット 🔄", renameCatPrompt:"カテゴリ名を変更", copyTitle:"リストをコピー", copyOnlyItems:"📝 アイテムのみ", copyOnlyItemsDesc:"クリーンなリスト — 誰かに送るのに最適", copyWithStatus:"📋 ステータス付き", copyWithStatusDesc:"⬜ ✅ 🤔 を表示", templateNewListName:"新しいリスト名", newVersion:"新しいバージョンがあります", reload:"再読込", helpBtnTitle:"ヘルプ", refreshBtn:"🔄 更新", refreshConfirm:"最新バージョンを取得しますか？再読み込みされます。", refreshing:"更新中...", bgTitle:"背景", bgNone:"なし", bgDots:"ドット", bgGrid:"グリッド", bgPaws:"肉球", bgStars:"星", bgHearts:"ハート", bgLeaves:"葉", editItemTitle:"アイテム編集", itemNamePh:"アイテム名", qtyPh:"数量", unitPh:"単位", pricePh:"価格", listTotal:t => `合計: ${t}`, currencySymbol:"¥" },
+    he: { okLabel:"אישור", cancelLabel:"ביטול", uncheckAllBtn:"🔄 איפוס", uncheckAllConfirm:"לבטל סימון כל הפריטים (להשאיר ברשימה)?", uncheckedAll:"הכל אופס 🔄", renameCatPrompt:"שינוי שם קטגוריה", copyTitle:"העתק רשימה", copyOnlyItems:"📝 פריטים בלבד", copyOnlyItemsDesc:"רשימה נקייה — מושלם לשליחה למישהו", copyWithStatus:"📋 עם סטטוס", copyWithStatusDesc:"מציג ⬜ ✅ 🤔", templateNewListName:"שם הרשימה החדשה", newVersion:"גרסה חדשה זמינה", reload:"טען מחדש", helpBtnTitle:"עזרה", refreshBtn:"🔄 עדכן אפליקציה", refreshConfirm:"לבדוק גרסה חדשה? האפליקציה תיטען מחדש.", refreshing:"מעדכן...", bgTitle:"רקע", bgNone:"ללא", bgDots:"נקודות", bgGrid:"רשת", bgPaws:"כפות", bgStars:"כוכבים", bgHearts:"לבבות", bgLeaves:"עלים", editItemTitle:"ערוך פריט", itemNamePh:"שם הפריט", qtyPh:"כמות", unitPh:"יח׳", pricePh:"מחיר", listTotal:t => `סה״כ: ${t}`, currencySymbol:"₪" },
+    ko: { okLabel:"확인", cancelLabel:"취소", uncheckAllBtn:"🔄 초기화", uncheckAllConfirm:"모든 항목의 선택을 해제할까요 (목록은 유지)?", uncheckedAll:"모두 초기화됨 🔄", renameCatPrompt:"카테고리 이름 변경", copyTitle:"목록 복사", copyOnlyItems:"📝 항목만", copyOnlyItemsDesc:"깨끗한 목록 — 다른 사람에게 보내기 좋음", copyWithStatus:"📋 상태 포함", copyWithStatusDesc:"⬜ ✅ 🤔 표시", templateNewListName:"새 목록 이름", newVersion:"새 버전 사용 가능", reload:"새로고침", helpBtnTitle:"도움말", refreshBtn:"🔄 앱 새로고침", refreshConfirm:"최신 버전을 가져올까요? 앱이 다시 로드됩니다.", refreshing:"새로고침 중...", bgTitle:"배경", bgNone:"없음", bgDots:"점", bgGrid:"격자", bgPaws:"발자국", bgStars:"별", bgHearts:"하트", bgLeaves:"잎", editItemTitle:"항목 편집", itemNamePh:"항목 이름", qtyPh:"수량", unitPh:"단위", pricePh:"가격", listTotal:t => `합계: ${t}`, currencySymbol:"₩" },
   }
   Object.entries(ext).forEach(([k,v]) => Object.assign(TPRO[k], v))
 })();
@@ -1596,11 +1609,13 @@ function toggleStatus(i){
 }
 
 async function editItem(i){
-  const name = await uiPrompt(t.editItemPrompt, lists[currentList].items[i].name)
-  if(name === null) return
-  const trimmed = name.trim()
-  if(!trimmed) return
-  lists[currentList].items[i].name = trimmed
+  const item = lists[currentList].items[i]
+  const result = await uiItemEdit(item)
+  if(!result || !result.name) return
+  item.name = result.name
+  item.qty = result.qty || ""
+  item.unit = result.unit || ""
+  item.price = result.price || ""
   save(); renderItems()
 }
 
@@ -1670,6 +1685,8 @@ function renderItems(){
       if(done > 0) stats.innerHTML += `<span class="stat-pill">✅ ${t.done(done)}</span>`
       if(maybeC > 0) stats.innerHTML += `<span class="stat-pill warn">🤔 ${t.maybe(maybeC)}</span>`
       if(total && pending === 0 && maybeC === 0) stats.innerHTML = `<span class="stat-pill primary">${t.allDone}</span>`
+      const totalPrice = list.items.reduce((s, it) => { const p = parsePrice(it.price); return s + (isFinite(p) ? p : 0) }, 0)
+      if(totalPrice > 0) stats.innerHTML += `<span class="stat-pill money">💰 ${tp().listTotal(formatPrice(totalPrice))}</span>`
     }
   }
 
@@ -1749,10 +1766,15 @@ function renderItems(){
       row.className = "item"
       row.dataset.index = i
       const tc = item.status===1?"done":item.status===2?"maybe":""
+      const qtyText = item.qty ? (item.qty + (item.unit ? " " + item.unit : "")) : ""
+      const qtyHTML = qtyText ? `<span class="qty-badge">${_esc(qtyText)}</span>` : ""
+      const priceText = formatPrice(item.price)
+      const priceHTML = priceText ? `<span class="price-badge">${priceText}</span>` : ""
       row.innerHTML = `
         <div class="drag">⠿</div>
         <div class="toggle ${tc}" onclick="toggleStatus(${i})"></div>
-        <div class="item-name ${tc}" onclick="toggleStatus(${i})">${item.name}</div>
+        <div class="item-name ${tc}" onclick="toggleStatus(${i})">${qtyHTML}${item.name}</div>
+        ${priceHTML}
         <button class="icon-btn" onclick="editItem(${i})">✏️</button>
         <button class="icon-btn" onclick="deleteItem(${i})">❌</button>
       `
@@ -1813,10 +1835,19 @@ async function copyList(){
   orderedCats.forEach(cat => {
     if(cat) lines.push("▸ " + cat)
     groups[cat].forEach(item => {
-      lines.push((withStatus ? statusLabel[item.status] : "•") + " " + item.name)
+      const prefix = withStatus ? statusLabel[item.status] : "•"
+      const qty = item.qty ? `${item.qty}${item.unit ? " " + item.unit : ""} ` : ""
+      const price = formatPrice(item.price)
+      const priceTail = price ? `  (${price})` : ""
+      lines.push(`${prefix} ${qty}${item.name}${priceTail}`)
     })
     if(cat) lines.push("")
   })
+  const totalPrice = list.items.reduce((s, it) => { const p = parsePrice(it.price); return s + (isFinite(p) ? p : 0) }, 0)
+  if(totalPrice > 0){
+    lines.push("")
+    lines.push(tp().listTotal(formatPrice(totalPrice)))
+  }
   const text = lines.join("\n")
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(()=>showToast(t.copied)).catch(()=>fallbackCopy(text))
@@ -1953,6 +1984,55 @@ function _uiResolveInput(){
   const i = document.getElementById("_uiInput")
   _uiResolveVal(i ? i.value : null)
 }
+function uiItemEdit(item){
+  return new Promise(resolve => {
+    _uiResolve = resolve
+    const tt = tp()
+    _uiOpen(tt.editItemTitle, `
+      <input id="_uiName" class="ui-input" autocomplete="off" placeholder="${tt.itemNamePh}" value="${_esc(item.name)}">
+      <div class="ui-row" style="margin-bottom:14px">
+        <input id="_uiQty" class="ui-input" inputmode="decimal" placeholder="${tt.qtyPh}" value="${_esc(item.qty)}" style="margin-bottom:0">
+        <input id="_uiUnit" class="ui-input" placeholder="${tt.unitPh}" value="${_esc(item.unit)}" style="margin-bottom:0">
+        <input id="_uiPrice" class="ui-input" inputmode="decimal" placeholder="${tt.pricePh}" value="${_esc(item.price)}" style="margin-bottom:0">
+      </div>
+      <div class="ui-row">
+        <button class="secondary-btn" onclick="uiCancel()">${tt.cancelLabel}</button>
+        <button class="primary-btn" onclick="_uiResolveItem()">${tt.okLabel}</button>
+      </div>`)
+    setTimeout(() => {
+      const n = document.getElementById("_uiName")
+      if(n){
+        n.focus(); n.select()
+        n.onkeydown = ev => { if(ev.key === "Escape"){ ev.preventDefault(); uiCancel() } }
+      }
+    }, 50)
+  })
+}
+function _uiResolveItem(){
+  const n = document.getElementById("_uiName")
+  const q = document.getElementById("_uiQty")
+  const u = document.getElementById("_uiUnit")
+  const p = document.getElementById("_uiPrice")
+  _uiResolveVal({
+    name: n ? n.value.trim() : "",
+    qty: q ? q.value.trim() : "",
+    unit: u ? u.value.trim() : "",
+    price: p ? p.value.trim() : "",
+  })
+}
+function parsePrice(v){
+  if(v == null || v === "") return NaN
+  const n = parseFloat(String(v).replace(",", "."))
+  return isFinite(n) ? n : NaN
+}
+function formatPrice(v){
+  const n = parsePrice(v)
+  if(!isFinite(n)) return ""
+  const sym = tp().currencySymbol
+  const useComma = currentLang === "pt" || currentLang === "es" || currentLang === "he"
+  return sym + " " + n.toFixed(2).replace(".", useComma ? "," : ".")
+}
+
 function uiChoice(title, options){
   return new Promise(resolve => {
     _uiResolve = resolve
@@ -2177,7 +2257,7 @@ async function saveAsTemplate(){
   templates.push({
     name: trimmed,
     emoji: list.emoji,
-    items: list.items.map(it => ({ name: it.name, category: it.category || "" })),
+    items: list.items.map(it => ({ name: it.name, category: it.category || "", qty: it.qty || "", unit: it.unit || "", price: it.price || "" })),
     categoryOrder: [...(list.categoryOrder || [])],
   })
   saveTemplates()
@@ -2218,7 +2298,7 @@ async function useTemplate(i){
   lists.push({
     name,
     emoji: tpl.emoji,
-    items: tpl.items.map(it => ({ name: it.name, status: 0, category: it.category || "" })),
+    items: tpl.items.map(it => ({ name: it.name, status: 0, category: it.category || "", qty: it.qty || "", unit: it.unit || "", price: it.price || "" })),
     categoryOrder: [...(tpl.categoryOrder || [])],
     collapsedCats: [],
   })
