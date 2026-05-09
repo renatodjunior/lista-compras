@@ -275,6 +275,101 @@ textarea{ resize:none; min-height:82px; }
 .help-close-btn:hover{ background:#388e3c; }
 .help-close-btn:active{ transform:scale(.98); }
 
+/* ── PRO ── */
+.settings-btn{ position:relative; }
+.pro-badge{
+  position:absolute; top:-4px; right:-4px;
+  background:linear-gradient(135deg,#ffb300,#ff7a00);
+  color:white; font-size:9px; font-weight:800;
+  padding:2px 5px; border-radius:99px;
+  box-shadow:0 2px 6px rgba(255,140,0,.4);
+  pointer-events:none;
+}
+.pro-tag{
+  display:inline-block;
+  background:linear-gradient(135deg,#ffb300,#ff7a00);
+  color:white; font-size:10px; font-weight:800;
+  padding:2px 7px; border-radius:99px; margin-left:6px;
+  vertical-align:middle; letter-spacing:.04em;
+}
+.locked-row{ position:relative; opacity:.55; }
+.locked-row::after{
+  content:"🔒"; position:absolute; right:10px; top:50%;
+  transform:translateY(-50%); font-size:14px;
+}
+.unlock-cta{
+  background:linear-gradient(135deg,#ffb300,#ff7a00);
+  color:white; border:none; padding:14px 18px;
+  border-radius:12px; font-family:inherit; font-weight:800;
+  font-size:15px; cursor:pointer; width:100%;
+  box-shadow:0 4px 14px rgba(255,140,0,.35);
+  transition:transform .1s;
+}
+.unlock-cta:active{ transform:scale(.97); }
+.pro-feature-list{ list-style:none; padding:0; margin:0 0 16px; }
+.pro-feature-list li{
+  padding:10px 12px; background:var(--btn);
+  border-radius:10px; margin-bottom:7px;
+  font-size:14px; font-weight:600;
+  display:flex; align-items:center; gap:8px;
+}
+.pro-feature-list li.unlocked{ background:var(--primary-light); color:var(--primary); }
+.settings-section{ margin:18px 0 10px; }
+.settings-section h3{
+  color:var(--primary); font-size:13px; font-weight:800;
+  text-transform:uppercase; letter-spacing:.06em; margin:0 0 10px;
+}
+.color-row{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.color-swatch{
+  width:32px; height:32px; border-radius:50%; cursor:pointer;
+  border:3px solid transparent; transition:transform .1s;
+}
+.color-swatch:active{ transform:scale(.9); }
+.color-swatch.active{ border-color:var(--text); }
+.template-row{
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--card); padding:10px 12px; border-radius:10px;
+  margin-bottom:7px; box-shadow:var(--shadow);
+}
+.template-row .tname{ font-weight:700; font-size:14px; }
+.template-row .titems{ font-size:12px; color:var(--muted); margin-top:2px; }
+.template-actions{ display:flex; gap:5px; }
+.stat-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0 14px;
+}
+.stat-card{
+  background:var(--btn); padding:14px; border-radius:12px; text-align:center;
+}
+.stat-card .v{ font-size:24px; font-weight:800; color:var(--primary); }
+.stat-card .k{ font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
+.top-items{ list-style:none; padding:0; margin:0; }
+.top-items li{
+  padding:8px 12px; background:var(--btn); border-radius:8px;
+  margin-bottom:5px; font-size:13px; display:flex; justify-content:space-between;
+}
+.top-items .count{ color:var(--muted); font-weight:700; }
+.license-input{
+  width:100%; padding:12px; border-radius:10px;
+  border:2px solid transparent; background:var(--card); color:var(--text);
+  font-family:'Courier New',monospace; font-size:14px;
+  letter-spacing:.05em; text-transform:uppercase; outline:none;
+  transition:border-color .2s; box-shadow:var(--shadow);
+}
+.license-input:focus{ border-color:var(--primary); }
+.secondary-btn{
+  padding:11px; border:none; border-radius:10px; background:var(--btn);
+  color:var(--text); cursor:pointer; width:100%;
+  font-family:inherit; font-size:14px; font-weight:700;
+  transition:transform .1s;
+}
+.secondary-btn:active{ transform:scale(.98); }
+.danger-link{
+  background:transparent; border:none; color:var(--danger);
+  font-family:inherit; font-size:12px; font-weight:700;
+  cursor:pointer; padding:4px 0; margin-top:8px; text-decoration:underline;
+}
+.list-card.has-template{ border-left:3px solid var(--warning); }
+
 /* ── FOOTER ── */
 .site-footer{
   text-align:center; padding:28px 0 8px; color:var(--muted); font-size:13px;
@@ -289,6 +384,50 @@ textarea{ resize:none; min-height:82px; }
 <body>
 
 <div class="toast" id="toast"></div>
+
+<!-- SETTINGS / PRO MODAL -->
+<div class="help-modal hidden" id="settingsModal" onclick="closeOnBg(event,'settingsModal')">
+  <div class="help-box">
+    <div class="help-box-header">
+      <span class="help-box-title" id="settingsTitle"></span>
+      <button class="help-x-btn" onclick="closeModal('settingsModal')">✕</button>
+    </div>
+    <div id="settingsContent"></div>
+  </div>
+</div>
+
+<!-- UNLOCK MODAL -->
+<div class="help-modal hidden" id="unlockModal" onclick="closeOnBg(event,'unlockModal')">
+  <div class="help-box">
+    <div class="help-box-header">
+      <span class="help-box-title" id="unlockTitle"></span>
+      <button class="help-x-btn" onclick="closeModal('unlockModal')">✕</button>
+    </div>
+    <div id="unlockContent"></div>
+  </div>
+</div>
+
+<!-- TEMPLATES MODAL -->
+<div class="help-modal hidden" id="templatesModal" onclick="closeOnBg(event,'templatesModal')">
+  <div class="help-box">
+    <div class="help-box-header">
+      <span class="help-box-title" id="templatesTitle"></span>
+      <button class="help-x-btn" onclick="closeModal('templatesModal')">✕</button>
+    </div>
+    <div id="templatesContent"></div>
+  </div>
+</div>
+
+<!-- STATS MODAL -->
+<div class="help-modal hidden" id="statsModal" onclick="closeOnBg(event,'statsModal')">
+  <div class="help-box">
+    <div class="help-box-header">
+      <span class="help-box-title" id="statsModalTitle"></span>
+      <button class="help-x-btn" onclick="closeModal('statsModal')">✕</button>
+    </div>
+    <div id="statsContent"></div>
+  </div>
+</div>
 
 <!-- HELP MODAL -->
 <div class="help-modal hidden" id="helpModal" onclick="closeHelpOnBg(event)">
@@ -309,6 +448,7 @@ textarea{ resize:none; min-height:82px; }
     <div class="header">
       <h2><span id="titleIcon">📋</span> MyOwnLists</h2>
       <div class="header-right">
+        <button class="theme-btn settings-btn" onclick="openSettings()" id="settingsBtn">⚙️<span class="pro-badge" id="proBadge" style="display:none">PRO</span></button>
         <button class="theme-btn help-btn" onclick="openHelp()" id="helpBtn">?</button>
         <select class="lang-select" id="langSelect" onchange="setLang(this.value)">
           <option value="pt">🇧🇷 PT</option>
@@ -322,6 +462,12 @@ textarea{ resize:none; min-height:82px; }
       </div>
     </div>
     <div id="lists"></div>
+    <div id="proLockedActions" style="display:none">
+      <div class="backup-row" style="margin-top:8px">
+        <button class="backup-btn" onclick="openTemplates()" id="templatesBtn"></button>
+        <button class="backup-btn" onclick="openStats()" id="statsBtn"></button>
+      </div>
+    </div>
     <div class="section-title" id="sectionNewList"></div>
     <div class="form-row">
       <input id="listName" maxlength="30">
@@ -340,6 +486,7 @@ textarea{ resize:none; min-height:82px; }
     <div class="top-row">
       <button class="back-btn" id="backBtn" onclick="back()"></button>
       <div class="top-actions">
+        <button class="clear-btn" id="saveTplBtn" onclick="saveAsTemplate()" style="display:none"></button>
         <button class="clear-btn" id="clearBtn" onclick="clearDone()"></button>
         <button class="copy-btn" id="copyBtn"></button>
       </div>
@@ -656,6 +803,269 @@ const T = {
   }
 }
 
+// ── PRO STRINGS ──────────────────────────────────
+const TPRO = {
+  en: {
+    settingsTitle: "Settings",
+    proStatusLocked: "Free version",
+    proStatusUnlocked: "PRO unlocked ✨",
+    unlockBtn: "✨ Unlock PRO",
+    proFeatures: "PRO features",
+    feat_templates: "📦 List templates",
+    feat_stats: "📊 Statistics dashboard",
+    feat_color: "🎨 Custom accent color",
+    feat_qr: "📲 Share via QR code (coming soon)",
+    feat_cloud: "☁️ Optional cloud sync (coming soon)",
+    accentColor: "Accent color",
+    resetColor: "Reset",
+    deactivate: "Deactivate PRO",
+    deactivateConfirm: "Deactivate PRO on this device?",
+    proDeactivated: "PRO deactivated",
+    unlockTitle: "Unlock PRO",
+    unlockDesc: "One-time payment, no subscription, no account, no ads. Forever yours.",
+    priceLine: "💵 R$ 15 / US$ 3 — once",
+    buyBtn: "💳 Buy PRO",
+    haveLicense: "I already have a license key",
+    licensePlaceholder: "MOL-XXXXXXXXXXXX",
+    activate: "Activate",
+    invalidLicense: "Invalid license key ❌",
+    proActivated: "PRO activated ✨",
+    devNote: "(testing build: any non-empty key works)",
+    templatesTitle: "List templates",
+    saveAsTemplate: "💾 Save",
+    templateSaved: "Template saved 📦",
+    templateNamePrompt: "Template name",
+    noTemplates: "No templates yet. Save a list as template from inside it.",
+    useTemplate: "Use",
+    templateUsed: "List created from template 🎉",
+    deleteTemplateConfirm: name => `Delete template "${name}"?`,
+    statsTitle: "Statistics",
+    statTotalLists: "Lists",
+    statTotalItems: "Items",
+    statBought: "Purchased",
+    statPct: "Completion",
+    statTopItems: "Most repeated items",
+    noData: "No data yet. Create lists and items to see stats.",
+    proRequired: "PRO required ✨",
+  },
+  pt: {
+    settingsTitle: "Configurações",
+    proStatusLocked: "Versão grátis",
+    proStatusUnlocked: "PRO ativado ✨",
+    unlockBtn: "✨ Desbloquear PRO",
+    proFeatures: "Recursos PRO",
+    feat_templates: "📦 Modelos de lista",
+    feat_stats: "📊 Painel de estatísticas",
+    feat_color: "🎨 Cor de destaque personalizada",
+    feat_qr: "📲 Compartilhar via QR code (em breve)",
+    feat_cloud: "☁️ Sincronização na nuvem opcional (em breve)",
+    accentColor: "Cor de destaque",
+    resetColor: "Padrão",
+    deactivate: "Desativar PRO",
+    deactivateConfirm: "Desativar PRO neste dispositivo?",
+    proDeactivated: "PRO desativado",
+    unlockTitle: "Desbloquear PRO",
+    unlockDesc: "Pagamento único, sem assinatura, sem cadastro, sem anúncios. Seu para sempre.",
+    priceLine: "💵 R$ 15 / US$ 3 — pagamento único",
+    buyBtn: "💳 Comprar PRO",
+    haveLicense: "Já tenho uma chave de licença",
+    licensePlaceholder: "MOL-XXXXXXXXXXXX",
+    activate: "Ativar",
+    invalidLicense: "Chave inválida ❌",
+    proActivated: "PRO ativado ✨",
+    devNote: "(build de teste: qualquer chave não vazia funciona)",
+    templatesTitle: "Modelos de lista",
+    saveAsTemplate: "💾 Salvar",
+    templateSaved: "Modelo salvo 📦",
+    templateNamePrompt: "Nome do modelo",
+    noTemplates: "Nenhum modelo ainda. Salve uma lista como modelo a partir dela.",
+    useTemplate: "Usar",
+    templateUsed: "Lista criada a partir do modelo 🎉",
+    deleteTemplateConfirm: name => `Excluir modelo "${name}"?`,
+    statsTitle: "Estatísticas",
+    statTotalLists: "Listas",
+    statTotalItems: "Itens",
+    statBought: "Comprados",
+    statPct: "Conclusão",
+    statTopItems: "Itens mais repetidos",
+    noData: "Sem dados ainda. Crie listas e itens para ver estatísticas.",
+    proRequired: "Requer PRO ✨",
+  },
+  es: {
+    settingsTitle: "Ajustes",
+    proStatusLocked: "Versión gratis",
+    proStatusUnlocked: "PRO activado ✨",
+    unlockBtn: "✨ Desbloquear PRO",
+    proFeatures: "Funciones PRO",
+    feat_templates: "📦 Plantillas de lista",
+    feat_stats: "📊 Panel de estadísticas",
+    feat_color: "🎨 Color de acento personalizado",
+    feat_qr: "📲 Compartir por QR (próximamente)",
+    feat_cloud: "☁️ Sincronización en la nube opcional (próximamente)",
+    accentColor: "Color de acento",
+    resetColor: "Restablecer",
+    deactivate: "Desactivar PRO",
+    deactivateConfirm: "¿Desactivar PRO en este dispositivo?",
+    proDeactivated: "PRO desactivado",
+    unlockTitle: "Desbloquear PRO",
+    unlockDesc: "Pago único, sin suscripción, sin cuenta, sin anuncios. Tuyo para siempre.",
+    priceLine: "💵 R$ 15 / US$ 3 — pago único",
+    buyBtn: "💳 Comprar PRO",
+    haveLicense: "Ya tengo una clave de licencia",
+    licensePlaceholder: "MOL-XXXXXXXXXXXX",
+    activate: "Activar",
+    invalidLicense: "Clave inválida ❌",
+    proActivated: "PRO activado ✨",
+    devNote: "(versión de prueba: cualquier clave no vacía sirve)",
+    templatesTitle: "Plantillas de lista",
+    saveAsTemplate: "💾 Guardar",
+    templateSaved: "Plantilla guardada 📦",
+    templateNamePrompt: "Nombre de la plantilla",
+    noTemplates: "Sin plantillas todavía. Guarda una lista como plantilla desde dentro.",
+    useTemplate: "Usar",
+    templateUsed: "Lista creada a partir de plantilla 🎉",
+    deleteTemplateConfirm: name => `¿Eliminar plantilla "${name}"?`,
+    statsTitle: "Estadísticas",
+    statTotalLists: "Listas",
+    statTotalItems: "Ítems",
+    statBought: "Comprados",
+    statPct: "Conclusión",
+    statTopItems: "Ítems más repetidos",
+    noData: "Sin datos. Crea listas e ítems para ver estadísticas.",
+    proRequired: "Requiere PRO ✨",
+  },
+  ja: {
+    settingsTitle: "設定",
+    proStatusLocked: "無料版",
+    proStatusUnlocked: "PRO 有効 ✨",
+    unlockBtn: "✨ PROをアンロック",
+    proFeatures: "PRO機能",
+    feat_templates: "📦 リストテンプレート",
+    feat_stats: "📊 統計ダッシュボード",
+    feat_color: "🎨 カスタムアクセントカラー",
+    feat_qr: "📲 QRコードで共有（近日）",
+    feat_cloud: "☁️ オプションのクラウド同期（近日）",
+    accentColor: "アクセントカラー",
+    resetColor: "デフォルト",
+    deactivate: "PROを無効化",
+    deactivateConfirm: "このデバイスでPROを無効化しますか？",
+    proDeactivated: "PRO無効化",
+    unlockTitle: "PROをアンロック",
+    unlockDesc: "一括払い、サブスクなし、アカウント不要、広告なし。永久に。",
+    priceLine: "💵 R$ 15 / US$ 3 — 一括払い",
+    buyBtn: "💳 PROを購入",
+    haveLicense: "ライセンスキーを持っています",
+    licensePlaceholder: "MOL-XXXXXXXXXXXX",
+    activate: "有効化",
+    invalidLicense: "無効なキー ❌",
+    proActivated: "PROを有効化 ✨",
+    devNote: "（テスト版：空でなければ何でもOK）",
+    templatesTitle: "リストテンプレート",
+    saveAsTemplate: "💾 保存",
+    templateSaved: "テンプレートを保存 📦",
+    templateNamePrompt: "テンプレート名",
+    noTemplates: "テンプレートはまだありません。リスト内から保存できます。",
+    useTemplate: "使用",
+    templateUsed: "テンプレートからリストを作成 🎉",
+    deleteTemplateConfirm: name => `テンプレート「${name}」を削除しますか？`,
+    statsTitle: "統計",
+    statTotalLists: "リスト",
+    statTotalItems: "アイテム",
+    statBought: "購入済み",
+    statPct: "達成率",
+    statTopItems: "最頻出アイテム",
+    noData: "データがありません。リストとアイテムを作成してください。",
+    proRequired: "PROが必要 ✨",
+  },
+  he: {
+    settingsTitle: "הגדרות",
+    proStatusLocked: "גרסה חינם",
+    proStatusUnlocked: "PRO פעיל ✨",
+    unlockBtn: "✨ פתח PRO",
+    proFeatures: "תכונות PRO",
+    feat_templates: "📦 תבניות רשימה",
+    feat_stats: "📊 לוח סטטיסטיקה",
+    feat_color: "🎨 צבע הדגשה מותאם",
+    feat_qr: "📲 שיתוף דרך QR (בקרוב)",
+    feat_cloud: "☁️ סנכרון ענן אופציונלי (בקרוב)",
+    accentColor: "צבע הדגשה",
+    resetColor: "ברירת מחדל",
+    deactivate: "כבה PRO",
+    deactivateConfirm: "לכבות PRO במכשיר זה?",
+    proDeactivated: "PRO כובה",
+    unlockTitle: "פתח PRO",
+    unlockDesc: "תשלום חד-פעמי, ללא מנוי, ללא חשבון, ללא פרסומות. שלך לתמיד.",
+    priceLine: "💵 R$ 15 / US$ 3 — חד-פעמי",
+    buyBtn: "💳 רכוש PRO",
+    haveLicense: "יש לי מפתח רישיון",
+    licensePlaceholder: "MOL-XXXXXXXXXXXX",
+    activate: "הפעל",
+    invalidLicense: "מפתח שגוי ❌",
+    proActivated: "PRO הופעל ✨",
+    devNote: "(גרסת בדיקה: כל מפתח לא ריק עובד)",
+    templatesTitle: "תבניות רשימה",
+    saveAsTemplate: "💾 שמור",
+    templateSaved: "תבנית נשמרה 📦",
+    templateNamePrompt: "שם התבנית",
+    noTemplates: "אין תבניות. שמור רשימה כתבנית מתוכה.",
+    useTemplate: "השתמש",
+    templateUsed: "רשימה נוצרה מתבנית 🎉",
+    deleteTemplateConfirm: name => `למחוק תבנית "${name}"?`,
+    statsTitle: "סטטיסטיקה",
+    statTotalLists: "רשימות",
+    statTotalItems: "פריטים",
+    statBought: "נרכשו",
+    statPct: "הושלם",
+    statTopItems: "פריטים נפוצים",
+    noData: "אין נתונים. צור רשימות ופריטים.",
+    proRequired: "דרוש PRO ✨",
+  },
+  ko: {
+    settingsTitle: "설정",
+    proStatusLocked: "무료 버전",
+    proStatusUnlocked: "PRO 활성 ✨",
+    unlockBtn: "✨ PRO 잠금 해제",
+    proFeatures: "PRO 기능",
+    feat_templates: "📦 목록 템플릿",
+    feat_stats: "📊 통계 대시보드",
+    feat_color: "🎨 사용자 지정 색상",
+    feat_qr: "📲 QR 코드 공유 (출시 예정)",
+    feat_cloud: "☁️ 선택적 클라우드 동기화 (출시 예정)",
+    accentColor: "강조 색상",
+    resetColor: "기본값",
+    deactivate: "PRO 비활성화",
+    deactivateConfirm: "이 기기에서 PRO를 비활성화할까요?",
+    proDeactivated: "PRO 비활성화됨",
+    unlockTitle: "PRO 잠금 해제",
+    unlockDesc: "일회성 결제, 구독 없음, 계정 없음, 광고 없음. 영원히 당신의 것.",
+    priceLine: "💵 R$ 15 / US$ 3 — 일회성",
+    buyBtn: "💳 PRO 구매",
+    haveLicense: "이미 라이선스 키가 있습니다",
+    licensePlaceholder: "MOL-XXXXXXXXXXXX",
+    activate: "활성화",
+    invalidLicense: "잘못된 키 ❌",
+    proActivated: "PRO 활성화 ✨",
+    devNote: "(테스트 빌드: 비어 있지 않은 키면 됨)",
+    templatesTitle: "목록 템플릿",
+    saveAsTemplate: "💾 저장",
+    templateSaved: "템플릿 저장됨 📦",
+    templateNamePrompt: "템플릿 이름",
+    noTemplates: "템플릿이 없습니다. 목록 안에서 저장하세요.",
+    useTemplate: "사용",
+    templateUsed: "템플릿에서 목록 생성됨 🎉",
+    deleteTemplateConfirm: name => `템플릿 "${name}"을(를) 삭제할까요?`,
+    statsTitle: "통계",
+    statTotalLists: "목록",
+    statTotalItems: "항목",
+    statBought: "구매 완료",
+    statPct: "완료율",
+    statTopItems: "최다 항목",
+    noData: "데이터 없음. 목록과 항목을 만드세요.",
+    proRequired: "PRO 필요 ✨",
+  }
+}
+function tp(){ return TPRO[currentLang] || TPRO.en }
+
 // ── HELP CONTENT ─────────────────────────────────
 const HELP = {
   pt: `
@@ -774,6 +1184,9 @@ let currentList = null
 let darkMode = localStorage.getItem("darkMode") === "1"
 let currentLang = localStorage.getItem("lang") || "pt"
 let t = T[currentLang]
+let pro = localStorage.getItem("pro") === "1"
+let templates = JSON.parse(localStorage.getItem("templates") || "[]")
+let accentColor = localStorage.getItem("accent") || ""
 
 if(darkMode){ document.body.classList.add("dark") }
 document.getElementById("themeBtn").textContent = darkMode ? "☀️" : "🌙"
@@ -833,6 +1246,7 @@ function applyLang(){
   document.getElementById("addItemsBtn").textContent = t.addBtn
   const si = document.getElementById("searchInput")
   if(si) si.placeholder = t.searchPlaceholder
+  if(typeof refreshProUI === "function") refreshProUI()
 
   if(!document.getElementById("itemsPage").classList.contains("hidden")){
     renderItems()
@@ -848,6 +1262,7 @@ function toggleTheme(){
   document.body.classList.toggle("dark", darkMode)
   localStorage.setItem("darkMode", darkMode ? "1" : "0")
   document.getElementById("themeBtn").textContent = darkMode ? "☀️" : "🌙"
+  applyAccent()
 }
 
 // ── HELP MODAL ────────────────────────────────────
@@ -1204,7 +1619,8 @@ document.getElementById("copyBtn").addEventListener("click", copyList)
 // ── BACKUP ────────────────────────────────────────
 
 function exportData(){
-  const data = JSON.stringify(lists, null, 2)
+  const payload = templates.length ? { lists, templates } : lists
+  const data = JSON.stringify(payload, null, 2)
   const blob = new Blob([data], { type:"application/json" })
   const url = URL.createObjectURL(blob)
   if(navigator.share){
@@ -1229,9 +1645,14 @@ function importData(e){
   reader.onload = ev => {
     try {
       const data = JSON.parse(ev.target.result)
-      if(!Array.isArray(data)) throw new Error()
-      if(!confirm(t.confirmImport(data.length))) return
-      lists = data
+      let arr = data
+      if(data && !Array.isArray(data) && Array.isArray(data.lists)){
+        arr = data.lists
+        if(Array.isArray(data.templates)){ templates = data.templates; localStorage.setItem("templates", JSON.stringify(templates)) }
+      }
+      if(!Array.isArray(arr)) throw new Error()
+      if(!confirm(t.confirmImport(arr.length))) return
+      lists = arr
       save(); renderLists()
       showToast(t.backupImported)
     } catch {
@@ -1240,6 +1661,242 @@ function importData(e){
   }
   reader.readAsText(file)
   e.target.value = ""
+}
+
+// ── PRO / SETTINGS ────────────────────────────────
+
+const ACCENT_PRESETS = [
+  { name:"green",  primary:"#3a9e4a", light:"#e8f5e9", dPrimary:"#4caf50", dLight:"#1a2e1a" },
+  { name:"blue",   primary:"#1e88e5", light:"#e3f2fd", dPrimary:"#42a5f5", dLight:"#0d1f33" },
+  { name:"purple", primary:"#8e24aa", light:"#f3e5f5", dPrimary:"#ba68c8", dLight:"#2a1a33" },
+  { name:"orange", primary:"#fb8c00", light:"#fff3e0", dPrimary:"#ffa726", dLight:"#332010" },
+  { name:"pink",   primary:"#e91e63", light:"#fce4ec", dPrimary:"#f06292", dLight:"#33101e" },
+  { name:"teal",   primary:"#00897b", light:"#e0f2f1", dPrimary:"#26a69a", dLight:"#0a2825" },
+]
+
+function applyAccent(){
+  if(!pro || !accentColor){
+    document.documentElement.style.removeProperty("--primary")
+    document.documentElement.style.removeProperty("--primary-light")
+    return
+  }
+  const preset = ACCENT_PRESETS.find(p => p.name === accentColor)
+  if(!preset) return
+  const root = document.documentElement
+  if(darkMode){
+    root.style.setProperty("--primary", preset.dPrimary)
+    root.style.setProperty("--primary-light", preset.dLight)
+  } else {
+    root.style.setProperty("--primary", preset.primary)
+    root.style.setProperty("--primary-light", preset.light)
+  }
+}
+
+function refreshProUI(){
+  document.getElementById("proBadge").style.display = pro ? "inline-block" : "none"
+  document.getElementById("proLockedActions").style.display = pro ? "block" : "none"
+  document.getElementById("saveTplBtn").style.display = pro ? "flex" : "none"
+  const tt = tp()
+  document.getElementById("templatesBtn").textContent = "📦 " + tt.templatesTitle
+  document.getElementById("statsBtn").textContent = "📊 " + tt.statsTitle
+  document.getElementById("saveTplBtn").textContent = tt.saveAsTemplate
+  applyAccent()
+}
+
+function closeModal(id){ document.getElementById(id).classList.add("hidden") }
+function closeOnBg(e, id){ if(e.target.id === id) closeModal(id) }
+
+function openSettings(){
+  const tt = tp()
+  document.getElementById("settingsTitle").textContent = tt.settingsTitle
+  const c = document.getElementById("settingsContent")
+  const featList = pro
+    ? `<ul class="pro-feature-list">
+         <li class="unlocked">${tt.feat_templates}</li>
+         <li class="unlocked">${tt.feat_stats}</li>
+         <li class="unlocked">${tt.feat_color}</li>
+         <li>${tt.feat_qr}</li>
+         <li>${tt.feat_cloud}</li>
+       </ul>`
+    : `<ul class="pro-feature-list">
+         <li>${tt.feat_templates}</li>
+         <li>${tt.feat_stats}</li>
+         <li>${tt.feat_color}</li>
+         <li>${tt.feat_qr}</li>
+         <li>${tt.feat_cloud}</li>
+       </ul>`
+  let html = `<p style="margin:0 0 14px;font-weight:700">${pro ? tt.proStatusUnlocked : tt.proStatusLocked}</p>`
+  html += `<div class="settings-section"><h3>${tt.proFeatures}</h3>${featList}</div>`
+  if(!pro){
+    html += `<button class="unlock-cta" onclick="openUnlock()">${tt.unlockBtn}</button>`
+  } else {
+    html += `<div class="settings-section"><h3>${tt.accentColor}</h3><div class="color-row" id="colorRow"></div></div>`
+    html += `<button class="danger-link" onclick="lockPro()">${tt.deactivate}</button>`
+  }
+  c.innerHTML = html
+  if(pro){
+    const cr = document.getElementById("colorRow")
+    ACCENT_PRESETS.forEach(p => {
+      const sw = document.createElement("div")
+      sw.className = "color-swatch" + (accentColor === p.name ? " active" : "")
+      sw.style.background = p.primary
+      sw.title = p.name
+      sw.onclick = () => { accentColor = p.name; localStorage.setItem("accent", p.name); applyAccent(); openSettings() }
+      cr.appendChild(sw)
+    })
+    const reset = document.createElement("button")
+    reset.className = "secondary-btn"
+    reset.style.width = "auto"
+    reset.style.padding = "6px 12px"
+    reset.style.fontSize = "12px"
+    reset.textContent = tt.resetColor
+    reset.onclick = () => { accentColor = ""; localStorage.removeItem("accent"); applyAccent(); openSettings() }
+    cr.appendChild(reset)
+  }
+  document.getElementById("settingsModal").classList.remove("hidden")
+}
+
+function openUnlock(){
+  closeModal("settingsModal")
+  const tt = tp()
+  document.getElementById("unlockTitle").textContent = tt.unlockTitle
+  document.getElementById("unlockContent").innerHTML = `
+    <p style="margin:0 0 8px;line-height:1.6;font-size:14px">${tt.unlockDesc}</p>
+    <p style="margin:0 0 16px;font-size:18px;font-weight:800;color:var(--primary)">${tt.priceLine}</p>
+    <button class="unlock-cta" onclick="goBuy()">${tt.buyBtn}</button>
+    <div class="settings-section"><h3>${tt.haveLicense}</h3>
+      <input class="license-input" id="licenseInput" placeholder="${tt.licensePlaceholder}" maxlength="20">
+      <button class="primary-btn" style="margin-top:10px" onclick="activateLicense()">${tt.activate}</button>
+      <p style="margin:10px 0 0;font-size:11px;color:var(--muted);text-align:center">${tt.devNote}</p>
+    </div>
+  `
+  document.getElementById("unlockModal").classList.remove("hidden")
+}
+
+function goBuy(){
+  window.open("https://myownlists.app/pro", "_blank")
+}
+
+function activateLicense(){
+  const key = (document.getElementById("licenseInput").value || "").trim().toUpperCase()
+  if(!key){ showToast(tp().invalidLicense); return }
+  pro = true
+  localStorage.setItem("pro", "1")
+  localStorage.setItem("license", key)
+  closeModal("unlockModal")
+  refreshProUI()
+  renderLists()
+  showToast(tp().proActivated)
+}
+
+function lockPro(){
+  if(!confirm(tp().deactivateConfirm)) return
+  pro = false
+  localStorage.removeItem("pro")
+  localStorage.removeItem("license")
+  refreshProUI()
+  closeModal("settingsModal")
+  renderLists()
+  showToast(tp().proDeactivated)
+}
+
+// Templates
+
+function saveTemplates(){ localStorage.setItem("templates", JSON.stringify(templates)) }
+
+function saveAsTemplate(){
+  if(!pro){ openUnlock(); return }
+  const list = lists[currentList]
+  if(!list) return
+  const name = prompt(tp().templateNamePrompt, list.name)
+  if(!name) return
+  templates.push({
+    name: name.trim(),
+    emoji: list.emoji,
+    items: list.items.map(it => ({ name: it.name, category: it.category || "" })),
+    categoryOrder: [...(list.categoryOrder || [])],
+  })
+  saveTemplates()
+  showToast(tp().templateSaved)
+}
+
+function openTemplates(){
+  if(!pro){ openUnlock(); return }
+  const tt = tp()
+  document.getElementById("templatesTitle").textContent = tt.templatesTitle
+  const c = document.getElementById("templatesContent")
+  if(!templates.length){
+    c.innerHTML = `<p class="empty-state">${tt.noTemplates}</p>`
+  } else {
+    c.innerHTML = templates.map((tpl, i) => `
+      <div class="template-row">
+        <div>
+          <div class="tname">${tpl.emoji} ${tpl.name}</div>
+          <div class="titems">${tpl.items.length} ${(t.itemsBought ? '' : '')}items</div>
+        </div>
+        <div class="template-actions">
+          <button class="icon-btn" onclick="useTemplate(${i})">▶</button>
+          <button class="icon-btn" onclick="deleteTemplate(${i})">❌</button>
+        </div>
+      </div>
+    `).join("")
+  }
+  document.getElementById("templatesModal").classList.remove("hidden")
+}
+
+function useTemplate(i){
+  const tpl = templates[i]
+  if(!tpl) return
+  lists.push({
+    name: tpl.name,
+    emoji: tpl.emoji,
+    items: tpl.items.map(it => ({ name: it.name, status: 0, category: it.category || "" })),
+    categoryOrder: [...(tpl.categoryOrder || [])],
+    collapsedCats: [],
+  })
+  save()
+  closeModal("templatesModal")
+  renderLists()
+  showToast(tp().templateUsed)
+}
+
+function deleteTemplate(i){
+  if(!confirm(tp().deleteTemplateConfirm(templates[i].name))) return
+  templates.splice(i, 1)
+  saveTemplates()
+  openTemplates()
+}
+
+// Stats
+
+function openStats(){
+  if(!pro){ openUnlock(); return }
+  const tt = tp()
+  document.getElementById("statsModalTitle").textContent = tt.statsTitle
+  const c = document.getElementById("statsContent")
+  const totalLists = lists.length
+  const allItems = lists.flatMap(L => L.items)
+  const totalItems = allItems.length
+  const bought = allItems.filter(it => it.status === 1).length
+  const pct = totalItems ? Math.round((bought/totalItems)*100) : 0
+  if(!totalItems){ c.innerHTML = `<p class="empty-state">${tt.noData}</p>`; document.getElementById("statsModal").classList.remove("hidden"); return }
+  const counts = {}
+  allItems.forEach(it => { const k = (it.name || "").trim().toLowerCase(); if(k) counts[k] = (counts[k] || 0) + 1 })
+  const top = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 8)
+  c.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-card"><div class="v">${totalLists}</div><div class="k">${tt.statTotalLists}</div></div>
+      <div class="stat-card"><div class="v">${totalItems}</div><div class="k">${tt.statTotalItems}</div></div>
+      <div class="stat-card"><div class="v">${bought}</div><div class="k">${tt.statBought}</div></div>
+      <div class="stat-card"><div class="v">${pct}%</div><div class="k">${tt.statPct}</div></div>
+    </div>
+    <div class="settings-section"><h3>${tt.statTopItems}</h3>
+      <ul class="top-items">
+        ${top.map(([n,c]) => `<li><span>${n}</span><span class="count">×${c}</span></li>`).join("")}
+      </ul>
+    </div>
+  `
+  document.getElementById("statsModal").classList.remove("hidden")
 }
 
 // ── TITLE ICON ANIMATION ──────────────────────────
@@ -1262,6 +1919,7 @@ function importData(e){
 })()
 
 // ── INIT ──────────────────────────────────────────
+refreshProUI()
 applyLang()
 
 if("serviceWorker" in navigator){
