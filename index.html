@@ -51,15 +51,34 @@ body{
 .header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
 .header h2{ margin:0; font-size:26px; font-weight:800; color:var(--primary); }
 .header-right{ display:flex; gap:6px; align-items:center; }
-.lang-select{
-  height:38px; padding:0 26px 0 8px; border-radius:10px; border:none;
-  -webkit-appearance:none; appearance:none;
-  background:var(--btn) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23888' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") no-repeat right 10px center;
-  color:var(--text); font-family:inherit;
-  font-size:13px; font-weight:700; cursor:pointer; outline:none;
+.lang-btn{
+  display:flex; align-items:center; gap:6px;
+  height:38px; padding:0 8px 0 6px; border-radius:10px; border:none;
+  background:var(--btn); color:var(--text); cursor:pointer;
+  font-family:inherit; font-size:13px; font-weight:700;
   transition:transform .1s;
 }
-.lang-select:active{ transform:scale(.95); }
+.lang-btn:active{ transform:scale(.95); }
+.lang-flag-icon{
+  width:22px; height:14px; border-radius:2px; flex-shrink:0;
+  box-shadow:0 0 0 1px rgba(0,0,0,.06);
+}
+.lang-caret{ font-size:10px; opacity:.6; }
+
+.lang-picker-list{ display:flex; flex-direction:column; gap:6px; }
+.lang-picker-row{
+  display:flex; align-items:center; gap:12px;
+  padding:10px 12px; border-radius:10px; cursor:pointer;
+  background:var(--btn); border:none; color:var(--text);
+  font-family:inherit; font-size:14px; font-weight:600;
+  text-align:left; transition:transform .1s, filter .15s;
+}
+.lang-picker-row:hover{ filter:brightness(.96); }
+.lang-picker-row:active{ transform:scale(.98); }
+.lang-picker-row.active{ background:var(--primary-light); color:var(--primary); }
+.lang-picker-row .lang-flag-icon{ width:28px; height:18px; }
+.lang-picker-row .pname{ flex:1; }
+.lang-picker-row .pcode{ font-size:11px; opacity:.6; font-weight:700; letter-spacing:.05em; }
 .theme-btn{
   width:38px; height:38px; border-radius:10px; border:none;
   background:var(--btn); cursor:pointer; font-size:18px;
@@ -503,7 +522,8 @@ textarea{ resize:none; min-height:82px; }
   .header{ margin-bottom:18px; gap:8px; }
   .header h2{ font-size:21px; }
   .header-right{ gap:4px; }
-  .lang-select{ height:34px; padding:0 22px 0 6px; font-size:12px; }
+  .lang-btn{ height:34px; padding:0 6px 0 4px; font-size:12px; gap:5px; }
+  .lang-flag-icon{ width:20px; height:13px; }
   .theme-btn{ width:34px; height:34px; font-size:16px; }
   .help-btn{ font-size:18px; }
   .top-row{ gap:6px; }
@@ -514,7 +534,9 @@ textarea{ resize:none; min-height:82px; }
 @media (max-width: 340px){
   .header h2{ font-size:18px; }
   .header h2 #titleIcon{ display:none; }
-  .lang-select{ height:30px; padding:0 18px 0 4px; font-size:11px; }
+  .lang-btn{ height:30px; padding:0 4px; font-size:11px; gap:4px; }
+  .lang-flag-icon{ width:18px; height:12px; }
+  .lang-caret{ display:none; }
   .theme-btn{ width:30px; height:30px; font-size:14px; }
   .back-btn{ height:32px; padding:0 8px; font-size:12px; }
   .copy-btn, .clear-btn{ width:32px; height:32px; font-size:15px; }
@@ -620,6 +642,47 @@ textarea{ resize:none; min-height:82px; }
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="flag-pt" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#009C3B"/>
+      <polygon points="12,2 22,8 12,14 2,8" fill="#FFDF00"/>
+      <circle cx="12" cy="8" r="3" fill="#002776"/>
+    </symbol>
+    <symbol id="flag-en" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <g fill="#B22234"><rect width="24" height="1.23"/><rect y="2.46" width="24" height="1.23"/><rect y="4.92" width="24" height="1.23"/><rect y="7.38" width="24" height="1.23"/><rect y="9.84" width="24" height="1.23"/><rect y="12.30" width="24" height="1.23"/><rect y="14.77" width="24" height="1.23"/></g>
+      <rect width="10" height="8.62" fill="#3C3B6E"/>
+    </symbol>
+    <symbol id="flag-es" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#AA151B"/>
+      <rect y="4" width="24" height="8" fill="#F1BF00"/>
+    </symbol>
+    <symbol id="flag-ja" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <circle cx="12" cy="8" r="4.8" fill="#BC002D"/>
+    </symbol>
+    <symbol id="flag-he" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect y="2" width="24" height="1.4" fill="#0038B8"/>
+      <rect y="12.6" width="24" height="1.4" fill="#0038B8"/>
+      <polygon points="12,5.2 9.6,9.4 14.4,9.4" fill="none" stroke="#0038B8" stroke-width="0.7"/>
+      <polygon points="12,10.8 9.6,6.6 14.4,6.6" fill="none" stroke="#0038B8" stroke-width="0.7"/>
+    </symbol>
+    <symbol id="flag-ko" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <path d="M 8 8 a 2 2 0 0 1 4 0 a 2 2 0 0 0 4 0 a 4 4 0 0 0 -8 0 z" fill="#cd2e3a"/>
+      <path d="M 16 8 a 2 2 0 0 1 -4 0 a 2 2 0 0 0 -4 0 a 4 4 0 0 0 8 0 z" fill="#003478"/>
+      <g fill="#000" stroke="none">
+        <rect x="3" y="3.6" width="2.4" height="0.5"/><rect x="3" y="4.5" width="2.4" height="0.5"/><rect x="3" y="5.4" width="2.4" height="0.5"/>
+        <rect x="18.6" y="3.6" width="2.4" height="0.5"/><rect x="18.6" y="4.5" width="1" height="0.5"/><rect x="20" y="4.5" width="1" height="0.5"/><rect x="18.6" y="5.4" width="2.4" height="0.5"/>
+        <rect x="3" y="10.1" width="1" height="0.5"/><rect x="4.4" y="10.1" width="1" height="0.5"/><rect x="3" y="11" width="2.4" height="0.5"/><rect x="3" y="11.9" width="1" height="0.5"/><rect x="4.4" y="11.9" width="1" height="0.5"/>
+        <rect x="18.6" y="10.1" width="1" height="0.5"/><rect x="20" y="10.1" width="1" height="0.5"/><rect x="18.6" y="11" width="1" height="0.5"/><rect x="20" y="11" width="1" height="0.5"/><rect x="18.6" y="11.9" width="1" height="0.5"/><rect x="20" y="11.9" width="1" height="0.5"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="toast" id="toast"></div>
 
 <!-- GENERIC UI MODAL (alert/confirm/prompt/choice) -->
@@ -698,14 +761,11 @@ textarea{ resize:none; min-height:82px; }
       <div class="header-right">
         <button class="theme-btn settings-btn" onclick="openSettings()" id="settingsBtn">⚙️<span class="pro-badge" id="proBadge" style="display:none">PRO</span></button>
         <button class="theme-btn help-btn" onclick="openHelp()" id="helpBtn">?</button>
-        <select class="lang-select" id="langSelect" onchange="setLang(this.value)">
-          <option value="pt">🇧🇷 PT</option>
-          <option value="en">🇺🇸 EN</option>
-          <option value="es">🇪🇸 ES</option>
-          <option value="ja">🇯🇵 JA</option>
-          <option value="he">🇮🇱 HE</option>
-          <option value="ko">🇰🇷 KO</option>
-        </select>
+        <button class="lang-btn" id="langBtn" onclick="openLangPicker()" aria-label="Language">
+          <svg class="lang-flag-icon" aria-hidden="true"><use id="langFlagUse" href="#flag-pt"/></svg>
+          <span id="langCode">PT</span>
+          <span class="lang-caret">▾</span>
+        </button>
         <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
       </div>
     </div>
@@ -1590,12 +1650,23 @@ function setLang(lang){
   applyLang()
 }
 
+const LANG_META = {
+  pt: { code: "PT", name: "Português" },
+  en: { code: "EN", name: "English" },
+  es: { code: "ES", name: "Español" },
+  ja: { code: "JA", name: "日本語" },
+  he: { code: "HE", name: "עברית" },
+  ko: { code: "KO", name: "한국어" },
+}
+
 function applyLang(){
   const isRTL = currentLang === "he"
   const langMap = { pt:"pt-BR", en:"en", es:"es", ja:"ja", he:"he", ko:"ko" }
   document.documentElement.lang = langMap[currentLang]
   document.documentElement.dir = isRTL ? "rtl" : "ltr"
-  document.getElementById("langSelect").value = currentLang
+  const meta = LANG_META[currentLang]
+  document.getElementById("langFlagUse").setAttribute("href", "#flag-" + currentLang)
+  document.getElementById("langCode").textContent = meta.code
 
   document.getElementById("sectionNewList").textContent = t.newList
   document.getElementById("listName").placeholder = t.listNamePlaceholder
@@ -1632,6 +1703,29 @@ function toggleTheme(){
 }
 
 // ── HELP MODAL ────────────────────────────────────
+
+function openLangPicker(){
+  _uiResolve = null
+  _uiOpen("", "")
+  document.getElementById("uiModalHeader").style.display = "none"
+  document.querySelector("#uiModal .ui-box").classList.add("no-header")
+  const body = document.getElementById("uiModalBody")
+  const langs = ["pt","en","es","ja","he","ko"]
+  body.innerHTML = `<div class="lang-picker-list">${langs.map(code => {
+    const m = LANG_META[code]
+    const active = code === currentLang ? " active" : ""
+    return `<button class="lang-picker-row${active}" onclick="pickLang('${code}')">
+      <svg class="lang-flag-icon"><use href="#flag-${code}"/></svg>
+      <span class="pname">${m.name}</span>
+      <span class="pcode">${m.code}</span>
+    </button>`
+  }).join("")}</div>`
+  document.getElementById("uiModal").classList.remove("hidden")
+}
+function pickLang(code){
+  closeModal("uiModal")
+  setLang(code)
+}
 
 function openHelp(){
   document.getElementById("helpTitle").textContent = t.helpTitle
