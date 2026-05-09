@@ -141,7 +141,7 @@ textarea{ resize:none; min-height:82px; }
   color:var(--text); gap:4px; transition:transform .1s;
 }
 .copy-btn:active, .clear-btn:active{ transform:scale(.94); }
-.clear-btn{ color:var(--danger); }
+#clearBtn{ color:var(--danger); }
 .list-title-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
 .list-title-row h2{ margin:0; font-size:22px; font-weight:800; }
 .progress-bar-wrap{
@@ -493,17 +493,24 @@ textarea{ resize:none; min-height:82px; }
   .lang-select{ height:34px; padding:0 22px 0 6px; font-size:12px; }
   .theme-btn{ width:34px; height:34px; font-size:16px; }
   .help-btn{ font-size:18px; }
-  .top-row{ flex-wrap:wrap; gap:6px; }
-  .top-actions{ flex-wrap:wrap; gap:4px; justify-content:flex-end; }
-  .back-btn{ height:34px; padding:0 12px; font-size:13px; }
-  .copy-btn, .clear-btn{ height:34px; padding:0 9px; font-size:12px; }
+  .top-row{ gap:6px; }
+  .top-actions{ gap:4px; }
+  .back-btn{ height:34px; padding:0 10px; font-size:13px; }
+  .copy-btn, .clear-btn{ height:34px; padding:0 8px; font-size:12px; }
 }
 @media (max-width: 340px){
   .header h2{ font-size:18px; }
   .header h2 #titleIcon{ display:none; }
   .lang-select{ height:30px; padding:0 18px 0 4px; font-size:11px; }
   .theme-btn{ width:30px; height:30px; font-size:14px; }
-  .back-btn{ height:32px; padding:0 9px; font-size:12px; }
+  .back-btn{
+    height:32px; padding:0; min-width:32px;
+    font-size:0; justify-content:center;
+  }
+  .back-btn::before{
+    content:"‹"; font-size:22px; font-weight:800; line-height:1;
+  }
+  [dir=rtl] .back-btn::before{ content:"›"; }
   .copy-btn, .clear-btn{ height:32px; padding:0 7px; font-size:11px; gap:3px; }
 }
 
@@ -771,7 +778,7 @@ const T = {
     emptyLists: "Nenhuma lista ainda.<br>Crie a primeira abaixo! 👆",
     itemsBought: (d, t) => `${d}/${t} comprados`,
     emptyList: "Vazia",
-    back: "← Voltar",
+    back: "‹ Voltar",
     clearDone: "🗑️ Limpar",
     copy: "🔗 Compartilhar",
     addItems: "Adicionar itens",
@@ -818,7 +825,7 @@ const T = {
     emptyLists: "No lists yet.<br>Create the first one below! 👆",
     itemsBought: (d, t) => `${d}/${t} purchased`,
     emptyList: "Empty",
-    back: "← Back",
+    back: "‹ Back",
     clearDone: "🗑️ Clear done",
     copy: "🔗 Share",
     addItems: "Add items",
@@ -865,7 +872,7 @@ const T = {
     emptyLists: "Sin listas todavía.<br>¡Crea la primera abajo! 👆",
     itemsBought: (d, t) => `${d}/${t} comprados`,
     emptyList: "Vacía",
-    back: "← Volver",
+    back: "‹ Volver",
     clearDone: "🗑️ Limpiar",
     copy: "🔗 Compartir",
     addItems: "Agregar ítems",
@@ -912,7 +919,7 @@ const T = {
     emptyLists: "リストがまだありません。<br>下に作成してください！ 👆",
     itemsBought: (d, t) => `${d}/${t} 購入済み`,
     emptyList: "空",
-    back: "← 戻る",
+    back: "‹ 戻る",
     clearDone: "🗑️ 削除",
     copy: "🔗 共有",
     addItems: "アイテムを追加",
@@ -959,7 +966,7 @@ const T = {
     emptyLists: "אין רשימות עדיין.<br>צור את הראשונה למטה! 👆",
     itemsBought: (d, t) => `${d}/${t} נרכשו`,
     emptyList: "ריקה",
-    back: "חזרה →",
+    back: "חזרה ›",
     clearDone: "🗑️ נקה",
     copy: "🔗 שתף",
     addItems: "הוסף פריטים",
@@ -1006,7 +1013,7 @@ const T = {
     emptyLists: "아직 목록이 없습니다.<br>아래에서 첫 번째를 만들어보세요! 👆",
     itemsBought: (d, t) => `${d}/${t} 구매 완료`,
     emptyList: "비어 있음",
-    back: "← 뒤로",
+    back: "‹ 뒤로",
     clearDone: "🗑️ 완료 삭제",
     copy: "🔗 공유",
     addItems: "항목 추가",
