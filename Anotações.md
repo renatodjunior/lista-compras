@@ -1,4 +1,4 @@
-Renomear sublista
+<!-- Validado
 
 Seletor de emojis para listas
 
@@ -26,5 +26,20 @@ A ideia de personalização parece legal também
 
 Na hora de salvar um modelo de lista, nunca usar alert de navegador sempre pop up normal, para outras features também 
 
-Como salva cache no navegador preciso de um pop up de reload para quando tiver internet conectada ele pode pegar uma versão melhorada das features novas. Quando uso no celular não consigo controlar o cache tão fácil assim. 
+Como salva cache no navegador preciso de um pop up de reload para quando tiver internet conectada ele pode pegar uma versão melhorada das features novas. Quando uso no celular não consigo controlar o cache tão fácil assim.  -->
 
+
+<!-- Onda 2 de anotações
+Deixar só a interrogação Azul e o botão com o fundo na mesma cor dos outros
+
+Mudar o texto de ajuda da versão pro adaptado pra ela.
+
+Melhorarias na personalização do app no modo pro . Planos de fundo fofinhos e reorganizar itens na tela 
+
+Um botão para refresh do cache do site com as novas alterações além do pop up pode ser antes do github.com/renatodjunior
+
+Roadmap 
+
+Com assistente IA para montar a lista
+
+Voice Mode para falar itens  -->

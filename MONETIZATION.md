@@ -161,6 +161,46 @@ Ordem aproximada de retorno-por-esforço:
 
 ---
 
+## Roadmap (ideias mais ousadas)
+
+Itens que mudam a categoria do app — provavelmente PRO ou versão paralela:
+
+### 🤖 Assistente IA pra montar lista
+- Usuário digita "festa de aniversário pra 10 pessoas, churrasco" → IA monta lista categorizada (carne, bebida, descartável, sobremesa)
+- Implementação: chamada pra LLM via API (Groq/OpenAI/Anthropic). **Quebra o "100% offline"** — precisa internet pra essa feature
+- Custo: tokens por uso. Modelos opções:
+  - Quota mensal pra PRO (ex: 30 listas geradas/mês)
+  - Pay-per-use com créditos (R$ 5 = 50 listas)
+  - Bring-your-own-key (usuário cola sua chave OpenAI/Groq, app só usa)
+- BYOK é o mais alinhado com a filosofia "sem servidor": você não paga nada, o usuário controla, e o app fica zero-cost pra você
+- Custom: "modelos AI fofinhos" presets — "lista vegetariana", "lista de bebê", "viagem 5 dias"
+
+### 🎤 Voice Mode pra falar itens
+- Botão de microfone no campo de adicionar item
+- Web Speech API (`SpeechRecognition`) — gratuito, sem servidor, funciona offline em alguns browsers (Chrome usa Google Speech online por padrão; Safari iOS usa nativo)
+- Hands-free no carro/cozinha: "Adicionar arroz, feijão, óleo, sal" — parser separa por vírgula/pausa
+- Pode ser feature free (Web Speech é grátis) ou diferencial PRO se precisar de processamento melhor (ex: Whisper local via WASM)
+- Limitação: cobertura desigual entre browsers, especialmente iOS Safari fora do app
+
+### 🎨 Mais personalização (parcial nesta branch)
+- Backgrounds "fofinhos" (já implementado: pontos/grade/patinhas/estrelas/corações/folhas)
+- Próximos: reordenar blocos da home (drag-drop dos cards), tipografia (font alternativa), tamanhos
+- Tudo PRO — diferencial de "make it your own"
+
+### ☁️ PRO virar app (estudo)
+- Hoje: PWA single-file. Limitação: cache no celular, atualizações dependem do user notar.
+- Vantagens de virar app real (Capacitor/Tauri/PWA Builder):
+  - Push notifications (lembrar de fazer compra)
+  - Widgets na home (lista de hoje no widget)
+  - Distribuição via App Store / Play Store (legitimidade + descoberta)
+- Desvantagens:
+  - Quebra simplicidade do "abre no navegador, funciona"
+  - Taxas de stores (15-30%)
+  - Reviews, certificados, fricção de release
+- Sugestão: manter PWA principal e oferecer **build empacotado** apenas pro PRO via PWA Builder ou TWA. PWA continua canônica.
+
+---
+
 ## Próximas melhorias de UX (sem custo de monetização)
 
 Não entrei nessa branch pra não inflar o PR, mas vale catalogar:

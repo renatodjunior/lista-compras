@@ -68,10 +68,10 @@ body{
 .theme-btn:active{ transform:scale(.9); }
 .help-btn{
   font-weight:800; font-size:20px; line-height:1;
-  background:#1e88e5; color:white;
+  color:#1e88e5;
 }
-.dark .help-btn{ background:#42a5f5; color:#0a1a2a; }
-.help-btn:hover{ filter:brightness(1.08); }
+.dark .help-btn{ color:#64b5f6; }
+.help-btn:hover{ filter:brightness(1.1); }
 #titleIcon{
   display:inline-block;
   animation:iconPop .25s ease;
@@ -374,6 +374,58 @@ textarea{ resize:none; min-height:82px; }
   cursor:pointer; padding:4px 0; margin-top:8px; text-decoration:underline;
 }
 .list-card.has-template{ border-left:3px solid var(--warning); }
+
+/* ── PRO BACKGROUNDS ── */
+.bg-dots{
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.6' fill='%23808080' fill-opacity='0.18'/%3E%3C/svg%3E");
+}
+.bg-grid{
+  background-image:
+    linear-gradient(rgba(128,128,128,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(128,128,128,.12) 1px,transparent 1px);
+  background-size:26px 26px;
+}
+.bg-paws{
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cg fill='%23808080' fill-opacity='0.18'%3E%3Ccircle cx='22' cy='25' r='3.2'/%3E%3Cellipse cx='15' cy='17' rx='1.8' ry='2.6'/%3E%3Cellipse cx='29' cy='17' rx='1.8' ry='2.6'/%3E%3Cellipse cx='10' cy='22' rx='1.4' ry='2.2' transform='rotate(-25 10 22)'/%3E%3Cellipse cx='34' cy='22' rx='1.4' ry='2.2' transform='rotate(25 34 22)'/%3E%3C/g%3E%3C/svg%3E");
+}
+.bg-stars{
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M16 5 L18 13 L26 14 L19 18 L21 26 L16 21 L11 26 L13 18 L6 14 L14 13 Z' fill='%23808080' fill-opacity='0.16'/%3E%3C/svg%3E");
+}
+.bg-hearts{
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Cpath d='M15 23 C 5 17, 5 9, 10 9 C 12 9, 15 11, 15 13 C 15 11, 18 9, 20 9 C 25 9, 25 17, 15 23 Z' fill='%23e91e63' fill-opacity='0.14'/%3E%3C/svg%3E");
+}
+.bg-leaves{
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34'%3E%3Cpath d='M17 4 C 23 11, 23 19, 17 30 C 11 19, 11 11, 17 4 Z' fill='%2334c759' fill-opacity='0.16'/%3E%3C/svg%3E");
+}
+.dark body.bg-dots{ background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.6' fill='%23ffffff' fill-opacity='0.07'/%3E%3C/svg%3E"); }
+.dark body.bg-paws{ background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='22' cy='25' r='3.2'/%3E%3Cellipse cx='15' cy='17' rx='1.8' ry='2.6'/%3E%3Cellipse cx='29' cy='17' rx='1.8' ry='2.6'/%3E%3Cellipse cx='10' cy='22' rx='1.4' ry='2.2' transform='rotate(-25 10 22)'/%3E%3Cellipse cx='34' cy='22' rx='1.4' ry='2.2' transform='rotate(25 34 22)'/%3E%3C/g%3E%3C/svg%3E"); }
+.dark body.bg-stars{ background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M16 5 L18 13 L26 14 L19 18 L21 26 L16 21 L11 26 L13 18 L6 14 L14 13 Z' fill='%23ffffff' fill-opacity='0.07'/%3E%3C/svg%3E"); }
+.bg-preview{
+  width:48px; height:48px; border-radius:10px;
+  border:2px solid transparent; cursor:pointer;
+  background-color:#f0f4f0; background-size:24px 24px;
+  transition:transform .1s, border-color .15s;
+  box-shadow:var(--shadow);
+  position:relative;
+}
+.bg-preview:active{ transform:scale(.92); }
+.bg-preview.active{ border-color:var(--primary); }
+.bg-preview-label{
+  position:absolute; bottom:-18px; left:0; right:0;
+  font-size:10px; font-weight:700; color:var(--muted); text-align:center;
+}
+.bg-row{ display:flex; gap:14px; flex-wrap:wrap; padding-bottom:22px; }
+
+/* ── REFRESH FOOTER BUTTON ── */
+.refresh-btn{
+  background:var(--btn); border:none; padding:6px 14px;
+  border-radius:99px; color:var(--text);
+  font-family:inherit; font-size:12px; font-weight:700;
+  cursor:pointer; margin-bottom:10px;
+  transition:transform .1s, background .15s;
+}
+.refresh-btn:hover{ background:var(--primary-light); color:var(--primary); }
+.refresh-btn:active{ transform:scale(.96); }
 .ui-box.no-header{ padding-top:18px; }
 .ui-box .ui-msg{ margin:0 0 18px; font-size:15px; line-height:1.6; }
 .ui-row{ display:flex; gap:8px; }
@@ -558,6 +610,7 @@ textarea{ resize:none; min-height:82px; }
   </div>
 
   <footer class="site-footer">
+    <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()"></button><br>
     <a href="https://github.com/renatodjunior" target="_blank" rel="noopener">github.com/renatodjunior</a>
   </footer>
 
@@ -1116,12 +1169,12 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
 // v3 string extensions
 ;(function(){
   const ext = {
-    pt: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Desmarcar", uncheckAllConfirm:"Desmarcar todos os itens (manter na lista)?", uncheckedAll:"Tudo desmarcado 🔄", renameCatPrompt:"Renomear categoria", copyTitle:"Copiar lista", copyOnlyItems:"📝 Apenas itens", copyOnlyItemsDesc:"Lista limpa — ideal para enviar pra alguém comprar", copyWithStatus:"📋 Com status", copyWithStatusDesc:"Mostra ⬜ ✅ 🤔 do estado atual", templateNewListName:"Nome da nova lista", newVersion:"Nova versão disponível", reload:"Recarregar", helpBtnTitle:"Ajuda" },
-    en: { okLabel:"OK", cancelLabel:"Cancel", uncheckAllBtn:"🔄 Reset", uncheckAllConfirm:"Uncheck all items (keep on list)?", uncheckedAll:"All unchecked 🔄", renameCatPrompt:"Rename category", copyTitle:"Copy list", copyOnlyItems:"📝 Items only", copyOnlyItemsDesc:"Clean list — ideal to send to someone shopping", copyWithStatus:"📋 With status", copyWithStatusDesc:"Shows ⬜ ✅ 🤔 of current state", templateNewListName:"New list name", newVersion:"New version available", reload:"Reload", helpBtnTitle:"Help" },
-    es: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Resetear", uncheckAllConfirm:"¿Desmarcar todos los ítems (mantenerlos)?", uncheckedAll:"Todo desmarcado 🔄", renameCatPrompt:"Renombrar categoría", copyTitle:"Copiar lista", copyOnlyItems:"📝 Solo ítems", copyOnlyItemsDesc:"Lista limpia — ideal para enviar a alguien", copyWithStatus:"📋 Con estado", copyWithStatusDesc:"Muestra ⬜ ✅ 🤔 del estado actual", templateNewListName:"Nombre de la nueva lista", newVersion:"Nueva versión disponible", reload:"Recargar", helpBtnTitle:"Ayuda" },
-    ja: { okLabel:"OK", cancelLabel:"キャンセル", uncheckAllBtn:"🔄 リセット", uncheckAllConfirm:"すべてのアイテムのチェックを外しますか（リストには残ります）？", uncheckedAll:"すべてリセット 🔄", renameCatPrompt:"カテゴリ名を変更", copyTitle:"リストをコピー", copyOnlyItems:"📝 アイテムのみ", copyOnlyItemsDesc:"クリーンなリスト — 誰かに送るのに最適", copyWithStatus:"📋 ステータス付き", copyWithStatusDesc:"⬜ ✅ 🤔 を表示", templateNewListName:"新しいリスト名", newVersion:"新しいバージョンがあります", reload:"再読込", helpBtnTitle:"ヘルプ" },
-    he: { okLabel:"אישור", cancelLabel:"ביטול", uncheckAllBtn:"🔄 איפוס", uncheckAllConfirm:"לבטל סימון כל הפריטים (להשאיר ברשימה)?", uncheckedAll:"הכל אופס 🔄", renameCatPrompt:"שינוי שם קטגוריה", copyTitle:"העתק רשימה", copyOnlyItems:"📝 פריטים בלבד", copyOnlyItemsDesc:"רשימה נקייה — מושלם לשליחה למישהו", copyWithStatus:"📋 עם סטטוס", copyWithStatusDesc:"מציג ⬜ ✅ 🤔", templateNewListName:"שם הרשימה החדשה", newVersion:"גרסה חדשה זמינה", reload:"טען מחדש", helpBtnTitle:"עזרה" },
-    ko: { okLabel:"확인", cancelLabel:"취소", uncheckAllBtn:"🔄 초기화", uncheckAllConfirm:"모든 항목의 선택을 해제할까요 (목록은 유지)?", uncheckedAll:"모두 초기화됨 🔄", renameCatPrompt:"카테고리 이름 변경", copyTitle:"목록 복사", copyOnlyItems:"📝 항목만", copyOnlyItemsDesc:"깨끗한 목록 — 다른 사람에게 보내기 좋음", copyWithStatus:"📋 상태 포함", copyWithStatusDesc:"⬜ ✅ 🤔 표시", templateNewListName:"새 목록 이름", newVersion:"새 버전 사용 가능", reload:"새로고침", helpBtnTitle:"도움말" },
+    pt: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Desmarcar", uncheckAllConfirm:"Desmarcar todos os itens (manter na lista)?", uncheckedAll:"Tudo desmarcado 🔄", renameCatPrompt:"Renomear categoria", copyTitle:"Copiar lista", copyOnlyItems:"📝 Apenas itens", copyOnlyItemsDesc:"Lista limpa — ideal para enviar pra alguém comprar", copyWithStatus:"📋 Com status", copyWithStatusDesc:"Mostra ⬜ ✅ 🤔 do estado atual", templateNewListName:"Nome da nova lista", newVersion:"Nova versão disponível", reload:"Recarregar", helpBtnTitle:"Ajuda", refreshBtn:"🔄 Atualizar app", refreshConfirm:"Buscar versão mais recente? O app vai recarregar.", refreshing:"Atualizando...", bgTitle:"Plano de fundo", bgNone:"Nenhum", bgDots:"Pontos", bgGrid:"Grade", bgPaws:"Patinhas", bgStars:"Estrelas", bgHearts:"Corações", bgLeaves:"Folhas" },
+    en: { okLabel:"OK", cancelLabel:"Cancel", uncheckAllBtn:"🔄 Reset", uncheckAllConfirm:"Uncheck all items (keep on list)?", uncheckedAll:"All unchecked 🔄", renameCatPrompt:"Rename category", copyTitle:"Copy list", copyOnlyItems:"📝 Items only", copyOnlyItemsDesc:"Clean list — ideal to send to someone shopping", copyWithStatus:"📋 With status", copyWithStatusDesc:"Shows ⬜ ✅ 🤔 of current state", templateNewListName:"New list name", newVersion:"New version available", reload:"Reload", helpBtnTitle:"Help", refreshBtn:"🔄 Refresh app", refreshConfirm:"Fetch latest version? App will reload.", refreshing:"Refreshing...", bgTitle:"Background", bgNone:"None", bgDots:"Dots", bgGrid:"Grid", bgPaws:"Paws", bgStars:"Stars", bgHearts:"Hearts", bgLeaves:"Leaves" },
+    es: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Resetear", uncheckAllConfirm:"¿Desmarcar todos los ítems (mantenerlos)?", uncheckedAll:"Todo desmarcado 🔄", renameCatPrompt:"Renombrar categoría", copyTitle:"Copiar lista", copyOnlyItems:"📝 Solo ítems", copyOnlyItemsDesc:"Lista limpia — ideal para enviar a alguien", copyWithStatus:"📋 Con estado", copyWithStatusDesc:"Muestra ⬜ ✅ 🤔 del estado actual", templateNewListName:"Nombre de la nueva lista", newVersion:"Nueva versión disponible", reload:"Recargar", helpBtnTitle:"Ayuda", refreshBtn:"🔄 Actualizar app", refreshConfirm:"¿Buscar la última versión? La app se recargará.", refreshing:"Actualizando...", bgTitle:"Fondo", bgNone:"Ninguno", bgDots:"Puntos", bgGrid:"Cuadrícula", bgPaws:"Patitas", bgStars:"Estrellas", bgHearts:"Corazones", bgLeaves:"Hojas" },
+    ja: { okLabel:"OK", cancelLabel:"キャンセル", uncheckAllBtn:"🔄 リセット", uncheckAllConfirm:"すべてのアイテムのチェックを外しますか（リストには残ります）？", uncheckedAll:"すべてリセット 🔄", renameCatPrompt:"カテゴリ名を変更", copyTitle:"リストをコピー", copyOnlyItems:"📝 アイテムのみ", copyOnlyItemsDesc:"クリーンなリスト — 誰かに送るのに最適", copyWithStatus:"📋 ステータス付き", copyWithStatusDesc:"⬜ ✅ 🤔 を表示", templateNewListName:"新しいリスト名", newVersion:"新しいバージョンがあります", reload:"再読込", helpBtnTitle:"ヘルプ", refreshBtn:"🔄 更新", refreshConfirm:"最新バージョンを取得しますか？再読み込みされます。", refreshing:"更新中...", bgTitle:"背景", bgNone:"なし", bgDots:"ドット", bgGrid:"グリッド", bgPaws:"肉球", bgStars:"星", bgHearts:"ハート", bgLeaves:"葉" },
+    he: { okLabel:"אישור", cancelLabel:"ביטול", uncheckAllBtn:"🔄 איפוס", uncheckAllConfirm:"לבטל סימון כל הפריטים (להשאיר ברשימה)?", uncheckedAll:"הכל אופס 🔄", renameCatPrompt:"שינוי שם קטגוריה", copyTitle:"העתק רשימה", copyOnlyItems:"📝 פריטים בלבד", copyOnlyItemsDesc:"רשימה נקייה — מושלם לשליחה למישהו", copyWithStatus:"📋 עם סטטוס", copyWithStatusDesc:"מציג ⬜ ✅ 🤔", templateNewListName:"שם הרשימה החדשה", newVersion:"גרסה חדשה זמינה", reload:"טען מחדש", helpBtnTitle:"עזרה", refreshBtn:"🔄 עדכן אפליקציה", refreshConfirm:"לבדוק גרסה חדשה? האפליקציה תיטען מחדש.", refreshing:"מעדכן...", bgTitle:"רקע", bgNone:"ללא", bgDots:"נקודות", bgGrid:"רשת", bgPaws:"כפות", bgStars:"כוכבים", bgHearts:"לבבות", bgLeaves:"עלים" },
+    ko: { okLabel:"확인", cancelLabel:"취소", uncheckAllBtn:"🔄 초기화", uncheckAllConfirm:"모든 항목의 선택을 해제할까요 (목록은 유지)?", uncheckedAll:"모두 초기화됨 🔄", renameCatPrompt:"카테고리 이름 변경", copyTitle:"목록 복사", copyOnlyItems:"📝 항목만", copyOnlyItemsDesc:"깨끗한 목록 — 다른 사람에게 보내기 좋음", copyWithStatus:"📋 상태 포함", copyWithStatusDesc:"⬜ ✅ 🤔 표시", templateNewListName:"새 목록 이름", newVersion:"새 버전 사용 가능", reload:"새로고침", helpBtnTitle:"도움말", refreshBtn:"🔄 앱 새로고침", refreshConfirm:"최신 버전을 가져올까요? 앱이 다시 로드됩니다.", refreshing:"새로고침 중...", bgTitle:"배경", bgNone:"없음", bgDots:"점", bgGrid:"격자", bgPaws:"발자국", bgStars:"별", bgHearts:"하트", bgLeaves:"잎" },
   }
   Object.entries(ext).forEach(([k,v]) => Object.assign(TPRO[k], v))
 })();
@@ -1238,6 +1291,94 @@ const HELP = {
   `
 }
 
+// ── HELP CONTENT (PRO) ───────────────────────────
+const HELP_PRO = {
+  pt: `
+    <h3 style="color:#ff7a00">✨ Recursos PRO ativos</h3>
+    <ul>
+      <li>📦 <strong>Modelos de lista</strong> — salve uma lista pronta como modelo (botão 💾 dentro da lista) e crie novas a partir dela em segundos. O nome pode ser ajustado no momento de usar.</li>
+      <li>📊 <strong>Painel de estatísticas</strong> — total de listas, itens, % de conclusão e top 8 itens mais repetidos entre todas suas listas.</li>
+      <li>🎨 <strong>Cor de destaque personalizada</strong> — escolha uma das 6 paletas em ⚙️ Configurações; cada uma tem versão clara e escura.</li>
+      <li>🌸 <strong>Plano de fundo</strong> — padrões discretos pra deixar o app com a sua cara.</li>
+    </ul>
+    <h3 style="color:#ff7a00">🔜 Em breve no PRO</h3>
+    <ul>
+      <li>📲 Compartilhar lista via QR code (sem servidor)</li>
+      <li>☁️ Sync opcional com sua própria conta de nuvem</li>
+    </ul>
+  `,
+  en: `
+    <h3 style="color:#ff7a00">✨ PRO features active</h3>
+    <ul>
+      <li>📦 <strong>List templates</strong> — save a ready list as a template (💾 button inside the list) and spawn new ones from it. You can rename when using it.</li>
+      <li>📊 <strong>Stats dashboard</strong> — total lists, items, completion %, top 8 most repeated items across your lists.</li>
+      <li>🎨 <strong>Custom accent color</strong> — pick from 6 palettes in ⚙️ Settings; each has a light and dark variant.</li>
+      <li>🌸 <strong>Background patterns</strong> — subtle patterns to make the app yours.</li>
+    </ul>
+    <h3 style="color:#ff7a00">🔜 Coming to PRO</h3>
+    <ul>
+      <li>📲 Share list via QR code (serverless)</li>
+      <li>☁️ Optional sync with your own cloud account</li>
+    </ul>
+  `,
+  es: `
+    <h3 style="color:#ff7a00">✨ Funciones PRO activas</h3>
+    <ul>
+      <li>📦 <strong>Plantillas de lista</strong> — guarda una lista lista como plantilla (botón 💾 dentro de la lista) y crea nuevas a partir de ella. Puedes renombrar al usarla.</li>
+      <li>📊 <strong>Panel de estadísticas</strong> — total de listas, ítems, % de conclusión y top 8 ítems más repetidos.</li>
+      <li>🎨 <strong>Color de acento personalizado</strong> — elige entre 6 paletas en ⚙️ Ajustes; cada una con versión clara y oscura.</li>
+      <li>🌸 <strong>Fondos</strong> — patrones discretos para personalizar.</li>
+    </ul>
+    <h3 style="color:#ff7a00">🔜 Próximamente en PRO</h3>
+    <ul>
+      <li>📲 Compartir lista por QR (sin servidor)</li>
+      <li>☁️ Sincronización opcional con tu propia nube</li>
+    </ul>
+  `,
+  ja: `
+    <h3 style="color:#ff7a00">✨ 有効なPRO機能</h3>
+    <ul>
+      <li>📦 <strong>リストテンプレート</strong> — リストをテンプレとして保存（リスト内の💾ボタン）。使用時に名前を変更可能。</li>
+      <li>📊 <strong>統計ダッシュボード</strong> — リスト数、アイテム数、達成率、最頻出アイテム上位8件。</li>
+      <li>🎨 <strong>カスタムアクセントカラー</strong> — ⚙️設定で6色から選択。ライト/ダーク両対応。</li>
+      <li>🌸 <strong>背景パターン</strong> — 控えめな柄で雰囲気を変える。</li>
+    </ul>
+    <h3 style="color:#ff7a00">🔜 PROに追加予定</h3>
+    <ul>
+      <li>📲 QRコードでリスト共有（サーバー不要）</li>
+      <li>☁️ 自分のクラウドアカウントでオプション同期</li>
+    </ul>
+  `,
+  he: `
+    <h3 style="color:#ff7a00">✨ תכונות PRO פעילות</h3>
+    <ul>
+      <li>📦 <strong>תבניות רשימה</strong> — שמור רשימה כתבנית (כפתור 💾 בתוך הרשימה). אפשר לשנות שם בהפעלה.</li>
+      <li>📊 <strong>לוח סטטיסטיקה</strong> — סה״כ רשימות, פריטים, אחוז השלמה וטופ 8 פריטים נפוצים.</li>
+      <li>🎨 <strong>צבע הדגשה מותאם</strong> — בחר מבין 6 פלטות בהגדרות ⚙️.</li>
+      <li>🌸 <strong>תבניות רקע</strong> — דוגמאות עדינות לעיצוב אישי.</li>
+    </ul>
+    <h3 style="color:#ff7a00">🔜 בקרוב ב-PRO</h3>
+    <ul>
+      <li>📲 שיתוף רשימה ב-QR (ללא שרת)</li>
+      <li>☁️ סנכרון אופציונלי עם החשבון שלך</li>
+    </ul>
+  `,
+  ko: `
+    <h3 style="color:#ff7a00">✨ 활성 PRO 기능</h3>
+    <ul>
+      <li>📦 <strong>목록 템플릿</strong> — 목록을 템플릿으로 저장(목록 안의 💾 버튼). 사용 시 이름 변경 가능.</li>
+      <li>📊 <strong>통계 대시보드</strong> — 총 목록·항목·완료율, 가장 자주 쓴 항목 8개.</li>
+      <li>🎨 <strong>사용자 강조 색상</strong> — ⚙️ 설정에서 6가지 팔레트 중 선택. 라이트/다크 지원.</li>
+      <li>🌸 <strong>배경 패턴</strong> — 은은한 패턴으로 개인화.</li>
+    </ul>
+    <h3 style="color:#ff7a00">🔜 PRO 출시 예정</h3>
+    <ul>
+      <li>📲 QR 코드로 목록 공유 (서버 없음)</li>
+      <li>☁️ 본인 클라우드 계정으로 선택적 동기화</li>
+    </ul>
+  `
+}
+
 // ── STATE ────────────────────────────────────────
 let lists = JSON.parse(localStorage.getItem("lists") || "[]")
 let currentList = null
@@ -1247,6 +1388,7 @@ let t = T[currentLang]
 let pro = localStorage.getItem("pro") === "1"
 let templates = JSON.parse(localStorage.getItem("templates") || "[]")
 let accentColor = localStorage.getItem("accent") || ""
+let bgPattern = localStorage.getItem("bg") || ""
 
 if(darkMode){ document.body.classList.add("dark") }
 document.getElementById("themeBtn").textContent = darkMode ? "☀️" : "🌙"
@@ -1329,7 +1471,12 @@ function toggleTheme(){
 
 function openHelp(){
   document.getElementById("helpTitle").textContent = t.helpTitle
-  document.getElementById("helpContent").innerHTML = HELP[currentLang] || HELP.en
+  let html = HELP[currentLang] || HELP.en
+  if(pro){
+    const extra = HELP_PRO[currentLang] || HELP_PRO.en
+    html += extra
+  }
+  document.getElementById("helpContent").innerHTML = html
   document.getElementById("helpCloseBtn").textContent = t.helpClose
   document.getElementById("helpModal").classList.remove("hidden")
 }
@@ -1867,6 +2014,29 @@ function applyAccent(){
   }
 }
 
+const BG_PRESETS = ["", "dots", "grid", "paws", "stars", "hearts", "leaves"]
+
+function applyBg(){
+  document.body.classList.remove(...BG_PRESETS.filter(Boolean).map(b => "bg-" + b))
+  if(pro && bgPattern) document.body.classList.add("bg-" + bgPattern)
+}
+
+async function forceRefresh(){
+  if(!await uiConfirm(tp().refreshConfirm)) return
+  showToast(tp().refreshing)
+  try {
+    if("serviceWorker" in navigator){
+      const reg = await navigator.serviceWorker.getRegistration()
+      if(reg) await reg.update()
+    }
+    if("caches" in window){
+      const keys = await caches.keys()
+      await Promise.all(keys.map(k => caches.delete(k)))
+    }
+  } catch(e){ console.warn("refresh:", e) }
+  setTimeout(() => window.location.reload(), 300)
+}
+
 function refreshProUI(){
   document.getElementById("proBadge").style.display = pro ? "inline-block" : "none"
   document.getElementById("proLockedActions").style.display = pro ? "block" : "none"
@@ -1877,7 +2047,9 @@ function refreshProUI(){
   document.getElementById("saveTplBtn").textContent = tt.saveAsTemplate
   document.getElementById("uncheckBtn").textContent = tt.uncheckAllBtn
   document.getElementById("helpBtn").title = tt.helpBtnTitle
+  document.getElementById("refreshBtn").textContent = tt.refreshBtn
   applyAccent()
+  applyBg()
 }
 
 function closeModal(id){ document.getElementById(id).classList.add("hidden") }
@@ -1908,6 +2080,7 @@ function openSettings(){
     html += `<button class="unlock-cta" onclick="openUnlock()">${tt.unlockBtn}</button>`
   } else {
     html += `<div class="settings-section"><h3>${tt.accentColor}</h3><div class="color-row" id="colorRow"></div></div>`
+    html += `<div class="settings-section"><h3>${tt.bgTitle}</h3><div class="bg-row" id="bgRow"></div></div>`
     html += `<button class="danger-link" onclick="lockPro()">${tt.deactivate}</button>`
   }
   c.innerHTML = html
@@ -1929,6 +2102,20 @@ function openSettings(){
     reset.textContent = tt.resetColor
     reset.onclick = () => { accentColor = ""; localStorage.removeItem("accent"); applyAccent(); openSettings() }
     cr.appendChild(reset)
+
+    const br = document.getElementById("bgRow")
+    const bgLabels = { "":tt.bgNone, dots:tt.bgDots, grid:tt.bgGrid, paws:tt.bgPaws, stars:tt.bgStars, hearts:tt.bgHearts, leaves:tt.bgLeaves }
+    BG_PRESETS.forEach(b => {
+      const sw = document.createElement("div")
+      sw.className = "bg-preview" + (bgPattern === b ? " active" : "") + (b ? " bg-" + b : "")
+      sw.title = bgLabels[b]
+      const lbl = document.createElement("span")
+      lbl.className = "bg-preview-label"
+      lbl.textContent = bgLabels[b]
+      sw.appendChild(lbl)
+      sw.onclick = () => { bgPattern = b; if(b) localStorage.setItem("bg", b); else localStorage.removeItem("bg"); applyBg(); openSettings() }
+      br.appendChild(sw)
+    })
   }
   document.getElementById("settingsModal").classList.remove("hidden")
 }
