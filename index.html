@@ -227,11 +227,13 @@ textarea{ resize:none; min-height:82px; }
 .stat-pill.warn{ background:#fff3d6; color:#a76b00; }
 .dark .stat-pill.warn{ background:#3a2e0a; color:#f5c452; }
 .item-name{ cursor:pointer; user-select:none; }
-.qty-badge{
-  display:inline-block; background:var(--primary-light); color:var(--primary);
-  font-size:11px; font-weight:800; padding:2px 7px; border-radius:99px;
-  margin-left:8px; vertical-align:middle; letter-spacing:.02em;
+.qty-badge, .unit-badge{
+  display:inline-block; font-size:11px; font-weight:600;
+  padding:2px 7px; border-radius:99px; margin-left:6px;
+  vertical-align:middle; letter-spacing:0;
 }
+.qty-badge{ background:var(--primary-light); color:var(--primary); font-variant-numeric:tabular-nums; }
+.unit-badge{ background:var(--btn); color:var(--muted); }
 .price-badge{
   font-size:12px; font-weight:700; color:var(--muted);
   white-space:nowrap; margin:0 6px; flex-shrink:0;
@@ -1789,8 +1791,9 @@ function renderItems(){
       row.className = "item"
       row.dataset.index = i
       const tc = item.status===1?"done":item.status===2?"maybe":""
-      const qtyText = item.qty ? ("×" + item.qty + (item.unit ? " " + item.unit : "")) : (item.unit ? item.unit : "")
-      const qtyHTML = qtyText ? `<span class="qty-badge">${_esc(qtyText)}</span>` : ""
+      const qtyHTML =
+        (item.qty ? `<span class="qty-badge">×${_esc(item.qty)}</span>` : "") +
+        (item.unit ? `<span class="unit-badge">${_esc(item.unit)}</span>` : "")
       const priceText = formatPrice(item.price)
       const priceHTML = priceText ? `<span class="price-badge">${priceText}</span>` : ""
       row.innerHTML = `
