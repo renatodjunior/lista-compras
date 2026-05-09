@@ -634,6 +634,7 @@ textarea{ resize:none; min-height:82px; }
       <button class="backup-btn" id="importBtn" onclick="document.getElementById('importFile').click()"></button>
       <input type="file" id="importFile" accept=".json" class="hidden" onchange="importData(event)">
     </div>
+    <button class="backup-btn" id="pasteListBtn" onclick="openPasteImport()" style="margin-top:8px;width:100%"></button>
   </div>
 
   <!-- ITEMS PAGE -->
@@ -1230,12 +1231,12 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
 // v3 string extensions
 ;(function(){
   const ext = {
-    pt: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Desmarcar", uncheckAllConfirm:"Desmarcar todos os itens (manter na lista)?", uncheckedAll:"Tudo desmarcado 🔄", renameCatPrompt:"Renomear categoria", copyTitle:"Copiar lista", copyOnlyItems:"📝 Apenas itens", copyOnlyItemsDesc:"Lista limpa — ideal para enviar pra alguém comprar", copyWithStatus:"📋 Com status", copyWithStatusDesc:"Mostra ⬜ ✅ 🤔 do estado atual", templateNewListName:"Nome da nova lista", newVersion:"Nova versão disponível", reload:"Recarregar", helpBtnTitle:"Ajuda", refreshBtn:"🔄 Atualizar app", refreshConfirm:"Buscar versão mais recente? O app vai recarregar.", refreshing:"Atualizando...", bgTitle:"Plano de fundo", bgNone:"Nenhum", bgDots:"Pontos", bgGrid:"Grade", bgPaws:"Patinhas", bgStars:"Estrelas", bgHearts:"Corações", bgLeaves:"Folhas", editItemTitle:"Editar item", itemNamePh:"Nome do item", qtyPh:"1", unitPh:"kg", pricePh:"12,50", listTotal:t => `Total: ${t}`, currencySymbol:"R$", qtyHint:"💡 Toque ✏️ no item pra adicionar quantidade, unidade ou preço", frequentsTitle:"✨ MAIS USADOS — toque pra adicionar", nameLabel:"NOME", qtyLabel:"QTD", unitLabel:"UNIDADE", priceLabel:"PREÇO" },
-    en: { okLabel:"OK", cancelLabel:"Cancel", uncheckAllBtn:"🔄 Reset", uncheckAllConfirm:"Uncheck all items (keep on list)?", uncheckedAll:"All unchecked 🔄", renameCatPrompt:"Rename category", copyTitle:"Copy list", copyOnlyItems:"📝 Items only", copyOnlyItemsDesc:"Clean list — ideal to send to someone shopping", copyWithStatus:"📋 With status", copyWithStatusDesc:"Shows ⬜ ✅ 🤔 of current state", templateNewListName:"New list name", newVersion:"New version available", reload:"Reload", helpBtnTitle:"Help", refreshBtn:"🔄 Refresh app", refreshConfirm:"Fetch latest version? App will reload.", refreshing:"Refreshing...", bgTitle:"Background", bgNone:"None", bgDots:"Dots", bgGrid:"Grid", bgPaws:"Paws", bgStars:"Stars", bgHearts:"Hearts", bgLeaves:"Leaves", editItemTitle:"Edit item", itemNamePh:"Item name", qtyPh:"1", unitPh:"kg", pricePh:"12.50", listTotal:t => `Total: ${t}`, currencySymbol:"$", qtyHint:"💡 Tap ✏️ on an item to add quantity, unit or price", frequentsTitle:"✨ FREQUENTS — tap to add", nameLabel:"NAME", qtyLabel:"QTY", unitLabel:"UNIT", priceLabel:"PRICE" },
-    es: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Resetear", uncheckAllConfirm:"¿Desmarcar todos los ítems (mantenerlos)?", uncheckedAll:"Todo desmarcado 🔄", renameCatPrompt:"Renombrar categoría", copyTitle:"Copiar lista", copyOnlyItems:"📝 Solo ítems", copyOnlyItemsDesc:"Lista limpia — ideal para enviar a alguien", copyWithStatus:"📋 Con estado", copyWithStatusDesc:"Muestra ⬜ ✅ 🤔 del estado actual", templateNewListName:"Nombre de la nueva lista", newVersion:"Nueva versión disponible", reload:"Recargar", helpBtnTitle:"Ayuda", refreshBtn:"🔄 Actualizar app", refreshConfirm:"¿Buscar la última versión? La app se recargará.", refreshing:"Actualizando...", bgTitle:"Fondo", bgNone:"Ninguno", bgDots:"Puntos", bgGrid:"Cuadrícula", bgPaws:"Patitas", bgStars:"Estrellas", bgHearts:"Corazones", bgLeaves:"Hojas", editItemTitle:"Editar ítem", itemNamePh:"Nombre del ítem", qtyPh:"1", unitPh:"kg", pricePh:"12,50", listTotal:t => `Total: ${t}`, currencySymbol:"$", qtyHint:"💡 Toca ✏️ en un ítem para añadir cantidad, unidad o precio", frequentsTitle:"✨ FRECUENTES — toca para añadir", nameLabel:"NOMBRE", qtyLabel:"CANT", unitLabel:"UNIDAD", priceLabel:"PRECIO" },
-    ja: { okLabel:"OK", cancelLabel:"キャンセル", uncheckAllBtn:"🔄 リセット", uncheckAllConfirm:"すべてのアイテムのチェックを外しますか（リストには残ります）？", uncheckedAll:"すべてリセット 🔄", renameCatPrompt:"カテゴリ名を変更", copyTitle:"リストをコピー", copyOnlyItems:"📝 アイテムのみ", copyOnlyItemsDesc:"クリーンなリスト — 誰かに送るのに最適", copyWithStatus:"📋 ステータス付き", copyWithStatusDesc:"⬜ ✅ 🤔 を表示", templateNewListName:"新しいリスト名", newVersion:"新しいバージョンがあります", reload:"再読込", helpBtnTitle:"ヘルプ", refreshBtn:"🔄 更新", refreshConfirm:"最新バージョンを取得しますか？再読み込みされます。", refreshing:"更新中...", bgTitle:"背景", bgNone:"なし", bgDots:"ドット", bgGrid:"グリッド", bgPaws:"肉球", bgStars:"星", bgHearts:"ハート", bgLeaves:"葉", editItemTitle:"アイテム編集", itemNamePh:"アイテム名", qtyPh:"1", unitPh:"kg", pricePh:"100", listTotal:t => `合計: ${t}`, currencySymbol:"¥", qtyHint:"💡 ✏️をタップして数量・単位・価格を追加", frequentsTitle:"✨ よく使う — タップで追加", nameLabel:"名前", qtyLabel:"数量", unitLabel:"単位", priceLabel:"価格" },
-    he: { okLabel:"אישור", cancelLabel:"ביטול", uncheckAllBtn:"🔄 איפוס", uncheckAllConfirm:"לבטל סימון כל הפריטים (להשאיר ברשימה)?", uncheckedAll:"הכל אופס 🔄", renameCatPrompt:"שינוי שם קטגוריה", copyTitle:"העתק רשימה", copyOnlyItems:"📝 פריטים בלבד", copyOnlyItemsDesc:"רשימה נקייה — מושלם לשליחה למישהו", copyWithStatus:"📋 עם סטטוס", copyWithStatusDesc:"מציג ⬜ ✅ 🤔", templateNewListName:"שם הרשימה החדשה", newVersion:"גרסה חדשה זמינה", reload:"טען מחדש", helpBtnTitle:"עזרה", refreshBtn:"🔄 עדכן אפליקציה", refreshConfirm:"לבדוק גרסה חדשה? האפליקציה תיטען מחדש.", refreshing:"מעדכן...", bgTitle:"רקע", bgNone:"ללא", bgDots:"נקודות", bgGrid:"רשת", bgPaws:"כפות", bgStars:"כוכבים", bgHearts:"לבבות", bgLeaves:"עלים", editItemTitle:"ערוך פריט", itemNamePh:"שם הפריט", qtyPh:"1", unitPh:"ק״ג", pricePh:"12.50", listTotal:t => `סה״כ: ${t}`, currencySymbol:"₪", qtyHint:"💡 הקש על ✏️ להוספת כמות, יחידה או מחיר", frequentsTitle:"✨ נפוצים — הקש להוספה", nameLabel:"שם", qtyLabel:"כמות", unitLabel:"יחידה", priceLabel:"מחיר" },
-    ko: { okLabel:"확인", cancelLabel:"취소", uncheckAllBtn:"🔄 초기화", uncheckAllConfirm:"모든 항목의 선택을 해제할까요 (목록은 유지)?", uncheckedAll:"모두 초기화됨 🔄", renameCatPrompt:"카테고리 이름 변경", copyTitle:"목록 복사", copyOnlyItems:"📝 항목만", copyOnlyItemsDesc:"깨끗한 목록 — 다른 사람에게 보내기 좋음", copyWithStatus:"📋 상태 포함", copyWithStatusDesc:"⬜ ✅ 🤔 표시", templateNewListName:"새 목록 이름", newVersion:"새 버전 사용 가능", reload:"새로고침", helpBtnTitle:"도움말", refreshBtn:"🔄 앱 새로고침", refreshConfirm:"최신 버전을 가져올까요? 앱이 다시 로드됩니다.", refreshing:"새로고침 중...", bgTitle:"배경", bgNone:"없음", bgDots:"점", bgGrid:"격자", bgPaws:"발자국", bgStars:"별", bgHearts:"하트", bgLeaves:"잎", editItemTitle:"항목 편집", itemNamePh:"항목 이름", qtyPh:"1", unitPh:"kg", pricePh:"12500", listTotal:t => `합계: ${t}`, currencySymbol:"₩", qtyHint:"💡 ✏️를 눌러 수량, 단위 또는 가격 추가", frequentsTitle:"✨ 자주 사용 — 눌러서 추가", nameLabel:"이름", qtyLabel:"수량", unitLabel:"단위", priceLabel:"가격" },
+    pt: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Desmarcar", uncheckAllConfirm:"Desmarcar todos os itens (manter na lista)?", uncheckedAll:"Tudo desmarcado 🔄", renameCatPrompt:"Renomear categoria", copyTitle:"Copiar lista", copyOnlyItems:"📝 Apenas itens", copyOnlyItemsDesc:"Lista limpa — ideal para enviar pra alguém comprar", copyWithStatus:"📋 Com status", copyWithStatusDesc:"Mostra ⬜ ✅ 🤔 do estado atual", templateNewListName:"Nome da nova lista", newVersion:"Nova versão disponível", reload:"Recarregar", helpBtnTitle:"Ajuda", refreshBtn:"🔄 Atualizar app", refreshConfirm:"Buscar versão mais recente? O app vai recarregar.", refreshing:"Atualizando...", bgTitle:"Plano de fundo", bgNone:"Nenhum", bgDots:"Pontos", bgGrid:"Grade", bgPaws:"Patinhas", bgStars:"Estrelas", bgHearts:"Corações", bgLeaves:"Folhas", editItemTitle:"Editar item", itemNamePh:"Nome do item", qtyPh:"1", unitPh:"kg", pricePh:"12,50", listTotal:t => `Total: ${t}`, currencySymbol:"R$", qtyHint:"💡 Toque ✏️ no item pra adicionar quantidade, unidade ou preço", frequentsTitle:"✨ MAIS USADOS — toque pra adicionar", nameLabel:"NOME", qtyLabel:"QTD", unitLabel:"UNIDADE", priceLabel:"PREÇO", pasteListBtn:"📥 Colar lista de texto", pasteImportTitle:"Importar de texto", pastePh:"Cole aqui o texto da lista (WhatsApp, notas, receita...)", importLabel:"Importar", pasteEmpty:"Nada para importar", pasteImported:n => `${n} ${n===1?"item importado":"itens importados"} ✅`, newListNamePrompt:"Nome da nova lista", importedListDefault:"Lista importada", pasteHint:"Detecta linhas, ✅ 🤔 ⬜, marcadores - * • ▸, cabeçalhos # e quantidade tipo '2 kg arroz'", detected:n => `${n} ${n===1?"item":"itens"} detectado${n===1?"":"s"}` },
+    en: { okLabel:"OK", cancelLabel:"Cancel", uncheckAllBtn:"🔄 Reset", uncheckAllConfirm:"Uncheck all items (keep on list)?", uncheckedAll:"All unchecked 🔄", renameCatPrompt:"Rename category", copyTitle:"Copy list", copyOnlyItems:"📝 Items only", copyOnlyItemsDesc:"Clean list — ideal to send to someone shopping", copyWithStatus:"📋 With status", copyWithStatusDesc:"Shows ⬜ ✅ 🤔 of current state", templateNewListName:"New list name", newVersion:"New version available", reload:"Reload", helpBtnTitle:"Help", refreshBtn:"🔄 Refresh app", refreshConfirm:"Fetch latest version? App will reload.", refreshing:"Refreshing...", bgTitle:"Background", bgNone:"None", bgDots:"Dots", bgGrid:"Grid", bgPaws:"Paws", bgStars:"Stars", bgHearts:"Hearts", bgLeaves:"Leaves", editItemTitle:"Edit item", itemNamePh:"Item name", qtyPh:"1", unitPh:"kg", pricePh:"12.50", listTotal:t => `Total: ${t}`, currencySymbol:"$", qtyHint:"💡 Tap ✏️ on an item to add quantity, unit or price", frequentsTitle:"✨ FREQUENTS — tap to add", nameLabel:"NAME", qtyLabel:"QTY", unitLabel:"UNIT", priceLabel:"PRICE", pasteListBtn:"📥 Paste list from text", pasteImportTitle:"Import from text", pastePh:"Paste your list text here (WhatsApp, notes, recipe...)", importLabel:"Import", pasteEmpty:"Nothing to import", pasteImported:n => `${n} ${n===1?"item imported":"items imported"} ✅`, newListNamePrompt:"New list name", importedListDefault:"Imported list", pasteHint:"Detects lines, ✅ 🤔 ⬜, bullets - * • ▸, headers # and quantities like '2 kg rice'", detected:n => `${n} ${n===1?"item":"items"} detected` },
+    es: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Resetear", uncheckAllConfirm:"¿Desmarcar todos los ítems (mantenerlos)?", uncheckedAll:"Todo desmarcado 🔄", renameCatPrompt:"Renombrar categoría", copyTitle:"Copiar lista", copyOnlyItems:"📝 Solo ítems", copyOnlyItemsDesc:"Lista limpia — ideal para enviar a alguien", copyWithStatus:"📋 Con estado", copyWithStatusDesc:"Muestra ⬜ ✅ 🤔 del estado actual", templateNewListName:"Nombre de la nueva lista", newVersion:"Nueva versión disponible", reload:"Recargar", helpBtnTitle:"Ayuda", refreshBtn:"🔄 Actualizar app", refreshConfirm:"¿Buscar la última versión? La app se recargará.", refreshing:"Actualizando...", bgTitle:"Fondo", bgNone:"Ninguno", bgDots:"Puntos", bgGrid:"Cuadrícula", bgPaws:"Patitas", bgStars:"Estrellas", bgHearts:"Corazones", bgLeaves:"Hojas", editItemTitle:"Editar ítem", itemNamePh:"Nombre del ítem", qtyPh:"1", unitPh:"kg", pricePh:"12,50", listTotal:t => `Total: ${t}`, currencySymbol:"$", qtyHint:"💡 Toca ✏️ en un ítem para añadir cantidad, unidad o precio", frequentsTitle:"✨ FRECUENTES — toca para añadir", nameLabel:"NOMBRE", qtyLabel:"CANT", unitLabel:"UNIDAD", priceLabel:"PRECIO", pasteListBtn:"📥 Pegar lista de texto", pasteImportTitle:"Importar de texto", pastePh:"Pega aquí el texto de tu lista (WhatsApp, notas, receta...)", importLabel:"Importar", pasteEmpty:"Nada para importar", pasteImported:n => `${n} ${n===1?"ítem importado":"ítems importados"} ✅`, newListNamePrompt:"Nombre de la nueva lista", importedListDefault:"Lista importada", pasteHint:"Detecta líneas, ✅ 🤔 ⬜, viñetas - * • ▸, encabezados # y cantidades como '2 kg arroz'", detected:n => `${n} ${n===1?"ítem":"ítems"} detectado${n===1?"":"s"}` },
+    ja: { okLabel:"OK", cancelLabel:"キャンセル", uncheckAllBtn:"🔄 リセット", uncheckAllConfirm:"すべてのアイテムのチェックを外しますか（リストには残ります）？", uncheckedAll:"すべてリセット 🔄", renameCatPrompt:"カテゴリ名を変更", copyTitle:"リストをコピー", copyOnlyItems:"📝 アイテムのみ", copyOnlyItemsDesc:"クリーンなリスト — 誰かに送るのに最適", copyWithStatus:"📋 ステータス付き", copyWithStatusDesc:"⬜ ✅ 🤔 を表示", templateNewListName:"新しいリスト名", newVersion:"新しいバージョンがあります", reload:"再読込", helpBtnTitle:"ヘルプ", refreshBtn:"🔄 更新", refreshConfirm:"最新バージョンを取得しますか？再読み込みされます。", refreshing:"更新中...", bgTitle:"背景", bgNone:"なし", bgDots:"ドット", bgGrid:"グリッド", bgPaws:"肉球", bgStars:"星", bgHearts:"ハート", bgLeaves:"葉", editItemTitle:"アイテム編集", itemNamePh:"アイテム名", qtyPh:"1", unitPh:"kg", pricePh:"100", listTotal:t => `合計: ${t}`, currencySymbol:"¥", qtyHint:"💡 ✏️をタップして数量・単位・価格を追加", frequentsTitle:"✨ よく使う — タップで追加", nameLabel:"名前", qtyLabel:"数量", unitLabel:"単位", priceLabel:"価格", pasteListBtn:"📥 テキストを貼り付け", pasteImportTitle:"テキストからインポート", pastePh:"リストのテキストを貼り付け（WhatsApp、メモ、レシピなど）", importLabel:"インポート", pasteEmpty:"インポート対象なし", pasteImported:n => `${n}件をインポート ✅`, newListNamePrompt:"新しいリスト名", importedListDefault:"インポートしたリスト", pasteHint:"行・✅ 🤔 ⬜・- * • ▸ 箇条書き・# 見出し・「2 kg ご飯」など数量を検出", detected:n => `${n}件検出` },
+    he: { okLabel:"אישור", cancelLabel:"ביטול", uncheckAllBtn:"🔄 איפוס", uncheckAllConfirm:"לבטל סימון כל הפריטים (להשאיר ברשימה)?", uncheckedAll:"הכל אופס 🔄", renameCatPrompt:"שינוי שם קטגוריה", copyTitle:"העתק רשימה", copyOnlyItems:"📝 פריטים בלבד", copyOnlyItemsDesc:"רשימה נקייה — מושלם לשליחה למישהו", copyWithStatus:"📋 עם סטטוס", copyWithStatusDesc:"מציג ⬜ ✅ 🤔", templateNewListName:"שם הרשימה החדשה", newVersion:"גרסה חדשה זמינה", reload:"טען מחדש", helpBtnTitle:"עזרה", refreshBtn:"🔄 עדכן אפליקציה", refreshConfirm:"לבדוק גרסה חדשה? האפליקציה תיטען מחדש.", refreshing:"מעדכן...", bgTitle:"רקע", bgNone:"ללא", bgDots:"נקודות", bgGrid:"רשת", bgPaws:"כפות", bgStars:"כוכבים", bgHearts:"לבבות", bgLeaves:"עלים", editItemTitle:"ערוך פריט", itemNamePh:"שם הפריט", qtyPh:"1", unitPh:"ק״ג", pricePh:"12.50", listTotal:t => `סה״כ: ${t}`, currencySymbol:"₪", qtyHint:"💡 הקש על ✏️ להוספת כמות, יחידה או מחיר", frequentsTitle:"✨ נפוצים — הקש להוספה", nameLabel:"שם", qtyLabel:"כמות", unitLabel:"יחידה", priceLabel:"מחיר", pasteListBtn:"📥 הדבק רשימה מטקסט", pasteImportTitle:"ייבוא מטקסט", pastePh:"הדבק כאן את טקסט הרשימה (WhatsApp, פתקים, מתכון...)", importLabel:"ייבא", pasteEmpty:"אין מה לייבא", pasteImported:n => `${n} פריטים יובאו ✅`, newListNamePrompt:"שם הרשימה החדשה", importedListDefault:"רשימה מיובאת", pasteHint:"מזהה שורות, ✅ 🤔 ⬜, תבליטים - * • ▸, כותרות # וכמויות כמו '2 ק״ג אורז'", detected:n => `${n} פריטים זוהו` },
+    ko: { okLabel:"확인", cancelLabel:"취소", uncheckAllBtn:"🔄 초기화", uncheckAllConfirm:"모든 항목의 선택을 해제할까요 (목록은 유지)?", uncheckedAll:"모두 초기화됨 🔄", renameCatPrompt:"카테고리 이름 변경", copyTitle:"목록 복사", copyOnlyItems:"📝 항목만", copyOnlyItemsDesc:"깨끗한 목록 — 다른 사람에게 보내기 좋음", copyWithStatus:"📋 상태 포함", copyWithStatusDesc:"⬜ ✅ 🤔 표시", templateNewListName:"새 목록 이름", newVersion:"새 버전 사용 가능", reload:"새로고침", helpBtnTitle:"도움말", refreshBtn:"🔄 앱 새로고침", refreshConfirm:"최신 버전을 가져올까요? 앱이 다시 로드됩니다.", refreshing:"새로고침 중...", bgTitle:"배경", bgNone:"없음", bgDots:"점", bgGrid:"격자", bgPaws:"발자국", bgStars:"별", bgHearts:"하트", bgLeaves:"잎", editItemTitle:"항목 편집", itemNamePh:"항목 이름", qtyPh:"1", unitPh:"kg", pricePh:"12500", listTotal:t => `합계: ${t}`, currencySymbol:"₩", qtyHint:"💡 ✏️를 눌러 수량, 단위 또는 가격 추가", frequentsTitle:"✨ 자주 사용 — 눌러서 추가", nameLabel:"이름", qtyLabel:"수량", unitLabel:"단위", priceLabel:"가격", pasteListBtn:"📥 텍스트로 목록 붙여넣기", pasteImportTitle:"텍스트에서 가져오기", pastePh:"여기에 목록 텍스트를 붙여넣으세요 (WhatsApp, 메모, 레시피 등)", importLabel:"가져오기", pasteEmpty:"가져올 것이 없습니다", pasteImported:n => `${n}개 항목 가져옴 ✅`, newListNamePrompt:"새 목록 이름", importedListDefault:"가져온 목록", pasteHint:"줄·✅ 🤔 ⬜·- * • ▸ 글머리·# 제목·'2 kg 쌀' 같은 수량 감지", detected:n => `${n}개 감지됨` },
   }
   Object.entries(ext).forEach(([k,v]) => Object.assign(TPRO[k], v))
 })();
@@ -2222,6 +2223,118 @@ function applyBg(){
   if(pro && bgPattern) document.body.classList.add("bg-" + bgPattern)
 }
 
+// ── PASTE-TO-LIST IMPORT ──────────────────────────
+function parseTextToList(text){
+  if(!text) return { items:[], categoryOrder:[], suggestedName:"" }
+  const lines = text.split(/\r?\n/)
+  const items = []
+  const categoryOrder = []
+  let currentCat = ""
+  let suggestedName = ""
+  let firstSeen = false
+  for(const raw of lines){
+    let line = raw.trim()
+    if(!line) continue
+    const headerMatch = line.match(/^(?:#{1,3}|▸|📂)\s+(.+?):?\s*$/u)
+    if(headerMatch){
+      const title = headerMatch[1].trim()
+      if(!firstSeen && items.length === 0 && !suggestedName){
+        suggestedName = title
+        firstSeen = true
+      } else if(title){
+        currentCat = title
+        if(!categoryOrder.includes(currentCat)) categoryOrder.push(currentCat)
+      }
+      continue
+    }
+    let status = 0
+    const statusMatch = line.match(/^(✅|☑️|✓|🤔|⬜|☐|✗|\[[xv ]\])\s*(.+)$/iu)
+    if(statusMatch){
+      const m = statusMatch[1]
+      if(/✅|☑️|✓|\[x\]|\[v\]/i.test(m)) status = 1
+      else if(/🤔/.test(m)) status = 2
+      line = statusMatch[2].trim()
+    }
+    line = line.replace(/^[•\-\*▸◦▪]\s+/, "").replace(/^\d+[.)]\s+/, "")
+    if(!line) continue
+    let qty = "", unit = ""
+    const qm = line.match(/^(\d+(?:[.,]\d+)?)\s*([a-zA-ZáéíóúçÁÉÍÓÚÇ]{1,5})?\s+(.+)$/)
+    if(qm && qm[3].length > 0){
+      qty = qm[1]
+      unit = qm[2] || ""
+      line = qm[3]
+    }
+    if(!line) continue
+    firstSeen = true
+    if(currentCat && !categoryOrder.includes(currentCat)) categoryOrder.push(currentCat)
+    items.push({ name: line, status, category: currentCat, qty, unit, price: "" })
+  }
+  return { items, categoryOrder, suggestedName }
+}
+
+function openPasteImport(prefilledText){
+  _uiResolve = null
+  const tt = tp()
+  _uiOpen(tt.pasteImportTitle, `
+    <textarea id="_pasteTA" class="ui-input" placeholder="${_esc(tt.pastePh)}" style="min-height:140px;resize:vertical;font-family:inherit;margin-bottom:6px"></textarea>
+    <div id="_pastePreview" style="margin:0 0 10px;font-size:13px;font-weight:700;color:var(--primary);min-height:18px"></div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:14px">${_esc(tt.pasteHint)}</div>
+    <div class="ui-row">
+      <button class="secondary-btn" onclick="closeModal('uiModal')">${tt.cancelLabel}</button>
+      <button class="primary-btn" onclick="confirmPasteImport()">${tt.importLabel}</button>
+    </div>
+  `)
+  setTimeout(() => {
+    const ta = document.getElementById("_pasteTA")
+    if(!ta) return
+    if(prefilledText){ ta.value = prefilledText; updatePastePreview() }
+    ta.focus()
+    ta.oninput = updatePastePreview
+  }, 50)
+}
+
+function updatePastePreview(){
+  const ta = document.getElementById("_pasteTA")
+  const preview = document.getElementById("_pastePreview")
+  if(!ta || !preview) return
+  const result = parseTextToList(ta.value)
+  preview.textContent = result.items.length ? tp().detected(result.items.length) : ""
+}
+
+async function confirmPasteImport(){
+  const ta = document.getElementById("_pasteTA")
+  if(!ta) return
+  const parsed = parseTextToList(ta.value)
+  if(!parsed.items.length){ showToast(tp().pasteEmpty); return }
+  closeModal("uiModal")
+  const suggested = parsed.suggestedName || tp().importedListDefault
+  const name = await uiPrompt(tp().newListNamePrompt, suggested)
+  if(name === null) return
+  const trimmed = (name || "").trim() || suggested
+  lists.push({
+    name: trimmed,
+    emoji: "📥",
+    items: parsed.items,
+    categoryOrder: parsed.categoryOrder,
+    collapsedCats: [],
+  })
+  save(); renderLists()
+  showToast(tp().pasteImported(parsed.items.length))
+}
+
+function checkShareTarget(){
+  try {
+    const params = new URLSearchParams(window.location.search)
+    const text = params.get("share_text") || params.get("text") || ""
+    const title = params.get("share_title") || params.get("title") || ""
+    const url = params.get("share_url") || params.get("url") || ""
+    if(!text && !title && !url) return
+    const combined = [title, text, url].filter(Boolean).join("\n")
+    history.replaceState(null, "", window.location.pathname)
+    setTimeout(() => openPasteImport(combined), 200)
+  } catch(e){ console.warn("share target:", e) }
+}
+
 async function forceRefresh(){
   if(!await uiConfirm(tp().refreshConfirm)) return
   showToast(tp().refreshing)
@@ -2249,6 +2362,7 @@ function refreshProUI(){
   document.getElementById("uncheckBtn").textContent = tt.uncheckAllBtn
   document.getElementById("helpBtn").title = tt.helpBtnTitle
   document.getElementById("refreshBtn").textContent = tt.refreshBtn
+  document.getElementById("pasteListBtn").textContent = tt.pasteListBtn
   applyAccent()
   applyBg()
 }
@@ -2491,6 +2605,7 @@ function openStats(){
 // ── INIT ──────────────────────────────────────────
 refreshProUI()
 applyLang()
+checkShareTarget()
 
 if("serviceWorker" in navigator){
   let _refreshing = false
