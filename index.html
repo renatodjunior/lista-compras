@@ -198,7 +198,30 @@ textarea{ resize:none; min-height:82px; }
   box-shadow:0 4px 20px rgba(0,0,0,.25);
 }
 .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+.toast-undo{
+  margin-left:14px; background:var(--primary); color:white;
+  border:none; padding:5px 12px; border-radius:99px; cursor:pointer;
+  font-family:inherit; font-weight:700; font-size:13px; pointer-events:auto;
+}
 .empty-state{ text-align:center; color:var(--muted); padding:28px 0 10px; font-size:15px; }
+.search-row{ position:relative; margin-bottom:10px; }
+.search-row input{ padding-left:36px; }
+.search-row::before{
+  content:"🔎"; position:absolute; left:11px; top:50%;
+  transform:translateY(-50%); font-size:14px; opacity:.6; pointer-events:none;
+}
+[dir=rtl] .search-row input{ padding-left:13px; padding-right:36px; }
+[dir=rtl] .search-row::before{ left:auto; right:11px; }
+.no-match{ text-align:center; color:var(--muted); padding:14px 0; font-size:14px; }
+.list-stats{ display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap; }
+.stat-pill{
+  background:var(--btn); padding:5px 11px; border-radius:99px;
+  font-size:12px; font-weight:700; color:var(--text);
+}
+.stat-pill.primary{ background:var(--primary-light); color:var(--primary); }
+.stat-pill.warn{ background:#fff3d6; color:#a76b00; }
+.dark .stat-pill.warn{ background:#3a2e0a; color:#f5c452; }
+.item-name{ cursor:pointer; user-select:none; }
 .backup-row{ display:flex; gap:8px; margin-top:12px; }
 .backup-btn{
   flex:1; padding:10px; border:none; border-radius:10px; background:var(--btn);
@@ -327,11 +350,16 @@ textarea{ resize:none; min-height:82px; }
     <div class="progress-bar-wrap">
       <div class="progress-bar" id="progressBar"></div>
     </div>
+    <div class="list-stats" id="listStats"></div>
+    <div class="search-row">
+      <input id="searchInput" oninput="renderItems()" autocomplete="off">
+    </div>
     <div id="items"></div>
+    <datalist id="itemNameOptions"></datalist>
     <div class="section-title" id="sectionAddItems"></div>
     <input id="newCategory" list="categoryOptions" style="margin-bottom:8px">
     <datalist id="categoryOptions"></datalist>
-    <textarea id="newItems"></textarea>
+    <textarea id="newItems" list="itemNameOptions"></textarea>
     <button class="primary-btn" id="addItemsBtn" onclick="addItems()"></button>
   </div>
 
@@ -379,6 +407,17 @@ const T = {
     editItemPrompt: "Editar item",
     helpTitle: "Como usar",
     helpClose: "Fechar",
+    searchPlaceholder: "Buscar item...",
+    undo: "Desfazer",
+    itemDeleted: "Item removido",
+    listDeleted: "Lista removida",
+    restored: "Restaurado ↩️",
+    remaining: n => `${n} restante${n!==1?"s":""}`,
+    done: n => `${n} comprado${n!==1?"s":""}`,
+    maybe: n => `${n} talvez`,
+    allDone: "Tudo pronto! 🎉",
+    noMatch: "Nenhum item corresponde à busca",
+    emojiPrompt: "Novo emoji",
   },
   en: {
     newList: "New list",
@@ -415,6 +454,17 @@ const T = {
     editItemPrompt: "Edit item",
     helpTitle: "How to use",
     helpClose: "Close",
+    searchPlaceholder: "Search item...",
+    undo: "Undo",
+    itemDeleted: "Item removed",
+    listDeleted: "List removed",
+    restored: "Restored ↩️",
+    remaining: n => `${n} remaining`,
+    done: n => `${n} done`,
+    maybe: n => `${n} maybe`,
+    allDone: "All done! 🎉",
+    noMatch: "No items match your search",
+    emojiPrompt: "New emoji",
   },
   es: {
     newList: "Nueva lista",
@@ -451,6 +501,17 @@ const T = {
     editItemPrompt: "Editar ítem",
     helpTitle: "Cómo usar",
     helpClose: "Cerrar",
+    searchPlaceholder: "Buscar ítem...",
+    undo: "Deshacer",
+    itemDeleted: "Ítem eliminado",
+    listDeleted: "Lista eliminada",
+    restored: "Restaurado ↩️",
+    remaining: n => `${n} restante${n!==1?"s":""}`,
+    done: n => `${n} comprado${n!==1?"s":""}`,
+    maybe: n => `${n} quizás`,
+    allDone: "¡Todo listo! 🎉",
+    noMatch: "Ningún ítem coincide con la búsqueda",
+    emojiPrompt: "Nuevo emoji",
   },
   ja: {
     newList: "新しいリスト",
@@ -487,6 +548,17 @@ const T = {
     editItemPrompt: "アイテムを編集",
     helpTitle: "使い方",
     helpClose: "閉じる",
+    searchPlaceholder: "アイテムを検索...",
+    undo: "元に戻す",
+    itemDeleted: "アイテムを削除",
+    listDeleted: "リストを削除",
+    restored: "復元しました ↩️",
+    remaining: n => `残り${n}件`,
+    done: n => `${n}件購入済み`,
+    maybe: n => `${n}件未定`,
+    allDone: "すべて完了！ 🎉",
+    noMatch: "一致するアイテムがありません",
+    emojiPrompt: "新しい絵文字",
   },
   he: {
     newList: "רשימה חדשה",
@@ -523,6 +595,17 @@ const T = {
     editItemPrompt: "ערוך פריט",
     helpTitle: "איך להשתמש",
     helpClose: "סגור",
+    searchPlaceholder: "חיפוש פריט...",
+    undo: "בטל",
+    itemDeleted: "הפריט הוסר",
+    listDeleted: "הרשימה הוסרה",
+    restored: "שוחזר ↩️",
+    remaining: n => `${n} נותרו`,
+    done: n => `${n} נרכשו`,
+    maybe: n => `${n} אולי`,
+    allDone: "הכל מוכן! 🎉",
+    noMatch: "אין פריטים תואמים לחיפוש",
+    emojiPrompt: "אמוג׳י חדש",
   },
   ko: {
     newList: "새 목록",
@@ -559,6 +642,17 @@ const T = {
     editItemPrompt: "항목 편집",
     helpTitle: "사용 방법",
     helpClose: "닫기",
+    searchPlaceholder: "항목 검색...",
+    undo: "실행 취소",
+    itemDeleted: "항목이 삭제됨",
+    listDeleted: "목록이 삭제됨",
+    restored: "복원됨 ↩️",
+    remaining: n => `${n}개 남음`,
+    done: n => `${n}개 완료`,
+    maybe: n => `${n}개 고민 중`,
+    allDone: "모두 완료! 🎉",
+    noMatch: "검색과 일치하는 항목이 없습니다",
+    emojiPrompt: "새 이모지",
   }
 }
 
@@ -686,11 +780,26 @@ document.getElementById("themeBtn").textContent = darkMode ? "☀️" : "🌙"
 
 function save(){ localStorage.setItem("lists", JSON.stringify(lists)) }
 
-function showToast(msg){
+let _toastTimer = null
+function showToast(msg, undoFn){
   const el = document.getElementById("toast")
-  el.textContent = msg
+  el.innerHTML = ""
+  const span = document.createElement("span")
+  span.textContent = msg
+  el.appendChild(span)
+  if(undoFn){
+    const btn = document.createElement("button")
+    btn.className = "toast-undo"
+    btn.textContent = t.undo
+    btn.onclick = () => {
+      el.classList.remove("show")
+      undoFn()
+    }
+    el.appendChild(btn)
+  }
   el.classList.add("show")
-  setTimeout(() => el.classList.remove("show"), 2200)
+  if(_toastTimer) clearTimeout(_toastTimer)
+  _toastTimer = setTimeout(() => el.classList.remove("show"), undoFn ? 4500 : 2200)
 }
 
 // ── LANGUAGE ─────────────────────────────────────
@@ -722,6 +831,8 @@ function applyLang(){
   document.getElementById("newCategory").placeholder = t.categoryPlaceholder
   document.getElementById("newItems").placeholder = t.itemsPlaceholder
   document.getElementById("addItemsBtn").textContent = t.addBtn
+  const si = document.getElementById("searchInput")
+  if(si) si.placeholder = t.searchPlaceholder
 
   if(!document.getElementById("itemsPage").classList.contains("hidden")){
     renderItems()
@@ -801,15 +912,26 @@ function renderLists(){
 
 function renameList(i){
   const name = prompt(t.renamePrompt, lists[i].name)
-  if(!name) return
-  lists[i].name = name
+  if(name === null) return
+  const trimmed = name.trim()
+  if(trimmed) lists[i].name = trimmed
+  const emoji = prompt(t.emojiPrompt, lists[i].emoji)
+  if(emoji === null){ save(); renderLists(); return }
+  const eTrim = emoji.trim()
+  if(eTrim) lists[i].emoji = eTrim
   save(); renderLists()
 }
 
 function deleteList(i){
   if(!confirm(t.deleteConfirm(lists[i].name))) return
+  const removed = lists[i]
   lists.splice(i, 1)
   save(); renderLists()
+  showToast(t.listDeleted, () => {
+    lists.splice(i, 0, removed)
+    save(); renderLists()
+    showToast(t.restored)
+  })
 }
 
 function openList(i){
@@ -817,6 +939,8 @@ function openList(i){
   document.getElementById("listsPage").classList.add("hidden")
   document.getElementById("itemsPage").classList.remove("hidden")
   document.getElementById("listTitle").textContent = lists[i].emoji + " " + lists[i].name
+  const si = document.getElementById("searchInput")
+  if(si) si.value = ""
   renderItems()
 }
 
@@ -857,8 +981,15 @@ function editItem(i){
 }
 
 function deleteItem(i){
-  lists[currentList].items.splice(i, 1)
+  const li = currentList
+  const removed = lists[li].items[i]
+  lists[li].items.splice(i, 1)
   save(); renderItems()
+  showToast(t.itemDeleted, () => {
+    lists[li].items.splice(i, 0, removed)
+    save(); renderItems()
+    showToast(t.restored)
+  })
 }
 
 // ── CLEAR DONE ────────────────────────────────────
@@ -902,8 +1033,29 @@ function renderItems(){
 
   const total = list.items.length
   const done = list.items.filter(it => it.status === 1).length
+  const maybeC = list.items.filter(it => it.status === 2).length
+  const pending = total - done - maybeC
   const pct = total ? Math.round((done/total)*100) : 0
   document.getElementById("progressBar").style.width = pct + "%"
+
+  const stats = document.getElementById("listStats")
+  if(stats){
+    stats.innerHTML = ""
+    if(total){
+      if(pending > 0) stats.innerHTML += `<span class="stat-pill primary">⏳ ${t.remaining(pending)}</span>`
+      if(done > 0) stats.innerHTML += `<span class="stat-pill">✅ ${t.done(done)}</span>`
+      if(maybeC > 0) stats.innerHTML += `<span class="stat-pill warn">🤔 ${t.maybe(maybeC)}</span>`
+      if(total && pending === 0 && maybeC === 0) stats.innerHTML = `<span class="stat-pill primary">${t.allDone}</span>`
+    }
+  }
+
+  const itemDL = document.getElementById("itemNameOptions")
+  if(itemDL){
+    itemDL.innerHTML = ""
+    const all = new Set()
+    lists.forEach(L => L.items.forEach(it => { if(it.name) all.add(it.name) }))
+    Array.from(all).sort().forEach(n => { const o = document.createElement("option"); o.value = n; itemDL.appendChild(o) })
+  }
 
   if(!total){
     container.innerHTML = `<div class="empty-state">${t.emptyItems}</div>`
@@ -917,12 +1069,21 @@ function renderItems(){
     cats.forEach(c => { const o = document.createElement("option"); o.value = c; dl.appendChild(o) })
   }
 
+  const q = (document.getElementById("searchInput")?.value || "").trim().toLowerCase()
+
   const groups = {}
+  let visibleCount = 0
   list.items.forEach((item, i) => {
+    if(q && !item.name.toLowerCase().includes(q)) return
     const cat = item.category || ""
     if(!groups[cat]) groups[cat] = []
     groups[cat].push({ item, i })
+    visibleCount++
   })
+  if(q && !visibleCount){
+    container.innerHTML = `<div class="no-match">${t.noMatch}</div>`
+    return
+  }
 
   const existingCats = Object.keys(groups)
   const orderedCats = list.categoryOrder.filter(c => existingCats.includes(c))
@@ -966,7 +1127,7 @@ function renderItems(){
       row.innerHTML = `
         <div class="drag">⠿</div>
         <div class="toggle ${tc}" onclick="toggleStatus(${i})"></div>
-        <div class="item-name ${tc}">${item.name}</div>
+        <div class="item-name ${tc}" onclick="toggleStatus(${i})">${item.name}</div>
         <button class="icon-btn" onclick="editItem(${i})">✏️</button>
         <button class="icon-btn" onclick="deleteItem(${i})">❌</button>
       `
