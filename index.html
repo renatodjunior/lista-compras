@@ -66,7 +66,12 @@ body{
   transition:transform .1s;
 }
 .theme-btn:active{ transform:scale(.9); }
-.help-btn{ font-weight:800; font-size:20px; line-height:1; }
+.help-btn{
+  font-weight:800; font-size:20px; line-height:1;
+  background:#1e88e5; color:white;
+}
+.dark .help-btn{ background:#42a5f5; color:#0a1a2a; }
+.help-btn:hover{ filter:brightness(1.08); }
 #titleIcon{
   display:inline-block;
   animation:iconPop .25s ease;
@@ -369,6 +374,36 @@ textarea{ resize:none; min-height:82px; }
   cursor:pointer; padding:4px 0; margin-top:8px; text-decoration:underline;
 }
 .list-card.has-template{ border-left:3px solid var(--warning); }
+.ui-box.no-header{ padding-top:18px; }
+.ui-box .ui-msg{ margin:0 0 18px; font-size:15px; line-height:1.6; }
+.ui-row{ display:flex; gap:8px; }
+.ui-row > *{ flex:1; }
+.ui-input{
+  width:100%; padding:11px 13px; border-radius:10px;
+  border:2px solid transparent; background:var(--btn); color:var(--text);
+  font-family:inherit; font-size:15px; outline:none; margin-bottom:14px;
+  transition:border-color .2s; box-shadow:var(--shadow);
+}
+.ui-input:focus{ border-color:var(--primary); }
+.cat-rename-btn{
+  width:24px; height:24px; border-radius:6px; background:transparent;
+  border:none; cursor:pointer; font-size:13px; color:var(--muted);
+  flex-shrink:0; opacity:.5; transition:opacity .15s, transform .1s;
+}
+.category-header:hover .cat-rename-btn{ opacity:1; }
+.cat-rename-btn:active{ transform:scale(.88); }
+.copy-choice-btn{
+  text-align:left; padding:14px; background:var(--btn); border:none;
+  border-radius:10px; color:var(--text); font-family:inherit;
+  cursor:pointer; margin-bottom:8px; width:100%;
+  font-size:14px; font-weight:700; line-height:1.4;
+  transition:background .15s, transform .1s;
+}
+.copy-choice-btn:hover{ background:var(--primary-light); }
+.copy-choice-btn:active{ transform:scale(.98); }
+.copy-choice-btn .desc{
+  display:block; font-size:12px; font-weight:500; color:var(--muted); margin-top:3px;
+}
 
 /* ── FOOTER ── */
 .site-footer{
@@ -384,6 +419,17 @@ textarea{ resize:none; min-height:82px; }
 <body>
 
 <div class="toast" id="toast"></div>
+
+<!-- GENERIC UI MODAL (alert/confirm/prompt/choice) -->
+<div class="help-modal hidden" id="uiModal" onclick="uiBgCancel(event)">
+  <div class="help-box ui-box">
+    <div class="help-box-header" id="uiModalHeader">
+      <span class="help-box-title" id="uiModalTitle"></span>
+      <button class="help-x-btn" onclick="uiCancel()">✕</button>
+    </div>
+    <div id="uiModalBody"></div>
+  </div>
+</div>
 
 <!-- SETTINGS / PRO MODAL -->
 <div class="help-modal hidden" id="settingsModal" onclick="closeOnBg(event,'settingsModal')">
@@ -487,6 +533,7 @@ textarea{ resize:none; min-height:82px; }
       <button class="back-btn" id="backBtn" onclick="back()"></button>
       <div class="top-actions">
         <button class="clear-btn" id="saveTplBtn" onclick="saveAsTemplate()" style="display:none"></button>
+        <button class="clear-btn" id="uncheckBtn" onclick="uncheckAll()"></button>
         <button class="clear-btn" id="clearBtn" onclick="clearDone()"></button>
         <button class="copy-btn" id="copyBtn"></button>
       </div>
@@ -1066,6 +1113,19 @@ const TPRO = {
 }
 function tp(){ return TPRO[currentLang] || TPRO.en }
 
+// v3 string extensions
+;(function(){
+  const ext = {
+    pt: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Desmarcar", uncheckAllConfirm:"Desmarcar todos os itens (manter na lista)?", uncheckedAll:"Tudo desmarcado 🔄", renameCatPrompt:"Renomear categoria", copyTitle:"Copiar lista", copyOnlyItems:"📝 Apenas itens", copyOnlyItemsDesc:"Lista limpa — ideal para enviar pra alguém comprar", copyWithStatus:"📋 Com status", copyWithStatusDesc:"Mostra ⬜ ✅ 🤔 do estado atual", templateNewListName:"Nome da nova lista", newVersion:"Nova versão disponível", reload:"Recarregar", helpBtnTitle:"Ajuda" },
+    en: { okLabel:"OK", cancelLabel:"Cancel", uncheckAllBtn:"🔄 Reset", uncheckAllConfirm:"Uncheck all items (keep on list)?", uncheckedAll:"All unchecked 🔄", renameCatPrompt:"Rename category", copyTitle:"Copy list", copyOnlyItems:"📝 Items only", copyOnlyItemsDesc:"Clean list — ideal to send to someone shopping", copyWithStatus:"📋 With status", copyWithStatusDesc:"Shows ⬜ ✅ 🤔 of current state", templateNewListName:"New list name", newVersion:"New version available", reload:"Reload", helpBtnTitle:"Help" },
+    es: { okLabel:"OK", cancelLabel:"Cancelar", uncheckAllBtn:"🔄 Resetear", uncheckAllConfirm:"¿Desmarcar todos los ítems (mantenerlos)?", uncheckedAll:"Todo desmarcado 🔄", renameCatPrompt:"Renombrar categoría", copyTitle:"Copiar lista", copyOnlyItems:"📝 Solo ítems", copyOnlyItemsDesc:"Lista limpia — ideal para enviar a alguien", copyWithStatus:"📋 Con estado", copyWithStatusDesc:"Muestra ⬜ ✅ 🤔 del estado actual", templateNewListName:"Nombre de la nueva lista", newVersion:"Nueva versión disponible", reload:"Recargar", helpBtnTitle:"Ayuda" },
+    ja: { okLabel:"OK", cancelLabel:"キャンセル", uncheckAllBtn:"🔄 リセット", uncheckAllConfirm:"すべてのアイテムのチェックを外しますか（リストには残ります）？", uncheckedAll:"すべてリセット 🔄", renameCatPrompt:"カテゴリ名を変更", copyTitle:"リストをコピー", copyOnlyItems:"📝 アイテムのみ", copyOnlyItemsDesc:"クリーンなリスト — 誰かに送るのに最適", copyWithStatus:"📋 ステータス付き", copyWithStatusDesc:"⬜ ✅ 🤔 を表示", templateNewListName:"新しいリスト名", newVersion:"新しいバージョンがあります", reload:"再読込", helpBtnTitle:"ヘルプ" },
+    he: { okLabel:"אישור", cancelLabel:"ביטול", uncheckAllBtn:"🔄 איפוס", uncheckAllConfirm:"לבטל סימון כל הפריטים (להשאיר ברשימה)?", uncheckedAll:"הכל אופס 🔄", renameCatPrompt:"שינוי שם קטגוריה", copyTitle:"העתק רשימה", copyOnlyItems:"📝 פריטים בלבד", copyOnlyItemsDesc:"רשימה נקייה — מושלם לשליחה למישהו", copyWithStatus:"📋 עם סטטוס", copyWithStatusDesc:"מציג ⬜ ✅ 🤔", templateNewListName:"שם הרשימה החדשה", newVersion:"גרסה חדשה זמינה", reload:"טען מחדש", helpBtnTitle:"עזרה" },
+    ko: { okLabel:"확인", cancelLabel:"취소", uncheckAllBtn:"🔄 초기화", uncheckAllConfirm:"모든 항목의 선택을 해제할까요 (목록은 유지)?", uncheckedAll:"모두 초기화됨 🔄", renameCatPrompt:"카테고리 이름 변경", copyTitle:"목록 복사", copyOnlyItems:"📝 항목만", copyOnlyItemsDesc:"깨끗한 목록 — 다른 사람에게 보내기 좋음", copyWithStatus:"📋 상태 포함", copyWithStatusDesc:"⬜ ✅ 🤔 표시", templateNewListName:"새 목록 이름", newVersion:"새 버전 사용 가능", reload:"새로고침", helpBtnTitle:"도움말" },
+  }
+  Object.entries(ext).forEach(([k,v]) => Object.assign(TPRO[k], v))
+})();
+
 // ── HELP CONTENT ─────────────────────────────────
 const HELP = {
   pt: `
@@ -1194,25 +1254,25 @@ document.getElementById("themeBtn").textContent = darkMode ? "☀️" : "🌙"
 function save(){ localStorage.setItem("lists", JSON.stringify(lists)) }
 
 let _toastTimer = null
-function showToast(msg, undoFn){
+function showToast(msg, actionFn, actionLabel){
   const el = document.getElementById("toast")
   el.innerHTML = ""
   const span = document.createElement("span")
   span.textContent = msg
   el.appendChild(span)
-  if(undoFn){
+  if(actionFn){
     const btn = document.createElement("button")
     btn.className = "toast-undo"
-    btn.textContent = t.undo
+    btn.textContent = actionLabel || t.undo
     btn.onclick = () => {
       el.classList.remove("show")
-      undoFn()
+      actionFn()
     }
     el.appendChild(btn)
   }
   el.classList.add("show")
   if(_toastTimer) clearTimeout(_toastTimer)
-  _toastTimer = setTimeout(() => el.classList.remove("show"), undoFn ? 4500 : 2200)
+  _toastTimer = setTimeout(() => el.classList.remove("show"), actionFn ? (actionLabel ? 30000 : 4500) : 2200)
 }
 
 // ── LANGUAGE ─────────────────────────────────────
@@ -1325,20 +1385,20 @@ function renderLists(){
   })
 }
 
-function renameList(i){
-  const name = prompt(t.renamePrompt, lists[i].name)
+async function renameList(i){
+  const name = await uiPrompt(t.renamePrompt, lists[i].name)
   if(name === null) return
   const trimmed = name.trim()
   if(trimmed) lists[i].name = trimmed
-  const emoji = prompt(t.emojiPrompt, lists[i].emoji)
+  const emoji = await uiPrompt(t.emojiPrompt, lists[i].emoji)
   if(emoji === null){ save(); renderLists(); return }
   const eTrim = emoji.trim()
   if(eTrim) lists[i].emoji = eTrim
   save(); renderLists()
 }
 
-function deleteList(i){
-  if(!confirm(t.deleteConfirm(lists[i].name))) return
+async function deleteList(i){
+  if(!await uiConfirm(t.deleteConfirm(lists[i].name))) return
   const removed = lists[i]
   lists.splice(i, 1)
   save(); renderLists()
@@ -1388,10 +1448,12 @@ function toggleStatus(i){
   save(); renderItems()
 }
 
-function editItem(i){
-  const name = prompt(t.editItemPrompt, lists[currentList].items[i].name)
-  if(!name) return
-  lists[currentList].items[i].name = name
+async function editItem(i){
+  const name = await uiPrompt(t.editItemPrompt, lists[currentList].items[i].name)
+  if(name === null) return
+  const trimmed = name.trim()
+  if(!trimmed) return
+  lists[currentList].items[i].name = trimmed
   save(); renderItems()
 }
 
@@ -1409,11 +1471,11 @@ function deleteItem(i){
 
 // ── CLEAR DONE ────────────────────────────────────
 
-function clearDone(){
+async function clearDone(){
   const list = lists[currentList]
   const doneCount = list.items.filter(it => it.status === 1).length
   if(!doneCount){ showToast(t.nothingToClear); return }
-  if(!confirm(t.confirmClear(doneCount))) return
+  if(!await uiConfirm(t.confirmClear(doneCount))) return
   list.items = list.items.filter(it => it.status !== 1)
   save(); renderItems()
   showToast(t.cleared(doneCount))
@@ -1522,6 +1584,7 @@ function renderItems(){
       header.innerHTML = `
         <div class="cat-drag">⠿</div>
         <div class="category-label">📂 ${cat}</div>
+        <button class="cat-rename-btn" title="✏️" onclick="renameCategory('${catEsc}')">✏️</button>
         <button class="icon-btn use-cat-btn" title="+" onclick="useCategory('${catEsc}')">+</button>
         <button class="collapse-btn" onclick="toggleCollapse('${catEsc}')">
           ${isCollapsed ? '▶' : '▼'}
@@ -1580,9 +1643,15 @@ function renderItems(){
 
 // ── COPY LIST ─────────────────────────────────────
 
-function copyList(){
+async function copyList(){
   const list = lists[currentList]
   if(!list || !list.items.length){ showToast(t.listEmpty); return }
+  const choice = await uiChoice(tp().copyTitle, [
+    { label: tp().copyOnlyItems, desc: tp().copyOnlyItemsDesc },
+    { label: tp().copyWithStatus, desc: tp().copyWithStatusDesc },
+  ])
+  if(choice === null) return
+  const withStatus = choice === 1
   const statusLabel = ["⬜","✅","🤔"]
   const groups = {}
   list.items.forEach(item => {
@@ -1596,7 +1665,9 @@ function copyList(){
   const lines = [list.emoji + " " + list.name, ""]
   orderedCats.forEach(cat => {
     if(cat) lines.push("▸ " + cat)
-    groups[cat].forEach(item => lines.push(statusLabel[item.status] + " " + item.name))
+    groups[cat].forEach(item => {
+      lines.push((withStatus ? statusLabel[item.status] : "•") + " " + item.name)
+    })
     if(cat) lines.push("")
   })
   const text = lines.join("\n")
@@ -1642,16 +1713,18 @@ function importData(e){
   const file = e.target.files[0]
   if(!file) return
   const reader = new FileReader()
-  reader.onload = ev => {
+  reader.onload = async ev => {
     try {
       const data = JSON.parse(ev.target.result)
       let arr = data
+      let pendingTpl = null
       if(data && !Array.isArray(data) && Array.isArray(data.lists)){
         arr = data.lists
-        if(Array.isArray(data.templates)){ templates = data.templates; localStorage.setItem("templates", JSON.stringify(templates)) }
+        if(Array.isArray(data.templates)) pendingTpl = data.templates
       }
       if(!Array.isArray(arr)) throw new Error()
-      if(!confirm(t.confirmImport(arr.length))) return
+      if(!await uiConfirm(t.confirmImport(arr.length))) return
+      if(pendingTpl){ templates = pendingTpl; localStorage.setItem("templates", JSON.stringify(templates)) }
       lists = arr
       save(); renderLists()
       showToast(t.backupImported)
@@ -1661,6 +1734,108 @@ function importData(e){
   }
   reader.readAsText(file)
   e.target.value = ""
+}
+
+// ── CUSTOM UI DIALOGS ─────────────────────────────
+let _uiResolve = null
+function _esc(s){ const d=document.createElement("div"); d.textContent=s==null?"":String(s); return d.innerHTML }
+
+function uiCancel(){
+  const r = _uiResolve; _uiResolve = null
+  closeModal("uiModal")
+  if(r) r(null)
+}
+function uiBgCancel(e){ if(e.target.id === "uiModal") uiCancel() }
+function _uiResolveVal(v){
+  const r = _uiResolve; _uiResolve = null
+  closeModal("uiModal")
+  if(r) r(v)
+}
+function _uiOpen(title, body){
+  const header = document.getElementById("uiModalHeader")
+  const box = document.querySelector("#uiModal .ui-box")
+  if(title){
+    header.style.display = ""
+    document.getElementById("uiModalTitle").textContent = title
+    box.classList.remove("no-header")
+  } else {
+    header.style.display = "none"
+    box.classList.add("no-header")
+  }
+  document.getElementById("uiModalBody").innerHTML = body
+  document.getElementById("uiModal").classList.remove("hidden")
+}
+function uiAlert(msg){
+  return new Promise(resolve => {
+    _uiResolve = resolve
+    _uiOpen("", `<p class="ui-msg">${_esc(msg)}</p><button class="primary-btn" onclick="_uiResolveVal(true)">${tp().okLabel}</button>`)
+  })
+}
+function uiConfirm(msg){
+  return new Promise(resolve => {
+    _uiResolve = resolve
+    _uiOpen("", `<p class="ui-msg">${_esc(msg)}</p>
+      <div class="ui-row">
+        <button class="secondary-btn" onclick="uiCancel()">${tp().cancelLabel}</button>
+        <button class="primary-btn" onclick="_uiResolveVal(true)">${tp().okLabel}</button>
+      </div>`)
+  })
+}
+function uiPrompt(title, defaultVal){
+  return new Promise(resolve => {
+    _uiResolve = resolve
+    _uiOpen(title || "", `
+      <input id="_uiInput" class="ui-input" autocomplete="off" value="${_esc(defaultVal)}">
+      <div class="ui-row">
+        <button class="secondary-btn" onclick="uiCancel()">${tp().cancelLabel}</button>
+        <button class="primary-btn" onclick="_uiResolveInput()">${tp().okLabel}</button>
+      </div>`)
+    setTimeout(() => {
+      const i = document.getElementById("_uiInput")
+      if(i){
+        i.focus(); i.select()
+        i.onkeydown = ev => {
+          if(ev.key === "Enter"){ ev.preventDefault(); _uiResolveInput() }
+          else if(ev.key === "Escape"){ ev.preventDefault(); uiCancel() }
+        }
+      }
+    }, 50)
+  })
+}
+function _uiResolveInput(){
+  const i = document.getElementById("_uiInput")
+  _uiResolveVal(i ? i.value : null)
+}
+function uiChoice(title, options){
+  return new Promise(resolve => {
+    _uiResolve = resolve
+    const buttons = options.map((o,i) =>
+      `<button class="copy-choice-btn" onclick="_uiResolveVal(${i})"><strong>${o.label}</strong>${o.desc ? `<span class="desc">${_esc(o.desc)}</span>` : ""}</button>`
+    ).join("")
+    _uiOpen(title || "", buttons)
+  })
+}
+
+// ── UNCHECK ALL / RENAME CATEGORY ─────────────────
+async function uncheckAll(){
+  const list = lists[currentList]
+  if(!list || !list.items.length) return
+  if(!await uiConfirm(tp().uncheckAllConfirm)) return
+  list.items.forEach(it => it.status = 0)
+  save(); renderItems()
+  showToast(tp().uncheckedAll)
+}
+
+async function renameCategory(oldCat){
+  const raw = await uiPrompt(tp().renameCatPrompt, oldCat)
+  if(raw === null) return
+  const newCat = raw.trim()
+  if(newCat === oldCat) return
+  const list = lists[currentList]
+  list.items.forEach(it => { if((it.category || "") === oldCat) it.category = newCat })
+  list.categoryOrder = (list.categoryOrder || []).map(c => c === oldCat ? newCat : c)
+  if(list.collapsedCats) list.collapsedCats = list.collapsedCats.map(c => c === oldCat ? newCat : c)
+  save(); renderItems()
 }
 
 // ── PRO / SETTINGS ────────────────────────────────
@@ -1700,6 +1875,8 @@ function refreshProUI(){
   document.getElementById("templatesBtn").textContent = "📦 " + tt.templatesTitle
   document.getElementById("statsBtn").textContent = "📊 " + tt.statsTitle
   document.getElementById("saveTplBtn").textContent = tt.saveAsTemplate
+  document.getElementById("uncheckBtn").textContent = tt.uncheckAllBtn
+  document.getElementById("helpBtn").title = tt.helpBtnTitle
   applyAccent()
 }
 
@@ -1789,8 +1966,8 @@ function activateLicense(){
   showToast(tp().proActivated)
 }
 
-function lockPro(){
-  if(!confirm(tp().deactivateConfirm)) return
+async function lockPro(){
+  if(!await uiConfirm(tp().deactivateConfirm)) return
   pro = false
   localStorage.removeItem("pro")
   localStorage.removeItem("license")
@@ -1804,14 +1981,16 @@ function lockPro(){
 
 function saveTemplates(){ localStorage.setItem("templates", JSON.stringify(templates)) }
 
-function saveAsTemplate(){
+async function saveAsTemplate(){
   if(!pro){ openUnlock(); return }
   const list = lists[currentList]
   if(!list) return
-  const name = prompt(tp().templateNamePrompt, list.name)
-  if(!name) return
+  const name = await uiPrompt(tp().templateNamePrompt, list.name)
+  if(name === null) return
+  const trimmed = name.trim()
+  if(!trimmed) return
   templates.push({
-    name: name.trim(),
+    name: trimmed,
     emoji: list.emoji,
     items: list.items.map(it => ({ name: it.name, category: it.category || "" })),
     categoryOrder: [...(list.categoryOrder || [])],
@@ -1844,24 +2023,27 @@ function openTemplates(){
   document.getElementById("templatesModal").classList.remove("hidden")
 }
 
-function useTemplate(i){
+async function useTemplate(i){
   const tpl = templates[i]
   if(!tpl) return
+  closeModal("templatesModal")
+  const raw = await uiPrompt(tp().templateNewListName, tpl.name)
+  if(raw === null){ openTemplates(); return }
+  const name = raw.trim() || tpl.name
   lists.push({
-    name: tpl.name,
+    name,
     emoji: tpl.emoji,
     items: tpl.items.map(it => ({ name: it.name, status: 0, category: it.category || "" })),
     categoryOrder: [...(tpl.categoryOrder || [])],
     collapsedCats: [],
   })
   save()
-  closeModal("templatesModal")
   renderLists()
   showToast(tp().templateUsed)
 }
 
-function deleteTemplate(i){
-  if(!confirm(tp().deleteTemplateConfirm(templates[i].name))) return
+async function deleteTemplate(i){
+  if(!await uiConfirm(tp().deleteTemplateConfirm(templates[i].name))) return
   templates.splice(i, 1)
   saveTemplates()
   openTemplates()
@@ -1923,8 +2105,26 @@ refreshProUI()
 applyLang()
 
 if("serviceWorker" in navigator){
+  let _refreshing = false
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if(_refreshing) return
+    _refreshing = true
+    window.location.reload()
+  })
   navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("✅ SW registered"))
+    .then(reg => {
+      function notifyUpdate(worker){
+        showToast(tp().newVersion, () => worker.postMessage({ action: "skipWaiting" }), tp().reload)
+      }
+      if(reg.waiting && navigator.serviceWorker.controller) notifyUpdate(reg.waiting)
+      reg.addEventListener("updatefound", () => {
+        const w = reg.installing
+        if(!w) return
+        w.addEventListener("statechange", () => {
+          if(w.state === "installed" && navigator.serviceWorker.controller) notifyUpdate(w)
+        })
+      })
+    })
     .catch(e => console.warn("SW error:", e))
 }
 </script>

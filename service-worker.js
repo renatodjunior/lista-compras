@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v3-pro"
+const CACHE_NAME = "mylists-v4-ux3"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
@@ -10,14 +10,18 @@ const FILES = [
   "https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
 ]
 
-// Instalação: cacheia todos os arquivos
+// Instalação: cacheia todos os arquivos. Não auto-skipWaiting — espera prompt do cliente.
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return Promise.allSettled(FILES.map(f => cache.add(f)))
     })
   )
-  self.skipWaiting()
+})
+
+// Cliente pede pra ativar nova versão imediatamente
+self.addEventListener("message", event => {
+  if(event.data && event.data.action === "skipWaiting") self.skipWaiting()
 })
 
 // Ativação: remove caches antigos
