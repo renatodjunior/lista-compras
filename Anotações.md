@@ -43,3 +43,12 @@ Roadmap
 Com assistente IA para montar a lista
 
 Voice Mode para falar itens  -->
+
+
+Trocar ordem de quantidade e nome do item, nome do item vem primeiro tag de quantidade e unidade depois. 
+
+Mudar placeholder de quantidade colocar exemplo, e para adicionar um x caso não tenha nada saber na tag que é a quantidade .
+
+O de unidade pode só colocar um exemplo de placeholder além da abreviação também. 
+
+Preciso de alguma forma mostrar que da pra colocar essas coisas a mais no item por que por hora quem for usar não sabe que tem se não clicar em nada. Mas tem que ser algo que não atrapalhe quem já conhece a funcionalidade 
