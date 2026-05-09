@@ -1997,20 +1997,18 @@ const ACCENT_PRESETS = [
 ]
 
 function applyAccent(){
-  if(!pro || !accentColor){
-    document.documentElement.style.removeProperty("--primary")
-    document.documentElement.style.removeProperty("--primary-light")
-    return
-  }
+  const target = document.body
+  target.style.removeProperty("--primary")
+  target.style.removeProperty("--primary-light")
+  if(!pro || !accentColor) return
   const preset = ACCENT_PRESETS.find(p => p.name === accentColor)
   if(!preset) return
-  const root = document.documentElement
   if(darkMode){
-    root.style.setProperty("--primary", preset.dPrimary)
-    root.style.setProperty("--primary-light", preset.dLight)
+    target.style.setProperty("--primary", preset.dPrimary)
+    target.style.setProperty("--primary-light", preset.dLight)
   } else {
-    root.style.setProperty("--primary", preset.primary)
-    root.style.setProperty("--primary-light", preset.light)
+    target.style.setProperty("--primary", preset.primary)
+    target.style.setProperty("--primary-light", preset.light)
   }
 }
 
