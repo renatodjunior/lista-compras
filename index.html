@@ -2649,15 +2649,21 @@ async function confirmPasteImport(){
 const SR_API = window.SpeechRecognition || window.webkitSpeechRecognition
 let _voice = null
 let _voiceBuffer = ""
+let _voiceTriedFallback = false
 const VOICE_LANG_MAP = { pt:"pt-BR", en:"en-US", es:"es-ES", ja:"ja-JP", he:"he-IL", ko:"ko-KR" }
-const VOICE_SPLIT_RE = /[,;]|\b(?: e | y | and | und | et | und )\b/i
+const VOICE_SPLIT_RE = /[,;]|\b(?: e | y | and | und | et )\b/i
 
 function toggleVoice(){
   if(!VOICE_AVAILABLE){ showToast(tp().voiceUnsupported); return }
   if(_voice){ stopVoice(); return }
+  _voiceTriedFallback = false
+  startVoiceLang(VOICE_LANG_MAP[currentLang] || "en-US")
+}
+
+function startVoiceLang(lang){
   try {
     _voice = new SR_API()
-    _voice.lang = VOICE_LANG_MAP[currentLang] || "en-US"
+    _voice.lang = lang
     _voice.continuous = true
     _voice.interimResults = false
     _voiceBuffer = ""
@@ -2671,6 +2677,15 @@ function toggleVoice(){
       if(ev.error === "aborted" || ev.error === "no-speech"){
         finishVoice(); return
       }
+      // network error: try once with en-US fallback
+      if(ev.error === "network" && !_voiceTriedFallback && lang !== "en-US"){
+        _voiceTriedFallback = true
+        try { _voice.abort() } catch(e){}
+        _voice = null
+        document.getElementById("voiceBtn").classList.remove("recording")
+        setTimeout(() => startVoiceLang("en-US"), 200)
+        return
+      }
       const tt = tp()
       let msg = tt.voiceError
       if(ev.error === "network") msg = (tt.voiceNetworkError || tt.voiceError) + " — " + (tt.voiceNeedsInternet || "needs internet")
@@ -2681,7 +2696,7 @@ function toggleVoice(){
     }
     _voice.start()
     document.getElementById("voiceBtn").classList.add("recording")
-    showToast(tp().voiceListening)
+    if(!_voiceTriedFallback) showToast(tp().voiceListening)
   } catch(e){
     showToast(tp().voiceError)
     _voice = null
