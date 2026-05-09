@@ -2636,7 +2636,7 @@ const VOICE_LANG_MAP = { pt:"pt-BR", en:"en-US", es:"es-ES", ja:"ja-JP", he:"he-
 const VOICE_SPLIT_RE = /[,;]|\b(?: e | y | and | und | et | und )\b/i
 
 function toggleVoice(){
-  if(!SR_API){ showToast(tp().voiceUnsupported); return }
+  if(!VOICE_AVAILABLE){ showToast(tp().voiceUnsupported); return }
   if(_voice){ stopVoice(); return }
   try {
     _voice = new SR_API()
@@ -2686,8 +2686,9 @@ function finishVoice(){
   ta.value = (existing ? existing + "\n" : "") + items.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join("\n")
   ta.focus()
 }
+const VOICE_AVAILABLE = !!SR_API && (location.protocol !== "file:")
 function initVoice(){
-  if(!SR_API){
+  if(!VOICE_AVAILABLE){
     const b = document.getElementById("voiceBtn")
     if(b) b.style.display = "none"
   }
