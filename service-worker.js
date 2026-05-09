@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v9-cat-emoji"
+const CACHE_NAME = "mylists-v10-print"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
