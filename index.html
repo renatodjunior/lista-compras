@@ -2225,27 +2225,50 @@ function applyBg(){
 
 // ── PASTE-TO-LIST IMPORT ──────────────────────────
 function parseTextToList(text){
-  if(!text) return { items:[], categoryOrder:[], suggestedName:"" }
+  if(!text) return { items:[], categoryOrder:[], suggestedName:"", suggestedEmoji:"" }
   const lines = text.split(/\r?\n/)
+  const nonEmptyCount = lines.filter(l => l.trim().length).length
   const items = []
   const categoryOrder = []
   let currentCat = ""
   let suggestedName = ""
+  let suggestedEmoji = ""
   let firstSeen = false
+  const STATUS_RE = /^(?:✅|☑️|✓|🤔|⬜|☐|✗|\[[xv ]\])\s+/iu
+  const BULLET_RE = /^(?:[•\-\*▸◦▪]|\d+[.)])\s+/
+  const EMOJI_TITLE_RE = /^([\p{Extended_Pictographic}\u{200D}️]+)\s+(.+)$/u
   for(const raw of lines){
     let line = raw.trim()
     if(!line) continue
     const headerMatch = line.match(/^(?:#{1,3}|▸|📂)\s+(.+?):?\s*$/u)
     if(headerMatch){
       const title = headerMatch[1].trim()
-      if(!firstSeen && items.length === 0 && !suggestedName){
-        suggestedName = title
+      if(!firstSeen && !suggestedName){
+        const em = title.match(EMOJI_TITLE_RE)
+        if(em){ suggestedEmoji = em[1].slice(0,4); suggestedName = em[2].trim() }
+        else suggestedName = title
         firstSeen = true
       } else if(title){
         currentCat = title
         if(!categoryOrder.includes(currentCat)) categoryOrder.push(currentCat)
       }
       continue
+    }
+    if(!firstSeen && !suggestedName && nonEmptyCount > 1 && line.length <= 60){
+      const isStatus = STATUS_RE.test(line)
+      const isBullet = BULLET_RE.test(line)
+      const startsWithEmoji = /^[\p{Extended_Pictographic}]/u.test(line)
+      if(startsWithEmoji && !isStatus && !isBullet){
+        const em = line.match(EMOJI_TITLE_RE)
+        if(em){
+          suggestedEmoji = em[1].slice(0,4)
+          suggestedName = em[2].trim()
+        } else {
+          suggestedName = line
+        }
+        firstSeen = true
+        continue
+      }
     }
     let status = 0
     const statusMatch = line.match(/^(✅|☑️|✓|🤔|⬜|☐|✗|\[[xv ]\])\s*(.+)$/iu)
@@ -2269,7 +2292,7 @@ function parseTextToList(text){
     if(currentCat && !categoryOrder.includes(currentCat)) categoryOrder.push(currentCat)
     items.push({ name: line, status, category: currentCat, qty, unit, price: "" })
   }
-  return { items, categoryOrder, suggestedName }
+  return { items, categoryOrder, suggestedName, suggestedEmoji }
 }
 
 function openPasteImport(prefilledText){
@@ -2313,7 +2336,7 @@ async function confirmPasteImport(){
   const trimmed = (name || "").trim() || suggested
   lists.push({
     name: trimmed,
-    emoji: "📥",
+    emoji: parsed.suggestedEmoji || "📥",
     items: parsed.items,
     categoryOrder: parsed.categoryOrder,
     collapsedCats: [],
