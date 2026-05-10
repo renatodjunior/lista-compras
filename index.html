@@ -3952,12 +3952,12 @@ function buildSyncSectionHTML(){
     ? new Date(last).toLocaleString({pt:"pt-BR",en:"en-US",es:"es-ES",ja:"ja-JP",he:"he-IL",ko:"ko-KR"}[currentLang] || "en-US")
     : "—"
   return `
-    <p style="font-size:13px;color:var(--primary);font-weight:700;margin:0 0 4px">☁️ ${tt.syncStatusOn}</p>
-    <p style="font-size:11px;color:var(--muted);margin:0 0 10px">${tt.syncLastAt}: ${lastText}</p>
-    <div class="ui-row" style="margin-bottom:8px">
-      <button class="secondary-btn" onclick="dropboxSyncNow()">🔄 ${tt.syncNow}</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 4px">
+      <p style="font-size:13px;color:var(--primary);font-weight:700;margin:0">☁️ ${tt.syncStatusOn}</p>
+      <button class="danger-link" style="margin:0;padding:0;font-size:11px" onclick="dropboxDisconnect()">${tt.syncDisconnect}</button>
     </div>
-    <button class="danger-link" onclick="dropboxDisconnect()">${tt.syncDisconnect}</button>
+    <p style="font-size:11px;color:var(--muted);margin:0 0 10px">${tt.syncLastAt}: ${lastText}</p>
+    <button class="secondary-btn" onclick="dropboxSyncNow()">🔄 ${tt.syncNow}</button>
   `
 }
 
