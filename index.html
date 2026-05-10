@@ -319,6 +319,15 @@ textarea{ resize:none; min-height:82px; }
 .add-row{ display:flex; gap:8px; align-items:stretch; }
 .add-extras{ display:flex; gap:8px; margin:8px 0; }
 .add-extras .ui-input{ margin-bottom:0; padding:9px 11px; font-size:14px; }
+.add-extra-input{ background:var(--card) !important; }
+.add-disclaimer{
+  background:var(--primary-light); color:var(--primary);
+  padding:10px 12px; border-radius:10px; margin:8px 0;
+  font-size:12px; line-height:1.4;
+}
+.add-disclaimer p{ margin:0 0 8px; font-weight:600; }
+.add-disclaimer button{ font-size:12px; padding:8px 12px; }
+#sectionAddItems{ color:var(--primary); }
 .mic-btn{
   width:48px; flex-shrink:0; border:none; border-radius:10px;
   background:var(--btn); color:var(--text); cursor:pointer;
@@ -952,19 +961,23 @@ textarea{ resize:none; min-height:82px; }
     <input id="newCategory" list="categoryOptions" style="margin-bottom:8px">
     <datalist id="categoryOptions"></datalist>
     <textarea id="newItems" list="itemNameOptions" oninput="updateAddExtras()"></textarea>
-    <div class="add-extras" id="addExtras" style="display:none">
+    <div class="add-extras" id="addExtras">
       <div class="field-group" style="flex:1">
         <label class="field-label" id="addQtyLabel"></label>
-        <input id="addQty" class="ui-input" inputmode="decimal" placeholder="1">
+        <input id="addQty" class="ui-input add-extra-input" inputmode="decimal" placeholder="1">
       </div>
       <div class="field-group" style="flex:1">
         <label class="field-label" id="addUnitLabel"></label>
-        <input id="addUnit" class="ui-input" placeholder="kg">
+        <input id="addUnit" class="ui-input add-extra-input" placeholder="kg">
       </div>
       <div class="field-group" style="flex:1">
         <label class="field-label" id="addPriceLabel"></label>
-        <input id="addPrice" class="ui-input" inputmode="decimal" placeholder="12,50">
+        <input id="addPrice" class="ui-input add-extra-input" inputmode="decimal" placeholder="12,50">
       </div>
+    </div>
+    <div class="add-disclaimer" id="addDisclaimer" style="display:none">
+      <p id="addDisclaimerText"></p>
+      <button class="secondary-btn" id="addDisclaimerBtn" onclick="openPasteImport()"></button>
     </div>
     <div class="add-row">
       <button class="mic-btn" id="voiceBtn" onclick="toggleVoice()" aria-label="Voice input">
@@ -1377,6 +1390,9 @@ const TPRO = {
     actionHistoryDesc: "See price evolution and variation",
     actionDelete: "❌ Delete item",
     actionDeleteDesc: "Removes this item from the list",
+    multiItemHint: "To add multiple items with quantity/price at once, use 'Paste list from text'.",
+    samplesShowText: "📋 See text format example",
+    samplesShowTextDesc: "Opens importer with sample formatted text",
   },
   pt: {
     settingsTitle: "Configurações",
@@ -1465,6 +1481,9 @@ const TPRO = {
     actionHistoryDesc: "Ver evolução de preços e variação",
     actionDelete: "❌ Excluir item",
     actionDeleteDesc: "Remove este item da lista",
+    multiItemHint: "Pra adicionar vários itens com quantidade/preço de uma vez, use 'Colar lista de texto'.",
+    samplesShowText: "📋 Ver exemplo em texto",
+    samplesShowTextDesc: "Abre o importador com formato de texto pronto",
   },
   es: {
     settingsTitle: "Ajustes",
@@ -1553,6 +1572,9 @@ const TPRO = {
     actionHistoryDesc: "Ver evolución de precios y variación",
     actionDelete: "❌ Eliminar ítem",
     actionDeleteDesc: "Quita este ítem de la lista",
+    multiItemHint: "Para añadir varios ítems con cantidad/precio a la vez, usa 'Pegar lista'.",
+    samplesShowText: "📋 Ver formato de texto",
+    samplesShowTextDesc: "Abre el importador con texto de ejemplo",
   },
   ja: {
     settingsTitle: "設定",
@@ -1641,6 +1663,9 @@ const TPRO = {
     actionHistoryDesc: "価格の推移と変動を表示",
     actionDelete: "❌ アイテム削除",
     actionDeleteDesc: "リストから削除",
+    multiItemHint: "複数アイテムを数量・価格付きで追加するには「テキスト貼り付け」を使ってください。",
+    samplesShowText: "📋 テキスト形式の例を見る",
+    samplesShowTextDesc: "サンプルテキストでインポーターを開く",
   },
   he: {
     settingsTitle: "הגדרות",
@@ -1729,6 +1754,9 @@ const TPRO = {
     actionHistoryDesc: "ראה התפתחות מחירים ושינויים",
     actionDelete: "❌ מחק פריט",
     actionDeleteDesc: "הסר פריט זה מהרשימה",
+    multiItemHint: "להוסיף פריטים עם כמות/מחיר בבת אחת, השתמש ב'הדבק רשימה'.",
+    samplesShowText: "📋 ראה פורמט טקסט",
+    samplesShowTextDesc: "פותח את הייבוא עם טקסט לדוגמה",
   },
   ko: {
     settingsTitle: "설정",
@@ -1817,6 +1845,9 @@ const TPRO = {
     actionHistoryDesc: "가격 변동 및 추이 보기",
     actionDelete: "❌ 항목 삭제",
     actionDeleteDesc: "목록에서 제거",
+    multiItemHint: "여러 항목을 수량/가격과 함께 추가하려면 '텍스트 붙여넣기'를 사용하세요.",
+    samplesShowText: "📋 텍스트 형식 예시 보기",
+    samplesShowTextDesc: "예시 텍스트로 가져오기 열기",
   }
 }
 function tp(){ return TPRO[currentLang] || TPRO.en }
@@ -2292,9 +2323,14 @@ function addItems(){
 function updateAddExtras(){
   const ta = document.getElementById("newItems")
   const wrap = document.getElementById("addExtras")
-  if(!ta || !wrap) return
+  const disc = document.getElementById("addDisclaimer")
+  if(!ta || !wrap || !disc) return
   const lines = ta.value.split("\n").map(s => s.trim()).filter(Boolean)
-  wrap.style.display = lines.length === 1 ? "flex" : "none"
+  const multi = lines.length >= 2
+  wrap.style.display = multi ? "none" : "flex"
+  disc.style.display = multi ? "block" : "none"
+  document.getElementById("addDisclaimerText").textContent = tp().multiItemHint
+  document.getElementById("addDisclaimerBtn").textContent = tp().pasteListBtn
 }
 
 function toggleStatus(i){
@@ -2457,7 +2493,34 @@ function openSamples(){
         </span>
       </button>
     `).join("")}
+    <button class="sample-row" onclick="showTextFormatExample()" style="margin-top:8px;border:2px dashed var(--primary-light)">
+      <span class="se">📋</span>
+      <span class="si">
+        <div class="sn">${tt.samplesShowText}</div>
+        <div class="sd">${tt.samplesShowTextDesc}</div>
+      </span>
+    </button>
   `)
+}
+
+function showTextFormatExample(){
+  const samples = SAMPLES[currentLang] || SAMPLES.en
+  const s = samples[0]
+  if(!s) return
+  const lines = [s.emoji + " " + s.name, ""]
+  const cats = []
+  s.items.forEach(it => { if(it.category && !cats.includes(it.category)) cats.push(it.category) })
+  cats.forEach(cat => {
+    const ce = (s.categoryEmojis || {})[cat] || ""
+    lines.push("▸ " + (ce ? ce + " " : "") + cat)
+    s.items.filter(it => it.category === cat).forEach(it => {
+      const qty = it.qty ? `${it.qty}${it.unit ? " " + it.unit : ""} ` : ""
+      lines.push("⚪ " + qty + it.name)
+    })
+    lines.push("")
+  })
+  closeModal("uiModal")
+  setTimeout(() => openPasteImport(lines.join("\n").trim()), 200)
 }
 
 function useSample(idx){
