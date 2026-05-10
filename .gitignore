@@ -1,5 +1,9 @@
 Captura de tela*.png
 Captura de tela*.jpg
+[0-9][0-9][0-9][0-9][0-9]*.jpg
+[0-9][0-9][0-9][0-9][0-9]*.png
+IMG_*.jpg
+IMG_*.png
 *.tmp
 .DS_Store
 Thumbs.db
