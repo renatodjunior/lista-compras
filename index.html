@@ -532,6 +532,20 @@ textarea{ resize:none; min-height:82px; }
 }
 [dir=rtl] .sample-fab{ right:auto; left:20px; }
 
+.add-fab{
+  position:fixed; bottom:20px; right:20px;
+  width:56px; height:56px; border-radius:50%;
+  background:var(--primary); color:white; border:none; cursor:pointer;
+  font-size:32px; line-height:1; font-weight:700;
+  display:none; align-items:center; justify-content:center;
+  box-shadow:0 4px 16px rgba(76,175,80,.4);
+  transition:transform .15s, filter .15s;
+  z-index:100;
+}
+.add-fab:hover{ filter:brightness(1.05); transform:scale(1.05); }
+.add-fab:active{ transform:scale(.92); }
+[dir=rtl] .add-fab{ right:auto; left:20px; }
+
 .sample-row{
   display:flex; align-items:center; gap:12px;
   padding:12px 14px; border-radius:12px;
@@ -960,6 +974,7 @@ textarea{ resize:none; min-height:82px; }
   </div>
 
   <button class="sample-fab" id="sampleFab" onclick="openSamples()" aria-label="Examples" title="Examples">✨</button>
+  <button class="add-fab" id="addFab" onclick="quickAddJump()" aria-label="Add" title="Add">+</button>
 
   <footer class="site-footer">
     <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()"></button><br>
@@ -2427,12 +2442,24 @@ function useSample(idx){
 }
 
 function refreshSampleFab(){
-  const fab = document.getElementById("sampleFab")
-  if(!fab) return
+  const sampleFab = document.getElementById("sampleFab")
+  const addFab = document.getElementById("addFab")
   const onItemsPage = !document.getElementById("itemsPage").classList.contains("hidden")
-  fab.style.display = onItemsPage ? "none" : "flex"
-  fab.classList.toggle("empty-pulse", lists.length === 0)
-  fab.title = tp().samplesTitle
+  if(sampleFab){
+    sampleFab.style.display = onItemsPage ? "none" : "flex"
+    sampleFab.classList.toggle("empty-pulse", lists.length === 0)
+    sampleFab.title = tp().samplesTitle
+  }
+  if(addFab){
+    addFab.style.display = onItemsPage ? "flex" : "none"
+  }
+}
+
+function quickAddJump(){
+  const ta = document.getElementById("newItems")
+  if(!ta) return
+  ta.scrollIntoView({ behavior:"smooth", block:"center" })
+  setTimeout(() => ta.focus(), 350)
 }
 
 // ── DROPBOX SYNC ─────────────────────────────────

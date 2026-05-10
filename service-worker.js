@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v25-kebab-actions"
+const CACHE_NAME = "mylists-v26-add-fab"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
