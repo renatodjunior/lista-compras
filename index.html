@@ -121,6 +121,10 @@ body{
   cursor:pointer; font-size:15px; border:none; transition:transform .1s;
 }
 .icon-btn:active{ transform:scale(.88); }
+.kebab-btn{
+  font-size:20px; font-weight:700; line-height:1;
+  color:var(--muted); flex-shrink:0;
+}
 .section-title{
   font-size:12px; font-weight:800; text-transform:uppercase;
   letter-spacing:.08em; color:var(--muted); margin:22px 0 10px;
@@ -1336,6 +1340,12 @@ const TPRO = {
     barcodeFound: "✓ Product found:",
     barcodeAskName: "Product not in database. What's the name?",
     barcodeSaved: "Product saved ✓ (next scan will auto-recognize)",
+    actionEdit: "✏️ Edit item",
+    actionEditDesc: "Name, quantity, unit, price",
+    actionHistory: "📊 Price history",
+    actionHistoryDesc: "See price evolution and variation",
+    actionDelete: "❌ Delete item",
+    actionDeleteDesc: "Removes this item from the list",
   },
   pt: {
     settingsTitle: "Configurações",
@@ -1418,6 +1428,12 @@ const TPRO = {
     barcodeFound: "✓ Produto encontrado:",
     barcodeAskName: "Produto não cadastrado. Qual é o nome?",
     barcodeSaved: "Produto salvo ✓ (próxima vez vai reconhecer sozinho)",
+    actionEdit: "✏️ Editar item",
+    actionEditDesc: "Nome, quantidade, unidade, preço",
+    actionHistory: "📊 Histórico de preços",
+    actionHistoryDesc: "Ver evolução de preços e variação",
+    actionDelete: "❌ Excluir item",
+    actionDeleteDesc: "Remove este item da lista",
   },
   es: {
     settingsTitle: "Ajustes",
@@ -1500,6 +1516,12 @@ const TPRO = {
     barcodeFound: "✓ Producto encontrado:",
     barcodeAskName: "Producto no registrado. ¿Cómo se llama?",
     barcodeSaved: "Producto guardado ✓ (próxima vez se reconocerá solo)",
+    actionEdit: "✏️ Editar ítem",
+    actionEditDesc: "Nombre, cantidad, unidad, precio",
+    actionHistory: "📊 Historial de precios",
+    actionHistoryDesc: "Ver evolución de precios y variación",
+    actionDelete: "❌ Eliminar ítem",
+    actionDeleteDesc: "Quita este ítem de la lista",
   },
   ja: {
     settingsTitle: "設定",
@@ -1582,6 +1604,12 @@ const TPRO = {
     barcodeFound: "✓ 商品が見つかりました:",
     barcodeAskName: "商品未登録。名前は？",
     barcodeSaved: "商品を保存 ✓ (次回から自動認識)",
+    actionEdit: "✏️ アイテム編集",
+    actionEditDesc: "名前・数量・単位・価格",
+    actionHistory: "📊 価格履歴",
+    actionHistoryDesc: "価格の推移と変動を表示",
+    actionDelete: "❌ アイテム削除",
+    actionDeleteDesc: "リストから削除",
   },
   he: {
     settingsTitle: "הגדרות",
@@ -1664,6 +1692,12 @@ const TPRO = {
     barcodeFound: "✓ מוצר נמצא:",
     barcodeAskName: "מוצר לא רשום. מה השם?",
     barcodeSaved: "המוצר נשמר ✓ (בפעם הבאה יזוהה אוטומטית)",
+    actionEdit: "✏️ ערוך פריט",
+    actionEditDesc: "שם, כמות, יחידה, מחיר",
+    actionHistory: "📊 היסטוריית מחירים",
+    actionHistoryDesc: "ראה התפתחות מחירים ושינויים",
+    actionDelete: "❌ מחק פריט",
+    actionDeleteDesc: "הסר פריט זה מהרשימה",
   },
   ko: {
     settingsTitle: "설정",
@@ -1746,6 +1780,12 @@ const TPRO = {
     barcodeFound: "✓ 제품 발견:",
     barcodeAskName: "제품 미등록. 이름은?",
     barcodeSaved: "제품 저장됨 ✓ (다음 스캔부터 자동 인식)",
+    actionEdit: "✏️ 항목 편집",
+    actionEditDesc: "이름, 수량, 단위, 가격",
+    actionHistory: "📊 가격 기록",
+    actionHistoryDesc: "가격 변동 및 추이 보기",
+    actionDelete: "❌ 항목 삭제",
+    actionDeleteDesc: "목록에서 제거",
   }
 }
 function tp(){ return TPRO[currentLang] || TPRO.en }
@@ -2659,6 +2699,22 @@ function computePriceTrends(){
   return trends
 }
 
+async function openItemActions(i){
+  const item = lists[currentList].items[i]
+  if(!item) return
+  const tt = tp()
+  const histKey = (item.name || "").trim().toLowerCase()
+  const hasHist = pro && histKey && priceHistory[histKey] && priceHistory[histKey].length > 0
+  const opts = [{ label: tt.actionEdit, desc: tt.actionEditDesc }]
+  if(hasHist) opts.push({ label: tt.actionHistory, desc: tt.actionHistoryDesc })
+  opts.push({ label: tt.actionDelete, desc: tt.actionDeleteDesc })
+  const choice = await uiChoice(item.name, opts)
+  if(choice === null) return
+  if(choice === 0) return editItem(i)
+  if(hasHist && choice === 1) return openItemHistory(histKey)
+  return deleteItem(i)
+}
+
 async function editItem(i){
   const item = lists[currentList].items[i]
   const result = await uiItemEdit(item)
@@ -2833,17 +2889,12 @@ function renderItems(){
         (item.unit ? `<span class="unit-badge">${_esc(item.unit)}</span>` : "")
       const priceText = formatPrice(item.price)
       const priceHTML = priceText ? `<span class="price-badge">${priceText}</span>` : ""
-      const histKey = (item.name || "").trim().toLowerCase()
-      const hasHist = pro && histKey && priceHistory[histKey] && priceHistory[histKey].length > 0
-      const histBtn = hasHist ? `<button class="icon-btn" title="📊" onclick="openItemHistory('${histKey.replace(/'/g, "\\'")}')">📊</button>` : ""
       row.innerHTML = `
         <div class="drag">⠿</div>
         <div class="toggle ${tc}" onclick="toggleStatus(${i})"></div>
         <div class="item-name ${tc}" onclick="toggleStatus(${i})">${item.name}${qtyHTML}</div>
         ${priceHTML}
-        ${histBtn}
-        <button class="icon-btn" onclick="editItem(${i})">✏️</button>
-        <button class="icon-btn" onclick="deleteItem(${i})">❌</button>
+        <button class="icon-btn kebab-btn" onclick="openItemActions(${i})" aria-label="actions">⋮</button>
       `
       wrap.appendChild(row)
     })

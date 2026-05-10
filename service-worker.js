@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v24-barcode-lookup"
+const CACHE_NAME = "mylists-v25-kebab-actions"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
