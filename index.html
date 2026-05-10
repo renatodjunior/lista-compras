@@ -502,6 +502,43 @@ textarea{ resize:none; min-height:82px; }
 .hist-total .trend.down{ color:#2e7d32; }
 .dark .hist-total .trend.up{ color:#ef5350; }
 .dark .hist-total .trend.down{ color:#66bb6a; }
+
+.sample-fab{
+  position:fixed; bottom:20px; right:20px;
+  width:56px; height:56px; border-radius:50%;
+  background:linear-gradient(135deg, #ffb300, #ff7a00);
+  color:white; border:none; cursor:pointer;
+  font-size:26px; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 16px rgba(255,122,0,.4);
+  transition:transform .15s, box-shadow .2s;
+  z-index:100;
+}
+.sample-fab:hover{ transform:scale(1.05); }
+.sample-fab:active{ transform:scale(.92); }
+.sample-fab.empty-pulse{
+  animation:fabPulse 2s ease-in-out infinite;
+}
+@keyframes fabPulse{
+  0%, 100%{ box-shadow:0 4px 16px rgba(255,122,0,.4); }
+  50%{ box-shadow:0 4px 16px rgba(255,122,0,.4), 0 0 0 12px rgba(255,122,0,.15); }
+}
+[dir=rtl] .sample-fab{ right:auto; left:20px; }
+
+.sample-row{
+  display:flex; align-items:center; gap:12px;
+  padding:12px 14px; border-radius:12px;
+  background:var(--btn); border:none; color:var(--text);
+  cursor:pointer; width:100%; margin-bottom:8px;
+  text-align:left; font-family:inherit;
+  transition:transform .1s, filter .15s;
+}
+.sample-row:hover{ filter:brightness(.95); }
+.sample-row:active{ transform:scale(.98); }
+.sample-row .se{ font-size:28px; }
+.sample-row .si{ flex:1; }
+.sample-row .sn{ font-weight:700; font-size:14px; }
+.sample-row .sd{ font-size:11px; color:var(--muted); margin-top:2px; }
 .license-input{
   width:100%; padding:12px; border-radius:10px;
   border:2px solid transparent; background:var(--card); color:var(--text);
@@ -904,6 +941,8 @@ textarea{ resize:none; min-height:82px; }
     </div>
   </div>
 
+  <button class="sample-fab" id="sampleFab" onclick="openSamples()" aria-label="Examples" title="Examples">✨</button>
+
   <footer class="site-footer">
     <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()"></button><br>
     <span>Renato Junior</span>
@@ -1252,6 +1291,10 @@ const TPRO = {
     personalInflation: "Your personal inflation",
     priceTrendsHint: "💡 Mark priced items as ✅ purchased at least 2 times to start seeing price trends.",
     dateCol: "Date", qtyCol: "Qty", priceCol: "Price", totalVariation: "Total change",
+    samplesTitle: "✨ Start with an example",
+    samplesDesc: "Tap a ready list to add it to your collection. You can edit everything after.",
+    samplesCats: "categories",
+    sampleCreated: "Example list added 🎉",
   },
   pt: {
     settingsTitle: "Configurações",
@@ -1303,6 +1346,10 @@ const TPRO = {
     personalInflation: "Sua inflação pessoal",
     priceTrendsHint: "💡 Marque itens com preço como ✅ comprado pelo menos 2 vezes pra começar a ver tendências de preço.",
     dateCol: "Data", qtyCol: "Qtd", priceCol: "Preço", totalVariation: "Variação total",
+    samplesTitle: "✨ Comece com um exemplo",
+    samplesDesc: "Toque numa lista pronta pra adicionar. Você pode editar tudo depois.",
+    samplesCats: "categorias",
+    sampleCreated: "Lista de exemplo adicionada 🎉",
   },
   es: {
     settingsTitle: "Ajustes",
@@ -1354,6 +1401,10 @@ const TPRO = {
     personalInflation: "Tu inflación personal",
     priceTrendsHint: "💡 Marca ítems con precio como ✅ comprado al menos 2 veces para ver tendencias.",
     dateCol: "Fecha", qtyCol: "Cant", priceCol: "Precio", totalVariation: "Cambio total",
+    samplesTitle: "✨ Empieza con un ejemplo",
+    samplesDesc: "Toca una lista lista para añadirla. Puedes editar todo después.",
+    samplesCats: "categorías",
+    sampleCreated: "Lista de ejemplo añadida 🎉",
   },
   ja: {
     settingsTitle: "設定",
@@ -1405,6 +1456,10 @@ const TPRO = {
     personalInflation: "あなたの個人インフレ",
     priceTrendsHint: "💡 価格付きアイテムを2回以上 ✅ 購入済みにすると価格傾向が表示されます。",
     dateCol: "日付", qtyCol: "数量", priceCol: "価格", totalVariation: "総変動",
+    samplesTitle: "✨ サンプルから始める",
+    samplesDesc: "リストをタップして追加。後で全て編集できます。",
+    samplesCats: "カテゴリ",
+    sampleCreated: "サンプルリストを追加 🎉",
   },
   he: {
     settingsTitle: "הגדרות",
@@ -1456,6 +1511,10 @@ const TPRO = {
     personalInflation: "האינפלציה האישית שלך",
     priceTrendsHint: "💡 סמן פריטים עם מחיר כ-✅ נרכש לפחות פעמיים כדי לראות מגמות.",
     dateCol: "תאריך", qtyCol: "כמות", priceCol: "מחיר", totalVariation: "שינוי כולל",
+    samplesTitle: "✨ התחל עם דוגמה",
+    samplesDesc: "הקש על רשימה מוכנה להוספה. ניתן לערוך הכל אחר כך.",
+    samplesCats: "קטגוריות",
+    sampleCreated: "רשימת דוגמה נוספה 🎉",
   },
   ko: {
     settingsTitle: "설정",
@@ -1507,6 +1566,10 @@ const TPRO = {
     personalInflation: "개인 인플레이션",
     priceTrendsHint: "💡 가격 표시된 항목을 ✅ 구매 완료로 2회 이상 표시하면 가격 추세가 보입니다.",
     dateCol: "날짜", qtyCol: "수량", priceCol: "가격", totalVariation: "총 변동",
+    samplesTitle: "✨ 예시로 시작하기",
+    samplesDesc: "준비된 목록을 탭하여 추가하세요. 나중에 모두 편집할 수 있습니다.",
+    samplesCats: "카테고리",
+    sampleCreated: "예시 목록 추가됨 🎉",
   }
 }
 function tp(){ return TPRO[currentLang] || TPRO.en }
@@ -1920,6 +1983,7 @@ function renderLists(){
     `
     container.appendChild(div)
   })
+  refreshSampleFab()
 }
 
 async function renameList(i){
@@ -1954,6 +2018,7 @@ function openList(i){
   const si = document.getElementById("searchInput")
   if(si) si.value = ""
   renderItems()
+  refreshSampleFab()
 }
 
 function back(){
@@ -2005,6 +2070,173 @@ function recordPriceEntry(item){
   if(priceHistory[name].length > 50) priceHistory[name] = priceHistory[name].slice(-50)
   savePriceHistory()
 }
+const SAMPLES = {
+  pt: [
+    { name:"Mercado da semana", emoji:"🛒", categoryEmojis:{ "Frutas":"🍎", "Laticínios":"🥛", "Padaria":"🍞", "Bebidas":"🥤" }, items:[
+      { name:"Maçã", category:"Frutas", qty:"1", unit:"kg" },
+      { name:"Banana", category:"Frutas", qty:"6", unit:"un" },
+      { name:"Leite", category:"Laticínios", qty:"1", unit:"L" },
+      { name:"Queijo", category:"Laticínios", qty:"200", unit:"g" },
+      { name:"Pão francês", category:"Padaria", qty:"500", unit:"g" },
+      { name:"Café", category:"Bebidas", qty:"1", unit:"un" },
+      { name:"Suco de laranja", category:"Bebidas", qty:"1", unit:"L" },
+    ]},
+    { name:"Churrasco", emoji:"🔥", categoryEmojis:{ "Carnes":"🥩", "Bebidas":"🍺", "Acompanhamentos":"🌽" }, items:[
+      { name:"Picanha", category:"Carnes", qty:"1", unit:"kg" },
+      { name:"Linguiça", category:"Carnes", qty:"500", unit:"g" },
+      { name:"Cerveja", category:"Bebidas", qty:"24", unit:"un" },
+      { name:"Refrigerante", category:"Bebidas", qty:"2", unit:"L" },
+      { name:"Pão de alho", category:"Acompanhamentos", qty:"1", unit:"un" },
+      { name:"Carvão", category:"Acompanhamentos", qty:"3", unit:"kg" },
+      { name:"Sal grosso", category:"Acompanhamentos", qty:"1", unit:"un" },
+    ]},
+  ],
+  en: [
+    { name:"Weekly groceries", emoji:"🛒", categoryEmojis:{ "Fruits":"🍎", "Dairy":"🥛", "Bakery":"🍞", "Drinks":"🥤" }, items:[
+      { name:"Apple", category:"Fruits", qty:"1", unit:"kg" },
+      { name:"Banana", category:"Fruits", qty:"6", unit:"un" },
+      { name:"Milk", category:"Dairy", qty:"1", unit:"L" },
+      { name:"Cheese", category:"Dairy", qty:"200", unit:"g" },
+      { name:"Bread", category:"Bakery", qty:"1", unit:"un" },
+      { name:"Coffee", category:"Drinks", qty:"1", unit:"un" },
+      { name:"Orange juice", category:"Drinks", qty:"1", unit:"L" },
+    ]},
+    { name:"BBQ party", emoji:"🍔", categoryEmojis:{ "Meat":"🥩", "Drinks":"🍺", "Sides":"🌽" }, items:[
+      { name:"Steak", category:"Meat", qty:"1", unit:"kg" },
+      { name:"Sausage", category:"Meat", qty:"500", unit:"g" },
+      { name:"Beer", category:"Drinks", qty:"24", unit:"un" },
+      { name:"Soda", category:"Drinks", qty:"2", unit:"L" },
+      { name:"Garlic bread", category:"Sides", qty:"1", unit:"un" },
+      { name:"Charcoal", category:"Sides", qty:"3", unit:"kg" },
+      { name:"Coarse salt", category:"Sides", qty:"1", unit:"un" },
+    ]},
+  ],
+  es: [
+    { name:"Compras semanales", emoji:"🛒", categoryEmojis:{ "Frutas":"🍎", "Lácteos":"🥛", "Panadería":"🍞", "Bebidas":"🥤" }, items:[
+      { name:"Manzana", category:"Frutas", qty:"1", unit:"kg" },
+      { name:"Plátano", category:"Frutas", qty:"6", unit:"un" },
+      { name:"Leche", category:"Lácteos", qty:"1", unit:"L" },
+      { name:"Queso", category:"Lácteos", qty:"200", unit:"g" },
+      { name:"Pan", category:"Panadería", qty:"1", unit:"un" },
+      { name:"Café", category:"Bebidas", qty:"1", unit:"un" },
+      { name:"Jugo de naranja", category:"Bebidas", qty:"1", unit:"L" },
+    ]},
+    { name:"Asado", emoji:"🔥", categoryEmojis:{ "Carnes":"🥩", "Bebidas":"🍺", "Acompañamientos":"🌽" }, items:[
+      { name:"Bife de chorizo", category:"Carnes", qty:"1", unit:"kg" },
+      { name:"Chorizo", category:"Carnes", qty:"500", unit:"g" },
+      { name:"Cerveza", category:"Bebidas", qty:"24", unit:"un" },
+      { name:"Gaseosa", category:"Bebidas", qty:"2", unit:"L" },
+      { name:"Pan de ajo", category:"Acompañamientos", qty:"1", unit:"un" },
+      { name:"Carbón", category:"Acompañamientos", qty:"3", unit:"kg" },
+      { name:"Sal gruesa", category:"Acompañamientos", qty:"1", unit:"un" },
+    ]},
+  ],
+  ja: [
+    { name:"週の食材", emoji:"🍙", categoryEmojis:{ "野菜":"🥬", "肉":"🥩", "乳製品":"🥛", "飲み物":"🍵" }, items:[
+      { name:"米", category:"野菜", qty:"5", unit:"kg" },
+      { name:"キャベツ", category:"野菜", qty:"1", unit:"un" },
+      { name:"鶏肉", category:"肉", qty:"500", unit:"g" },
+      { name:"豚肉", category:"肉", qty:"300", unit:"g" },
+      { name:"牛乳", category:"乳製品", qty:"1", unit:"L" },
+      { name:"卵", category:"乳製品", qty:"10", unit:"un" },
+      { name:"緑茶", category:"飲み物", qty:"1", unit:"un" },
+    ]},
+    { name:"寿司パーティー", emoji:"🍣", categoryEmojis:{ "魚介類":"🐟", "ご飯":"🍚", "薬味":"🌿" }, items:[
+      { name:"マグロ", category:"魚介類", qty:"300", unit:"g" },
+      { name:"サーモン", category:"魚介類", qty:"300", unit:"g" },
+      { name:"寿司米", category:"ご飯", qty:"2", unit:"kg" },
+      { name:"海苔", category:"ご飯", qty:"1", unit:"un" },
+      { name:"わさび", category:"薬味", qty:"1", unit:"un" },
+      { name:"醤油", category:"薬味", qty:"1", unit:"un" },
+    ]},
+  ],
+  he: [
+    { name:"קניות שבועיות", emoji:"🛒", categoryEmojis:{ "פירות":"🍎", "מוצרי חלב":"🥛", "מאפיה":"🍞", "משקאות":"🥤" }, items:[
+      { name:"תפוח", category:"פירות", qty:"1", unit:"ק״ג" },
+      { name:"בננה", category:"פירות", qty:"6", unit:"יח׳" },
+      { name:"חלב", category:"מוצרי חלב", qty:"1", unit:"ל׳" },
+      { name:"גבינה", category:"מוצרי חלב", qty:"200", unit:"ג׳" },
+      { name:"לחם", category:"מאפיה", qty:"1", unit:"יח׳" },
+      { name:"קפה", category:"משקאות", qty:"1", unit:"יח׳" },
+      { name:"מיץ תפוזים", category:"משקאות", qty:"1", unit:"ל׳" },
+    ]},
+    { name:"מנגל", emoji:"🔥", categoryEmojis:{ "בשר":"🥩", "משקאות":"🍺", "תוספות":"🌽" }, items:[
+      { name:"סטייק", category:"בשר", qty:"1", unit:"ק״ג" },
+      { name:"נקניקיות", category:"בשר", qty:"500", unit:"ג׳" },
+      { name:"בירה", category:"משקאות", qty:"12", unit:"יח׳" },
+      { name:"קולה", category:"משקאות", qty:"2", unit:"ל׳" },
+      { name:"לחם שום", category:"תוספות", qty:"1", unit:"יח׳" },
+      { name:"פחם", category:"תוספות", qty:"3", unit:"ק״ג" },
+    ]},
+  ],
+  ko: [
+    { name:"주간 장보기", emoji:"🛒", categoryEmojis:{ "과일":"🍎", "유제품":"🥛", "베이커리":"🍞", "음료":"🥤" }, items:[
+      { name:"사과", category:"과일", qty:"1", unit:"kg" },
+      { name:"바나나", category:"과일", qty:"6", unit:"개" },
+      { name:"우유", category:"유제품", qty:"1", unit:"L" },
+      { name:"치즈", category:"유제품", qty:"200", unit:"g" },
+      { name:"빵", category:"베이커리", qty:"1", unit:"개" },
+      { name:"커피", category:"음료", qty:"1", unit:"개" },
+      { name:"오렌지 주스", category:"음료", qty:"1", unit:"L" },
+    ]},
+    { name:"바베큐", emoji:"🔥", categoryEmojis:{ "고기":"🥩", "음료":"🍺", "사이드":"🌽" }, items:[
+      { name:"등심", category:"고기", qty:"1", unit:"kg" },
+      { name:"소시지", category:"고기", qty:"500", unit:"g" },
+      { name:"맥주", category:"음료", qty:"24", unit:"개" },
+      { name:"콜라", category:"음료", qty:"2", unit:"L" },
+      { name:"마늘빵", category:"사이드", qty:"1", unit:"개" },
+      { name:"숯", category:"사이드", qty:"3", unit:"kg" },
+    ]},
+  ],
+}
+
+function openSamples(){
+  const tt = tp()
+  const samples = SAMPLES[currentLang] || SAMPLES.en
+  _uiResolve = null
+  _uiOpen(tt.samplesTitle, `
+    <p style="font-size:13px;color:var(--muted);margin:0 0 12px;line-height:1.5">${tt.samplesDesc}</p>
+    ${samples.map((s, i) => `
+      <button class="sample-row" onclick="useSample(${i})">
+        <span class="se">${s.emoji}</span>
+        <span class="si">
+          <div class="sn">${_esc(s.name)}</div>
+          <div class="sd">${s.items.length} ${tt.statTotalItems.toLowerCase()} · ${Object.keys(s.categoryEmojis || {}).length} ${tt.samplesCats}</div>
+        </span>
+      </button>
+    `).join("")}
+  `)
+}
+
+function useSample(idx){
+  const samples = SAMPLES[currentLang] || SAMPLES.en
+  const s = samples[idx]
+  if(!s) return
+  const cats = []
+  s.items.forEach(it => { if(it.category && !cats.includes(it.category)) cats.push(it.category) })
+  lists.push({
+    name: s.name,
+    emoji: s.emoji,
+    items: s.items.map(it => ({ name: it.name, status: 0, category: it.category || "", qty: it.qty || "", unit: it.unit || "", price: "" })),
+    categoryOrder: cats,
+    categoryEmojis: { ...(s.categoryEmojis || {}) },
+    collapsedCats: [],
+  })
+  save()
+  closeModal("uiModal")
+  renderLists()
+  showToast(tp().sampleCreated)
+}
+
+function refreshSampleFab(){
+  const fab = document.getElementById("sampleFab")
+  if(!fab) return
+  const onItemsPage = !document.getElementById("itemsPage").classList.contains("hidden")
+  fab.style.display = onItemsPage ? "none" : "flex"
+  fab.classList.toggle("empty-pulse", lists.length === 0)
+  fab.title = tp().samplesTitle
+}
+
 function openItemHistory(name){
   const entries = priceHistory[name]
   if(!entries || !entries.length) return
