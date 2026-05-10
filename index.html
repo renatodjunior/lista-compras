@@ -317,6 +317,8 @@ textarea{ resize:none; min-height:82px; }
 }
 
 .add-row{ display:flex; gap:8px; align-items:stretch; }
+.add-extras{ display:flex; gap:8px; margin:8px 0; }
+.add-extras .ui-input{ margin-bottom:0; padding:9px 11px; font-size:14px; }
 .mic-btn{
   width:48px; flex-shrink:0; border:none; border-radius:10px;
   background:var(--btn); color:var(--text); cursor:pointer;
@@ -949,7 +951,21 @@ textarea{ resize:none; min-height:82px; }
     </div>
     <input id="newCategory" list="categoryOptions" style="margin-bottom:8px">
     <datalist id="categoryOptions"></datalist>
-    <textarea id="newItems" list="itemNameOptions"></textarea>
+    <textarea id="newItems" list="itemNameOptions" oninput="updateAddExtras()"></textarea>
+    <div class="add-extras" id="addExtras" style="display:none">
+      <div class="field-group" style="flex:1">
+        <label class="field-label" id="addQtyLabel"></label>
+        <input id="addQty" class="ui-input" inputmode="decimal" placeholder="1">
+      </div>
+      <div class="field-group" style="flex:1">
+        <label class="field-label" id="addUnitLabel"></label>
+        <input id="addUnit" class="ui-input" placeholder="kg">
+      </div>
+      <div class="field-group" style="flex:1">
+        <label class="field-label" id="addPriceLabel"></label>
+        <input id="addPrice" class="ui-input" inputmode="decimal" placeholder="12,50">
+      </div>
+    </div>
     <div class="add-row">
       <button class="mic-btn" id="voiceBtn" onclick="toggleVoice()" aria-label="Voice input">
         <svg class="mic-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2087,6 +2103,9 @@ function applyLang(){
   document.getElementById("newCategory").placeholder = t.categoryPlaceholder
   document.getElementById("newItems").placeholder = t.itemsPlaceholder
   document.getElementById("addItemsBtn").textContent = t.addBtn
+  const aql = document.getElementById("addQtyLabel"); if(aql) aql.textContent = tp().qtyLabel
+  const aul = document.getElementById("addUnitLabel"); if(aul) aul.textContent = tp().unitLabel
+  const apl = document.getElementById("addPriceLabel"); if(apl) apl.textContent = tp().priceLabel
   const vb = document.getElementById("voiceBtn")
   if(vb) vb.title = tp().voiceTooltip
   const si = document.getElementById("searchInput")
@@ -2249,13 +2268,33 @@ function addItems(){
   const list = lists[currentList]
   if(!list.categoryOrder) list.categoryOrder = []
   if(!list.collapsedCats) list.collapsedCats = []
-  txt.split("\n").forEach(t2 => {
-    if(t2.trim()) list.items.push({ name:t2.trim(), status:0, category:category||"" })
+  const lines = txt.split("\n").map(s => s.trim()).filter(Boolean)
+  const isSingle = lines.length === 1
+  let extra = { qty:"", unit:"", price:"" }
+  if(isSingle){
+    extra = {
+      qty: (document.getElementById("addQty")?.value || "").trim(),
+      unit: (document.getElementById("addUnit")?.value || "").trim(),
+      price: (document.getElementById("addPrice")?.value || "").trim(),
+    }
+  }
+  lines.forEach(name => {
+    list.items.push({ name, status:0, category: category || "", qty: extra.qty, unit: extra.unit, price: extra.price })
   })
   if(!list.categoryOrder.includes(category||"")) list.categoryOrder.push(category||"")
   document.getElementById("newItems").value = ""
+  ;["addQty","addUnit","addPrice"].forEach(id => { const el = document.getElementById(id); if(el) el.value = "" })
+  updateAddExtras()
   save(); renderItems()
   showToast(t.itemsAdded)
+}
+
+function updateAddExtras(){
+  const ta = document.getElementById("newItems")
+  const wrap = document.getElementById("addExtras")
+  if(!ta || !wrap) return
+  const lines = ta.value.split("\n").map(s => s.trim()).filter(Boolean)
+  wrap.style.display = lines.length === 1 ? "flex" : "none"
 }
 
 function toggleStatus(i){

@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v26-add-fab"
+const CACHE_NAME = "mylists-v27-single-add"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
