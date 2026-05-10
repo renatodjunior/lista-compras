@@ -482,6 +482,16 @@ textarea{ resize:none; min-height:82px; }
   cursor:pointer; padding:4px 0; margin-top:8px; text-decoration:underline;
 }
 .list-card.has-template{ border-left:3px solid var(--warning); }
+.pix-divider{
+  display:flex; align-items:center; gap:8px;
+  margin:18px 0 10px; color:var(--muted);
+}
+.pix-divider::before, .pix-divider::after{
+  content:""; flex:1; height:1px; background:var(--btn);
+}
+.pix-divider span{
+  font-size:11px; font-weight:700; letter-spacing:.06em;
+}
 
 /* ── PRO BACKGROUNDS ── */
 .bg-dots{
@@ -1173,6 +1183,8 @@ const TPRO = {
     activate: "Unlock PRO",
     proActivated: "PRO unlocked ✨ Thank you!",
     devNote: "honor system — unlocking without donating is also OK",
+    orPix: "OR PAY VIA PIX (BR)",
+    copyPix: "📋 Copy Pix code",
     templatesTitle: "List templates",
     saveAsTemplate: "💾 Save",
     templateSaved: "Template saved 📦",
@@ -1214,6 +1226,8 @@ const TPRO = {
     activate: "Destravar PRO",
     proActivated: "PRO destravado ✨ Obrigado!",
     devNote: "honor system — destravar sem doar também é OK",
+    orPix: "OU PAGAR POR PIX",
+    copyPix: "📋 Copiar Pix copia-e-cola",
     templatesTitle: "Modelos de lista",
     saveAsTemplate: "💾 Salvar",
     templateSaved: "Modelo salvo 📦",
@@ -1255,6 +1269,8 @@ const TPRO = {
     activate: "Activar PRO",
     proActivated: "PRO activado ✨ ¡Gracias!",
     devNote: "honor system — activar sin donar también está bien",
+    orPix: "O PAGAR POR PIX (BR)",
+    copyPix: "📋 Copiar código Pix",
     templatesTitle: "Plantillas de lista",
     saveAsTemplate: "💾 Guardar",
     templateSaved: "Plantilla guardada 📦",
@@ -1296,6 +1312,8 @@ const TPRO = {
     activate: "PROを有効化",
     proActivated: "PRO有効化 ✨ ありがとう！",
     devNote: "honor system — 寄付なしの有効化もOK",
+    orPix: "またはPIX (ブラジル)",
+    copyPix: "📋 Pixコードをコピー",
     templatesTitle: "リストテンプレート",
     saveAsTemplate: "💾 保存",
     templateSaved: "テンプレートを保存 📦",
@@ -1337,6 +1355,8 @@ const TPRO = {
     activate: "הפעל PRO",
     proActivated: "PRO הופעל ✨ תודה!",
     devNote: "honor system — הפעלה ללא תרומה גם בסדר",
+    orPix: "או PIX (ברזיל)",
+    copyPix: "📋 העתק קוד Pix",
     templatesTitle: "תבניות רשימה",
     saveAsTemplate: "💾 שמור",
     templateSaved: "תבנית נשמרה 📦",
@@ -1378,6 +1398,8 @@ const TPRO = {
     activate: "PRO 활성화",
     proActivated: "PRO 활성화 ✨ 감사합니다!",
     devNote: "honor system — 후원 없이 활성화도 OK",
+    orPix: "또는 PIX (브라질)",
+    copyPix: "📋 Pix 코드 복사",
     templatesTitle: "목록 템플릿",
     saveAsTemplate: "💾 저장",
     templateSaved: "템플릿 저장됨 📦",
@@ -2899,8 +2921,12 @@ function openUnlock(){
   document.getElementById("unlockTitle").textContent = tt.unlockTitle
   document.getElementById("unlockContent").innerHTML = `
     <p style="margin:0 0 12px;line-height:1.6;font-size:14px">${tt.unlockDesc}</p>
-    <p style="margin:0 0 16px;font-size:16px;font-weight:800;color:var(--primary);text-align:center">${tt.priceLine}</p>
+    <p style="margin:0 0 14px;font-size:15px;font-weight:800;color:var(--primary);text-align:center">${tt.priceLine}</p>
     <button class="unlock-cta" onclick="goDonate()">${tt.buyBtn}</button>
+    <div class="pix-divider"><span>${tt.orPix || "OU PIX"}</span></div>
+    <div id="pixQrWrap" style="background:white;padding:12px;border-radius:12px;text-align:center"></div>
+    <div id="pixCopyText" style="font-family:monospace;font-size:10px;background:var(--btn);padding:8px;border-radius:6px;margin-top:8px;word-break:break-all;line-height:1.4;max-height:64px;overflow-y:auto"></div>
+    <button class="secondary-btn" style="margin-top:6px" onclick="copyPixCode()">${tt.copyPix || "📋 Copiar Pix"}</button>
     <div class="settings-section" style="text-align:center">
       <p style="margin:14px 0 8px;font-size:13px;color:var(--muted)">${tt.haveLicense}</p>
       <button class="secondary-btn" onclick="activatePro()">${tt.activate}</button>
@@ -2908,10 +2934,71 @@ function openUnlock(){
     </div>
   `
   document.getElementById("unlockModal").classList.remove("hidden")
+  renderPixQR()
 }
 
+const PIX_CONFIG = {
+  key: "e880d14d-ad91-49a6-a2f5-b1f4d1213ebd",
+  name: "Renato (MyOwnLists)",
+  city: "BRASIL",
+  amount: 0
+}
+const KOFI_URL = "https://ko-fi.com/renatodjunior"
+
 function goDonate(){
-  window.open("https://myownlists.app/donate", "_blank")
+  window.open(KOFI_URL, "_blank")
+}
+
+function pixCRC16(str){
+  let crc = 0xFFFF
+  for(let i = 0; i < str.length; i++){
+    crc ^= str.charCodeAt(i) << 8
+    for(let j = 0; j < 8; j++){
+      crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1)
+      crc &= 0xFFFF
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4, "0")
+}
+function pixTLV(id, value){
+  const len = String(value.length).padStart(2, "0")
+  return id + len + value
+}
+function buildPixCode(cfg){
+  const merchantAccount = pixTLV("00", "br.gov.bcb.pix") + pixTLV("01", cfg.key)
+  let payload =
+    pixTLV("00", "01") +
+    pixTLV("26", merchantAccount) +
+    pixTLV("52", "0000") +
+    pixTLV("53", "986") +
+    (cfg.amount > 0 ? pixTLV("54", Number(cfg.amount).toFixed(2)) : "") +
+    pixTLV("58", "BR") +
+    pixTLV("59", cfg.name) +
+    pixTLV("60", cfg.city) +
+    pixTLV("62", pixTLV("05", "***"))
+  payload += "6304"
+  return payload + pixCRC16(payload)
+}
+async function renderPixQR(){
+  try { await loadQRLib() } catch(e){ return }
+  const code = buildPixCode(PIX_CONFIG)
+  const qr = qrcode(0, "M")
+  qr.addData(code)
+  qr.make()
+  const wrap = document.getElementById("pixQrWrap")
+  if(!wrap) return
+  wrap.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true })
+  const svg = wrap.querySelector("svg")
+  if(svg){ svg.style.maxWidth = "200px"; svg.style.height = "auto"; svg.style.display = "block"; svg.style.margin = "0 auto" }
+  const txt = document.getElementById("pixCopyText")
+  if(txt) txt.textContent = code
+}
+function copyPixCode(){
+  const text = document.getElementById("pixCopyText")?.textContent || ""
+  if(!text) return
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(() => showToast(t.copied)).catch(() => fallbackCopy(text))
+  } else { fallbackCopy(text) }
 }
 
 function activatePro(){
