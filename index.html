@@ -630,11 +630,12 @@ textarea{ resize:none; min-height:82px; }
 @media (max-width: 400px){
   .container{ padding:14px 10px 60px; }
   .header{ margin-bottom:18px; gap:8px; }
-  .header h2{ font-size:19px; }
-  .header h2 #titleIcon{ display:none; }
+  .header h2{ font-size:21px; }
   .header-right{ gap:4px; flex-shrink:0; }
-  .lang-btn{ height:34px; padding:0 6px 0 4px; font-size:12px; gap:5px; }
-  .lang-flag-icon{ width:20px; height:13px; }
+  .lang-btn{ height:34px; padding:0 6px; font-size:12px; gap:0; }
+  .lang-btn #langCode{ display:none; }
+  .lang-btn .lang-caret{ display:none; }
+  .lang-flag-icon{ width:22px; height:14px; }
   .theme-btn{ width:34px; height:34px; font-size:16px; }
   .help-btn{ font-size:18px; }
   .top-row{ gap:6px; }
@@ -643,10 +644,10 @@ textarea{ resize:none; min-height:82px; }
   .copy-btn, .clear-btn{ width:34px; height:34px; font-size:16px; }
 }
 @media (max-width: 340px){
-  .header h2{ font-size:17px; }
-  .lang-btn{ height:30px; padding:0 4px; font-size:11px; gap:4px; }
-  .lang-flag-icon{ width:18px; height:12px; }
-  .lang-caret{ display:none; }
+  .header h2{ font-size:18px; }
+  .header h2 #titleIcon{ display:none; }
+  .lang-btn{ height:30px; padding:0 4px; }
+  .lang-flag-icon{ width:20px; height:13px; }
   .theme-btn{ width:30px; height:30px; font-size:14px; }
   .back-btn{ height:32px; padding:0 8px; font-size:12px; }
   .copy-btn, .clear-btn{ width:32px; height:32px; font-size:15px; }
@@ -948,7 +949,7 @@ textarea{ resize:none; min-height:82px; }
 
   <footer class="site-footer">
     <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()"></button><br>
-    <span>Renato Junior</span>
+    <span>Renato D. Junior</span>
     <span style="margin:0 8px;opacity:.5">·</span>
     <a href="#" id="supportFooterLink" onclick="event.preventDefault(); openTip()"></a>
   </footer>
