@@ -2379,7 +2379,7 @@ async function dropboxConnect(){
     response_type: "code",
     code_challenge: challenge,
     code_challenge_method: "S256",
-    redirect_uri: location.origin + location.pathname,
+    redirect_uri: location.origin + "/",
     state,
     token_access_type: "offline",
   })
@@ -2405,7 +2405,7 @@ async function _handleDropboxCallback(){
         code, grant_type: "authorization_code",
         client_id: DROPBOX_APP_KEY,
         code_verifier: verifier,
-        redirect_uri: location.origin + location.pathname,
+        redirect_uri: location.origin + "/",
       })
     })
     const data = await res.json()
