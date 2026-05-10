@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v28-add-polish"
+const CACHE_NAME = "mylists-v28-paste-context"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [

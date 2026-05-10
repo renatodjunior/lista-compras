@@ -3657,6 +3657,23 @@ async function confirmPasteImport(){
   const parsed = parseTextToList(ta.value)
   if(!parsed.items.length){ showToast(tp().pasteEmpty); return }
   closeModal("uiModal")
+
+  const itemsPageOpen = !document.getElementById("itemsPage").classList.contains("hidden")
+  const inList = currentList !== null && itemsPageOpen && lists[currentList]
+
+  if(inList){
+    const list = lists[currentList]
+    if(!list.categoryOrder) list.categoryOrder = []
+    if(!list.categoryEmojis) list.categoryEmojis = {}
+    if(!list.collapsedCats) list.collapsedCats = []
+    parsed.items.forEach(it => list.items.push(it))
+    parsed.categoryOrder.forEach(c => { if(!list.categoryOrder.includes(c)) list.categoryOrder.push(c) })
+    Object.entries(parsed.categoryEmojis || {}).forEach(([k, v]) => { if(!list.categoryEmojis[k]) list.categoryEmojis[k] = v })
+    save(); renderItems()
+    showToast(tp().pasteImported(parsed.items.length))
+    return
+  }
+
   const suggested = parsed.suggestedName || tp().importedListDefault
   const suggestedEmoji = parsed.suggestedEmoji || "📥"
   const result = await uiPromptWithEmoji(tp().newListNamePrompt, suggested, suggestedEmoji)
