@@ -461,6 +461,21 @@ textarea{ resize:none; min-height:82px; }
   margin-bottom:5px; font-size:13px; display:flex; justify-content:space-between;
 }
 .top-items .count{ color:var(--muted); font-weight:700; }
+.top-items .trend{ font-weight:800; font-size:13px; }
+.top-items .trend.up{ color:#d32f2f; }
+.top-items .trend.down{ color:#2e7d32; }
+.dark .top-items .trend.up{ color:#ef5350; }
+.dark .top-items .trend.down{ color:#66bb6a; }
+.inflation-banner{
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--btn); padding:12px 16px; border-radius:12px; margin-bottom:14px;
+}
+.inflation-banner.up{ background:#ffebee; color:#c62828; }
+.inflation-banner.down{ background:#e8f5e9; color:#2e7d32; }
+.dark .inflation-banner.up{ background:#3a1010; color:#ef5350; }
+.dark .inflation-banner.down{ background:#0d2e0d; color:#66bb6a; }
+.inflation-banner .ib-label{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+.inflation-banner .ib-value{ font-size:22px; font-weight:800; }
 .license-input{
   width:100%; padding:12px; border-radius:10px;
   border:2px solid transparent; background:var(--card); color:var(--text);
@@ -1206,6 +1221,10 @@ const TPRO = {
     statTopItems: "Most repeated items",
     noData: "No data yet. Create lists and items to see stats.",
     proRequired: "PRO required ✨",
+    priceUp: "Biggest price increases",
+    priceDown: "Biggest price drops",
+    personalInflation: "Your personal inflation",
+    priceTrendsHint: "💡 Mark priced items as ✅ purchased at least 2 times to start seeing price trends.",
   },
   pt: {
     settingsTitle: "Configurações",
@@ -1252,6 +1271,10 @@ const TPRO = {
     statTopItems: "Itens mais repetidos",
     noData: "Sem dados ainda. Crie listas e itens para ver estatísticas.",
     proRequired: "Requer PRO ✨",
+    priceUp: "Maior alta de preço",
+    priceDown: "Maior queda de preço",
+    personalInflation: "Sua inflação pessoal",
+    priceTrendsHint: "💡 Marque itens com preço como ✅ comprado pelo menos 2 vezes pra começar a ver tendências de preço.",
   },
   es: {
     settingsTitle: "Ajustes",
@@ -1298,6 +1321,10 @@ const TPRO = {
     statTopItems: "Ítems más repetidos",
     noData: "Sin datos. Crea listas e ítems para ver estadísticas.",
     proRequired: "Requiere PRO ✨",
+    priceUp: "Mayor alza de precio",
+    priceDown: "Mayor caída de precio",
+    personalInflation: "Tu inflación personal",
+    priceTrendsHint: "💡 Marca ítems con precio como ✅ comprado al menos 2 veces para ver tendencias.",
   },
   ja: {
     settingsTitle: "設定",
@@ -1344,6 +1371,10 @@ const TPRO = {
     statTopItems: "最頻出アイテム",
     noData: "データがありません。リストとアイテムを作成してください。",
     proRequired: "PROが必要 ✨",
+    priceUp: "価格が最も上昇",
+    priceDown: "価格が最も下落",
+    personalInflation: "あなたの個人インフレ",
+    priceTrendsHint: "💡 価格付きアイテムを2回以上 ✅ 購入済みにすると価格傾向が表示されます。",
   },
   he: {
     settingsTitle: "הגדרות",
@@ -1390,6 +1421,10 @@ const TPRO = {
     statTopItems: "פריטים נפוצים",
     noData: "אין נתונים. צור רשימות ופריטים.",
     proRequired: "דרוש PRO ✨",
+    priceUp: "העליות הגדולות במחיר",
+    priceDown: "הירידות הגדולות במחיר",
+    personalInflation: "האינפלציה האישית שלך",
+    priceTrendsHint: "💡 סמן פריטים עם מחיר כ-✅ נרכש לפחות פעמיים כדי לראות מגמות.",
   },
   ko: {
     settingsTitle: "설정",
@@ -1436,6 +1471,10 @@ const TPRO = {
     statTopItems: "최다 항목",
     noData: "데이터 없음. 목록과 항목을 만드세요.",
     proRequired: "PRO 필요 ✨",
+    priceUp: "가격 상승 상위",
+    priceDown: "가격 하락 상위",
+    personalInflation: "개인 인플레이션",
+    priceTrendsHint: "💡 가격 표시된 항목을 ✅ 구매 완료로 2회 이상 표시하면 가격 추세가 보입니다.",
   }
 }
 function tp(){ return TPRO[currentLang] || TPRO.en }
@@ -1910,8 +1949,47 @@ function addItems(){
 }
 
 function toggleStatus(i){
-  lists[currentList].items[i].status = (lists[currentList].items[i].status + 1) % 3
+  const item = lists[currentList].items[i]
+  const prev = item.status
+  item.status = (prev + 1) % 3
+  if(prev !== 1 && item.status === 1) recordPriceEntry(item)
   save(); renderItems()
+}
+
+let priceHistory = JSON.parse(localStorage.getItem("priceHistory") || "{}")
+function savePriceHistory(){ localStorage.setItem("priceHistory", JSON.stringify(priceHistory)) }
+function recordPriceEntry(item){
+  const name = (item.name || "").trim().toLowerCase()
+  if(!name) return
+  const price = parsePrice(item.price)
+  if(!isFinite(price) || price <= 0) return
+  if(!priceHistory[name]) priceHistory[name] = []
+  priceHistory[name].push({
+    ts: Date.now(),
+    qty: item.qty || "",
+    unit: item.unit || "",
+    price: item.price
+  })
+  if(priceHistory[name].length > 50) priceHistory[name] = priceHistory[name].slice(-50)
+  savePriceHistory()
+}
+function computePriceTrends(){
+  const trends = []
+  Object.entries(priceHistory).forEach(([name, entries]) => {
+    if(!entries || entries.length < 2) return
+    const oldest = parsePrice(entries[0].price)
+    const newest = parsePrice(entries[entries.length - 1].price)
+    if(!isFinite(oldest) || !isFinite(newest) || oldest <= 0) return
+    const pct = ((newest - oldest) / oldest) * 100
+    trends.push({
+      name,
+      display: name.charAt(0).toUpperCase() + name.slice(1),
+      oldest, newest,
+      pct,
+      count: entries.length
+    })
+  })
+  return trends
 }
 
 async function editItem(i){
@@ -2260,7 +2338,8 @@ document.getElementById("copyBtn").addEventListener("click", copyList)
 // ── BACKUP ────────────────────────────────────────
 
 function exportData(){
-  const payload = templates.length ? { lists, templates } : lists
+  const hasExtras = templates.length || Object.keys(priceHistory).length
+  const payload = hasExtras ? { lists, templates, priceHistory } : lists
   const data = JSON.stringify(payload, null, 2)
   const blob = new Blob([data], { type:"application/json" })
   const url = URL.createObjectURL(blob)
@@ -2288,13 +2367,16 @@ function importData(e){
       const data = JSON.parse(ev.target.result)
       let arr = data
       let pendingTpl = null
+      let pendingHist = null
       if(data && !Array.isArray(data) && Array.isArray(data.lists)){
         arr = data.lists
         if(Array.isArray(data.templates)) pendingTpl = data.templates
+        if(data.priceHistory && typeof data.priceHistory === "object") pendingHist = data.priceHistory
       }
       if(!Array.isArray(arr)) throw new Error()
       if(!await uiConfirm(t.confirmImport(arr.length))) return
       if(pendingTpl){ templates = pendingTpl; localStorage.setItem("templates", JSON.stringify(templates)) }
+      if(pendingHist){ priceHistory = pendingHist; savePriceHistory() }
       lists = arr
       save(); renderLists()
       showToast(t.backupImported)
@@ -3149,6 +3231,19 @@ function openStats(){
   const counts = {}
   allItems.forEach(it => { const k = (it.name || "").trim().toLowerCase(); if(k) counts[k] = (counts[k] || 0) + 1 })
   const top = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 8)
+  const trends = computePriceTrends()
+  const ups = trends.filter(t => t.pct > 0).sort((a,b) => b.pct - a.pct).slice(0, 5)
+  const downs = trends.filter(t => t.pct < 0).sort((a,b) => a.pct - b.pct).slice(0, 5)
+  const inflation = trends.length
+    ? trends.reduce((s, t) => s + t.pct, 0) / trends.length
+    : null
+  const trendRow = (t) => {
+    const arrow = t.pct > 0 ? "📈" : "📉"
+    const sign = t.pct > 0 ? "+" : ""
+    const cls = t.pct > 0 ? "up" : "down"
+    return `<li><span>${arrow} ${t.display}</span><span class="trend ${cls}">${sign}${t.pct.toFixed(1)}%</span></li>`
+  }
+
   c.innerHTML = `
     <div class="stat-grid">
       <div class="stat-card"><div class="v">${totalLists}</div><div class="k">${tt.statTotalLists}</div></div>
@@ -3156,11 +3251,26 @@ function openStats(){
       <div class="stat-card"><div class="v">${bought}</div><div class="k">${tt.statBought}</div></div>
       <div class="stat-card"><div class="v">${pct}%</div><div class="k">${tt.statPct}</div></div>
     </div>
+    ${inflation !== null ? `
+    <div class="inflation-banner ${inflation > 0 ? 'up' : (inflation < 0 ? 'down' : '')}">
+      <span class="ib-label">${tt.personalInflation}</span>
+      <span class="ib-value">${inflation > 0 ? "+" : ""}${inflation.toFixed(1)}%</span>
+    </div>` : ""}
     <div class="settings-section"><h3>${tt.statTopItems}</h3>
       <ul class="top-items">
         ${top.map(([n,c]) => `<li><span>${n}</span><span class="count">×${c}</span></li>`).join("")}
       </ul>
     </div>
+    ${ups.length ? `
+    <div class="settings-section"><h3>📈 ${tt.priceUp}</h3>
+      <ul class="top-items">${ups.map(trendRow).join("")}</ul>
+    </div>` : ""}
+    ${downs.length ? `
+    <div class="settings-section"><h3>📉 ${tt.priceDown}</h3>
+      <ul class="top-items">${downs.map(trendRow).join("")}</ul>
+    </div>` : ""}
+    ${!ups.length && !downs.length ? `
+    <p style="font-size:12px;color:var(--muted);margin-top:14px;line-height:1.5">${tt.priceTrendsHint}</p>` : ""}
   `
   document.getElementById("statsModal").classList.remove("hidden")
 }
