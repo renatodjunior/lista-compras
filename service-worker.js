@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v21-narrow-tweak"
+const CACHE_NAME = "mylists-v22-cloud-sync"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
