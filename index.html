@@ -1185,6 +1185,8 @@ const TPRO = {
     devNote: "honor system — unlocking without donating is also OK",
     orPix: "OR PAY VIA PIX (BR)",
     copyPix: "📋 Copy Pix code",
+    tipAgain: "💝 Support project",
+    tipDesc: "Thanks for using the app! If you'd like to send another tip:",
     templatesTitle: "List templates",
     saveAsTemplate: "💾 Save",
     templateSaved: "Template saved 📦",
@@ -1228,6 +1230,8 @@ const TPRO = {
     devNote: "honor system — destravar sem doar também é OK",
     orPix: "OU PAGAR POR PIX",
     copyPix: "📋 Copiar Pix copia-e-cola",
+    tipAgain: "💝 Apoiar projeto",
+    tipDesc: "Obrigado por usar o app! Se quiser mandar mais um cafézinho:",
     templatesTitle: "Modelos de lista",
     saveAsTemplate: "💾 Salvar",
     templateSaved: "Modelo salvo 📦",
@@ -1271,6 +1275,8 @@ const TPRO = {
     devNote: "honor system — activar sin donar también está bien",
     orPix: "O PAGAR POR PIX (BR)",
     copyPix: "📋 Copiar código Pix",
+    tipAgain: "💝 Apoyar proyecto",
+    tipDesc: "¡Gracias por usar la app! Si quieres mandar otra propina:",
     templatesTitle: "Plantillas de lista",
     saveAsTemplate: "💾 Guardar",
     templateSaved: "Plantilla guardada 📦",
@@ -1314,6 +1320,8 @@ const TPRO = {
     devNote: "honor system — 寄付なしの有効化もOK",
     orPix: "またはPIX (ブラジル)",
     copyPix: "📋 Pixコードをコピー",
+    tipAgain: "💝 プロジェクトを支援",
+    tipDesc: "アプリを使ってくれてありがとう！もう一杯コーヒーをどうぞ：",
     templatesTitle: "リストテンプレート",
     saveAsTemplate: "💾 保存",
     templateSaved: "テンプレートを保存 📦",
@@ -1357,6 +1365,8 @@ const TPRO = {
     devNote: "honor system — הפעלה ללא תרומה גם בסדר",
     orPix: "או PIX (ברזיל)",
     copyPix: "📋 העתק קוד Pix",
+    tipAgain: "💝 תמוך בפרויקט",
+    tipDesc: "תודה שאתה משתמש באפליקציה! אם תרצה לשלוח עוד תרומה:",
     templatesTitle: "תבניות רשימה",
     saveAsTemplate: "💾 שמור",
     templateSaved: "תבנית נשמרה 📦",
@@ -1400,6 +1410,8 @@ const TPRO = {
     devNote: "honor system — 후원 없이 활성화도 OK",
     orPix: "또는 PIX (브라질)",
     copyPix: "📋 Pix 코드 복사",
+    tipAgain: "💝 프로젝트 후원",
+    tipDesc: "앱을 사용해 주셔서 감사합니다! 또 한 잔의 커피를 보내주세요:",
     templatesTitle: "목록 템플릿",
     saveAsTemplate: "💾 저장",
     templateSaved: "템플릿 저장됨 📦",
@@ -2859,7 +2871,7 @@ function openSettings(){
          <li class="unlocked">${tt.feat_templates}</li>
          <li class="unlocked">${tt.feat_stats}</li>
          <li class="unlocked">${tt.feat_color}</li>
-         <li>${tt.feat_qr}</li>
+         <li class="unlocked">${tt.feat_qr}</li>
          <li>${tt.feat_cloud}</li>
        </ul>`
     : `<ul class="pro-feature-list">
@@ -2876,7 +2888,7 @@ function openSettings(){
   } else {
     html += `<div class="settings-section"><h3>${tt.accentColor}</h3><div class="color-row" id="colorRow"></div></div>`
     html += `<div class="settings-section"><h3>${tt.bgTitle}</h3><div class="bg-row" id="bgRow"></div></div>`
-    html += `<button class="danger-link" onclick="lockPro()">${tt.deactivate}</button>`
+    html += `<button class="unlock-cta" onclick="openTip()">${tt.tipAgain}</button>`
   }
   c.innerHTML = html
   if(pro){
@@ -2999,6 +3011,22 @@ function copyPixCode(){
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(() => showToast(t.copied)).catch(() => fallbackCopy(text))
   } else { fallbackCopy(text) }
+}
+
+function openTip(){
+  closeModal("settingsModal")
+  const tt = tp()
+  document.getElementById("unlockTitle").textContent = tt.unlockTitle
+  document.getElementById("unlockContent").innerHTML = `
+    <p style="margin:0 0 14px;line-height:1.6;font-size:14px">${tt.tipDesc}</p>
+    <button class="unlock-cta" onclick="goDonate()">${tt.buyBtn}</button>
+    <div class="pix-divider"><span>${tt.orPix}</span></div>
+    <div id="pixQrWrap" style="background:white;padding:12px;border-radius:12px;text-align:center"></div>
+    <div id="pixCopyText" style="font-family:monospace;font-size:10px;background:var(--btn);padding:8px;border-radius:6px;margin-top:8px;word-break:break-all;line-height:1.4;max-height:64px;overflow-y:auto"></div>
+    <button class="secondary-btn" style="margin-top:6px" onclick="copyPixCode()">${tt.copyPix}</button>
+  `
+  document.getElementById("unlockModal").classList.remove("hidden")
+  renderPixQR()
 }
 
 function activatePro(){
