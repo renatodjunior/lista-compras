@@ -166,6 +166,12 @@ Cola texto de uma receita do WhatsApp em "📥 Colar lista" → parser detecta `
 
 ![Lista dark com folhas](screenshot-list-pro-dark.png)
 
+### PRO em ação — paleta laranja + estrelas + total da lista
+
+> Acento laranja, fundo de estrelas, itens com quantidade/unidade/preço e **pílula 💰 Total: R$ 60,00** somando automático. Categoria com emoji custom (`🌾 Corredor dos Grãos`).
+
+![Lista PRO laranja com estrelas](screenshot-list-pro-orange-stars.png)
+
 ---
 
 ## 💾 Onde os dados ficam
