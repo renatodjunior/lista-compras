@@ -49,7 +49,10 @@ body{
 }
 .container{ max-width:520px; margin:auto; padding:20px 16px 60px; }
 .header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
-.header h2{ margin:0; font-size:26px; font-weight:800; color:var(--primary); }
+.header h2{
+  margin:0; font-size:26px; font-weight:800; color:var(--primary);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;
+}
 .header-right{ display:flex; gap:6px; align-items:center; }
 .lang-btn{
   display:flex; align-items:center; gap:6px;
@@ -627,8 +630,9 @@ textarea{ resize:none; min-height:82px; }
 @media (max-width: 400px){
   .container{ padding:14px 10px 60px; }
   .header{ margin-bottom:18px; gap:8px; }
-  .header h2{ font-size:21px; }
-  .header-right{ gap:4px; }
+  .header h2{ font-size:19px; }
+  .header h2 #titleIcon{ display:none; }
+  .header-right{ gap:4px; flex-shrink:0; }
   .lang-btn{ height:34px; padding:0 6px 0 4px; font-size:12px; gap:5px; }
   .lang-flag-icon{ width:20px; height:13px; }
   .theme-btn{ width:34px; height:34px; font-size:16px; }
@@ -639,8 +643,7 @@ textarea{ resize:none; min-height:82px; }
   .copy-btn, .clear-btn{ width:34px; height:34px; font-size:16px; }
 }
 @media (max-width: 340px){
-  .header h2{ font-size:18px; }
-  .header h2 #titleIcon{ display:none; }
+  .header h2{ font-size:17px; }
   .lang-btn{ height:30px; padding:0 4px; font-size:11px; gap:4px; }
   .lang-flag-icon{ width:18px; height:12px; }
   .lang-caret{ display:none; }
