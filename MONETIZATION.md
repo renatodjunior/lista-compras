@@ -4,11 +4,29 @@
 
 ---
 
-## TL;DR — recomendação
+## Decisão final: modelo B — Donation + auto-unlock (honor system)
 
-**Modelo**: pagamento único "vitalício" via chave de licença (R$ 15 / US$ 3) destrava o tier **PRO**. Sem assinatura, sem conta, sem coleta de dados. A licença é validada localmente e armazenada no `localStorage`. Se o usuário trocar de aparelho, ele cola a mesma chave novamente. Quem não compra continua usando 100% do produto atual — PRO é só upside.
+**Como funciona:**
+1. App é 100% grátis com tier free completo
+2. Tier PRO existe e é destravável a qualquer momento
+3. Botão "💝 Apoiar projeto + destravar PRO" abre página de doação (Pix/Ko-fi)
+4. Após (ou sem) doar, usuário clica "Destravar PRO" → flag local `pro=1`, recursos liberam
+5. **Sem chave de licença, sem validação, sem fingir que é DRM** — quem é honesto doa, quem não é só clica destravar; pra single-file PWA open-source isso é o mais que dá pra fazer com integridade
 
-Esse modelo respeita a essência do app (privacidade, simplicidade, offline) e é o que está implementado nesta branch para você experimentar.
+**Justificativa:**
+- Código aberto no GitHub: qualquer DRM é teatro. DevTools destrava em 5 segundos
+- Quem paga R$15 num PWA grátis valoriza o projeto, não tá tentando burlar
+- Doação opcional com agradecimento concreto (PRO destravado) é mais honesto que paywall furado
+- Filosofia coerente: privacidade, offline, sem servidor, sem fricção
+- Renda esperada: menor que paywall mas maior que doação pura (incentivo do "destravar"), e com goodwill alto
+
+**Setup pra produção:**
+1. Cria página de doação: pode ser Ko-fi (`https://ko-fi.com/seuusuario`) ou página própria com QR Pix
+2. Subdomínio `myownlists.app/donate` redireciona pra Ko-fi/Pix
+3. Nada mais — sem webhook, sem email, sem chave
+4. Atualizar `goDonate()` no JS pro link real
+
+**Branches:** `feat/donation-mode` é a versão final (em cima de toda a stack).
 
 ---
 
