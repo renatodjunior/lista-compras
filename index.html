@@ -941,6 +941,16 @@ textarea{ resize:none; min-height:82px; }
           <line x1="8" y1="22" x2="16" y2="22"/>
         </svg>
       </button>
+      <button class="mic-btn" id="barcodeBtn" onclick="startBarcode()" aria-label="Scan barcode" style="display:none">
+        <svg class="mic-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="4" y1="6" x2="4" y2="18"/>
+          <line x1="7" y1="6" x2="7" y2="18"/>
+          <line x1="10" y1="6" x2="10" y2="18"/>
+          <line x1="13" y1="6" x2="13" y2="18"/>
+          <line x1="17" y1="6" x2="17" y2="18"/>
+          <line x1="20" y1="6" x2="20" y2="18"/>
+        </svg>
+      </button>
       <button class="primary-btn" id="addItemsBtn" onclick="addItems()" style="flex:1"></button>
     </div>
   </div>
@@ -1255,7 +1265,7 @@ const TPRO = {
     feat_stats: "📊 Statistics dashboard",
     feat_color: "🎨 Custom accent color",
     feat_qr: "📲 Share via QR code",
-    feat_cloud: "☁️ Optional cloud sync (coming soon)",
+    feat_cloud: "☁️ Optional Dropbox cloud sync",
     accentColor: "Accent color",
     resetColor: "Reset",
     deactivate: "Revert to free",
@@ -1317,6 +1327,11 @@ const TPRO = {
     syncError: "Sync error",
     syncAuthError: "Dropbox auth error",
     syncNotConfigured: "Sync not configured in this build (needs Dropbox APP_KEY)",
+    barcodeTitle: "Scan barcode",
+    barcodeAimAt: "Aim camera at the barcode",
+    barcodeUnsupported: "Scanner not supported in this browser",
+    barcodeCameraError: "Camera permission denied",
+    barcodeDetected: "Code detected:",
   },
   pt: {
     settingsTitle: "Configurações",
@@ -1328,7 +1343,7 @@ const TPRO = {
     feat_stats: "📊 Painel de estatísticas",
     feat_color: "🎨 Cor de destaque personalizada",
     feat_qr: "📲 Compartilhar via QR code",
-    feat_cloud: "☁️ Sincronização na nuvem opcional (em breve)",
+    feat_cloud: "☁️ Sincronização opcional com Dropbox",
     accentColor: "Cor de destaque",
     resetColor: "Padrão",
     deactivate: "Reverter pra free",
@@ -1390,6 +1405,11 @@ const TPRO = {
     syncError: "Erro de sincronização",
     syncAuthError: "Erro de autenticação Dropbox",
     syncNotConfigured: "Sync não configurado neste build (precisa Dropbox APP_KEY)",
+    barcodeTitle: "Escanear código de barras",
+    barcodeAimAt: "Aponte a câmera pro código de barras",
+    barcodeUnsupported: "Scanner não suportado neste navegador",
+    barcodeCameraError: "Sem permissão de câmera",
+    barcodeDetected: "Código detectado:",
   },
   es: {
     settingsTitle: "Ajustes",
@@ -1401,7 +1421,7 @@ const TPRO = {
     feat_stats: "📊 Panel de estadísticas",
     feat_color: "🎨 Color de acento personalizado",
     feat_qr: "📲 Compartir por QR",
-    feat_cloud: "☁️ Sincronización en la nube opcional (próximamente)",
+    feat_cloud: "☁️ Sincronización opcional con Dropbox",
     accentColor: "Color de acento",
     resetColor: "Restablecer",
     deactivate: "Volver a versión gratis",
@@ -1463,6 +1483,11 @@ const TPRO = {
     syncError: "Error de sincronización",
     syncAuthError: "Error de autenticación Dropbox",
     syncNotConfigured: "Sync no configurado en este build (requiere Dropbox APP_KEY)",
+    barcodeTitle: "Escanear código de barras",
+    barcodeAimAt: "Apunta la cámara al código de barras",
+    barcodeUnsupported: "Escáner no soportado en este navegador",
+    barcodeCameraError: "Permiso de cámara denegado",
+    barcodeDetected: "Código detectado:",
   },
   ja: {
     settingsTitle: "設定",
@@ -1474,7 +1499,7 @@ const TPRO = {
     feat_stats: "📊 統計ダッシュボード",
     feat_color: "🎨 カスタムアクセントカラー",
     feat_qr: "📲 QRコードで共有",
-    feat_cloud: "☁️ オプションのクラウド同期（近日）",
+    feat_cloud: "☁️ Dropboxとのオプション同期",
     accentColor: "アクセントカラー",
     resetColor: "デフォルト",
     deactivate: "無料版に戻す",
@@ -1536,6 +1561,11 @@ const TPRO = {
     syncError: "同期エラー",
     syncAuthError: "Dropbox認証エラー",
     syncNotConfigured: "このビルドでは同期未設定 (Dropbox APP_KEY必要)",
+    barcodeTitle: "バーコードをスキャン",
+    barcodeAimAt: "カメラをバーコードに向けてください",
+    barcodeUnsupported: "このブラウザはスキャナー非対応",
+    barcodeCameraError: "カメラのアクセスが拒否されました",
+    barcodeDetected: "コード検出:",
   },
   he: {
     settingsTitle: "הגדרות",
@@ -1547,7 +1577,7 @@ const TPRO = {
     feat_stats: "📊 לוח סטטיסטיקה",
     feat_color: "🎨 צבע הדגשה מותאם",
     feat_qr: "📲 שיתוף דרך QR",
-    feat_cloud: "☁️ סנכרון ענן אופציונלי (בקרוב)",
+    feat_cloud: "☁️ סנכרון אופציונלי עם Dropbox",
     accentColor: "צבע הדגשה",
     resetColor: "ברירת מחדל",
     deactivate: "חזור לגרסה חינם",
@@ -1609,6 +1639,11 @@ const TPRO = {
     syncError: "שגיאת סנכרון",
     syncAuthError: "שגיאת אימות Dropbox",
     syncNotConfigured: "הסנכרון לא הוגדר ב-build זה (דורש Dropbox APP_KEY)",
+    barcodeTitle: "סריקת ברקוד",
+    barcodeAimAt: "כוון את המצלמה לברקוד",
+    barcodeUnsupported: "הסורק לא נתמך בדפדפן זה",
+    barcodeCameraError: "הרשאת מצלמה נדחתה",
+    barcodeDetected: "קוד זוהה:",
   },
   ko: {
     settingsTitle: "설정",
@@ -1620,7 +1655,7 @@ const TPRO = {
     feat_stats: "📊 통계 대시보드",
     feat_color: "🎨 사용자 지정 색상",
     feat_qr: "📲 QR 코드 공유",
-    feat_cloud: "☁️ 선택적 클라우드 동기화 (출시 예정)",
+    feat_cloud: "☁️ Dropbox 선택적 동기화",
     accentColor: "강조 색상",
     resetColor: "기본값",
     deactivate: "무료 버전으로 되돌리기",
@@ -1682,6 +1717,11 @@ const TPRO = {
     syncError: "동기화 오류",
     syncAuthError: "Dropbox 인증 오류",
     syncNotConfigured: "이 빌드에는 동기화 미설정 (Dropbox APP_KEY 필요)",
+    barcodeTitle: "바코드 스캔",
+    barcodeAimAt: "카메라를 바코드에 비추세요",
+    barcodeUnsupported: "이 브라우저는 스캐너 미지원",
+    barcodeCameraError: "카메라 권한 거부됨",
+    barcodeDetected: "코드 감지됨:",
   }
 }
 function tp(){ return TPRO[currentLang] || TPRO.en }
@@ -1821,10 +1861,7 @@ const HELP_PRO = {
       <li>🎨 <strong>Cor de destaque personalizada</strong> — escolha uma das 6 paletas em ⚙️ Configurações; cada uma tem versão clara e escura.</li>
       <li>🌸 <strong>Plano de fundo</strong> — padrões discretos pra deixar o app com a sua cara.</li>
       <li>📲 <strong>QR code</strong> — outra pessoa escaneia e importa direto, sem servidor.</li>
-    </ul>
-    <h3 style="color:#ff7a00">🔜 Em breve no PRO</h3>
-    <ul>
-      <li>☁️ Sync opcional com sua própria conta de nuvem</li>
+      <li>☁️ <strong>Sync com Dropbox</strong> — listas salvas na sua conta Dropbox, mesmas listas em todos os devices.</li>
     </ul>
   `,
   en: `
@@ -1835,10 +1872,7 @@ const HELP_PRO = {
       <li>🎨 <strong>Custom accent color</strong> — pick from 6 palettes in ⚙️ Settings; each has a light and dark variant.</li>
       <li>🌸 <strong>Background patterns</strong> — subtle patterns to make the app yours.</li>
       <li>📲 <strong>QR code</strong> — another device scans and imports directly, serverless.</li>
-    </ul>
-    <h3 style="color:#ff7a00">🔜 Coming to PRO</h3>
-    <ul>
-      <li>☁️ Optional sync with your own cloud account</li>
+      <li>☁️ <strong>Dropbox sync</strong> — lists saved to your own Dropbox account, same lists on every device.</li>
     </ul>
   `,
   es: `
@@ -1849,10 +1883,7 @@ const HELP_PRO = {
       <li>🎨 <strong>Color de acento personalizado</strong> — elige entre 6 paletas en ⚙️ Ajustes; cada una con versión clara y oscura.</li>
       <li>🌸 <strong>Fondos</strong> — patrones discretos para personalizar.</li>
       <li>📲 <strong>QR code</strong> — otro dispositivo escanea e importa directo, sin servidor.</li>
-    </ul>
-    <h3 style="color:#ff7a00">🔜 Próximamente en PRO</h3>
-    <ul>
-      <li>☁️ Sincronización opcional con tu propia nube</li>
+      <li>☁️ <strong>Sync con Dropbox</strong> — listas guardadas en tu Dropbox, mismas listas en todos los dispositivos.</li>
     </ul>
   `,
   ja: `
@@ -1863,10 +1894,7 @@ const HELP_PRO = {
       <li>🎨 <strong>カスタムアクセントカラー</strong> — ⚙️設定で6色から選択。ライト/ダーク両対応。</li>
       <li>🌸 <strong>背景パターン</strong> — 控えめな柄で雰囲気を変える。</li>
       <li>📲 <strong>QRコード</strong> — 別の端末でスキャンして直接インポート、サーバー不要。</li>
-    </ul>
-    <h3 style="color:#ff7a00">🔜 PROに追加予定</h3>
-    <ul>
-      <li>☁️ 自分のクラウドアカウントでオプション同期</li>
+      <li>☁️ <strong>Dropbox同期</strong> — リストを自分のDropboxに保存、すべての端末で同じリスト。</li>
     </ul>
   `,
   he: `
@@ -1877,10 +1905,7 @@ const HELP_PRO = {
       <li>🎨 <strong>צבע הדגשה מותאם</strong> — בחר מבין 6 פלטות בהגדרות ⚙️.</li>
       <li>🌸 <strong>תבניות רקע</strong> — דוגמאות עדינות לעיצוב אישי.</li>
       <li>📲 <strong>קוד QR</strong> — מכשיר אחר סורק ומייבא ישירות, ללא שרת.</li>
-    </ul>
-    <h3 style="color:#ff7a00">🔜 בקרוב ב-PRO</h3>
-    <ul>
-      <li>☁️ סנכרון אופציונלי עם החשבון שלך</li>
+      <li>☁️ <strong>סנכרון Dropbox</strong> — הרשימות שלך נשמרות בחשבון Dropbox שלך, אותן רשימות בכל המכשירים.</li>
     </ul>
   `,
   ko: `
@@ -1891,10 +1916,7 @@ const HELP_PRO = {
       <li>🎨 <strong>사용자 강조 색상</strong> — ⚙️ 설정에서 6가지 팔레트 중 선택. 라이트/다크 지원.</li>
       <li>🌸 <strong>배경 패턴</strong> — 은은한 패턴으로 개인화.</li>
       <li>📲 <strong>QR 코드</strong> — 다른 기기로 스캔하여 바로 가져오기, 서버 없음.</li>
-    </ul>
-    <h3 style="color:#ff7a00">🔜 PRO 출시 예정</h3>
-    <ul>
-      <li>☁️ 본인 클라우드 계정으로 선택적 동기화</li>
+      <li>☁️ <strong>Dropbox 동기화</strong> — 본인 Dropbox에 저장, 모든 기기에서 같은 목록.</li>
     </ul>
   `
 }
@@ -3528,6 +3550,78 @@ function initVoice(){
   }
 }
 
+// ── BARCODE SCAN ─────────────────────────────────
+const BARCODE_AVAILABLE = ("BarcodeDetector" in window) && IS_MOBILE && (location.protocol !== "file:")
+let _bcStream = null
+let _bcRunning = false
+let _bcDetector = null
+
+function initBarcode(){
+  const b = document.getElementById("barcodeBtn")
+  if(!b) return
+  b.style.display = BARCODE_AVAILABLE ? "flex" : "none"
+}
+
+async function startBarcode(){
+  if(!BARCODE_AVAILABLE){ showToast(tp().barcodeUnsupported); return }
+  try {
+    _bcStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" }
+    })
+    _bcDetector = new BarcodeDetector({
+      formats: ["ean_13", "ean_8", "code_128", "code_39", "qr_code", "upc_a", "upc_e", "code_93", "itf"]
+    })
+    _uiResolve = null
+    _uiOpen(tp().barcodeTitle, `
+      <video id="_bcVideo" autoplay playsinline muted style="width:100%;border-radius:12px;background:#000;max-height:340px;object-fit:cover"></video>
+      <p style="text-align:center;font-size:13px;color:var(--muted);margin:10px 0 14px;line-height:1.5">${tp().barcodeAimAt}</p>
+      <button class="secondary-btn" onclick="stopBarcode()">${tp().cancelLabel}</button>
+    `)
+    const video = document.getElementById("_bcVideo")
+    video.srcObject = _bcStream
+    _bcRunning = true
+    detectBarcodeLoop(video)
+  } catch(e){
+    showToast(tp().barcodeCameraError)
+    if(_bcStream){ _bcStream.getTracks().forEach(t => t.stop()); _bcStream = null }
+  }
+}
+
+async function detectBarcodeLoop(video){
+  if(!_bcRunning) return
+  try {
+    if(video.readyState >= 2){
+      const codes = await _bcDetector.detect(video)
+      if(codes && codes.length > 0){
+        const code = codes[0].rawValue
+        handleBarcodeResult(code)
+        return
+      }
+    }
+  } catch(e){}
+  setTimeout(() => detectBarcodeLoop(video), 250)
+}
+
+function stopBarcode(){
+  _bcRunning = false
+  if(_bcStream){
+    _bcStream.getTracks().forEach(t => t.stop())
+    _bcStream = null
+  }
+  closeModal("uiModal")
+}
+
+function handleBarcodeResult(code){
+  stopBarcode()
+  const ta = document.getElementById("newItems")
+  if(!ta) return
+  const existing = ta.value.replace(/\s+$/, "")
+  ta.value = (existing ? existing + "\n" : "") + code
+  ta.focus()
+  if(navigator.vibrate) navigator.vibrate(80)
+  showToast(tp().barcodeDetected + " " + code)
+}
+
 function checkShareTarget(){
   try {
     const params = new URLSearchParams(window.location.search)
@@ -3608,7 +3702,7 @@ function openSettings(){
          <li class="unlocked">${tt.feat_stats}</li>
          <li class="unlocked">${tt.feat_color}</li>
          <li class="unlocked">${tt.feat_qr}</li>
-         <li>${tt.feat_cloud}</li>
+         <li class="unlocked">${tt.feat_cloud}</li>
        </ul>`
     : `<ul class="pro-feature-list">
          <li>${tt.feat_templates}</li>
@@ -3944,6 +4038,7 @@ function openStats(){
 refreshProUI()
 applyLang()
 initVoice()
+initBarcode()
 ;(async () => {
   const handled = await _handleDropboxCallback()
   if(!handled) checkShareTarget()
