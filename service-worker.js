@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v17-final"
+const CACHE_NAME = "mylists-v17-footer"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [

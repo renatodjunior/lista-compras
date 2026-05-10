@@ -865,9 +865,9 @@ textarea{ resize:none; min-height:82px; }
 
   <footer class="site-footer">
     <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()"></button><br>
-    <a href="https://github.com/renatodjunior" target="_blank" rel="noopener">github.com/renatodjunior</a>
+    <span>Renato Junior</span>
     <span style="margin:0 8px;opacity:.5">·</span>
-    <a href="#" onclick="event.preventDefault(); openTip()">💝 Apoiar (Ko-fi / Pix)</a>
+    <a href="#" id="supportFooterLink" onclick="event.preventDefault(); openTip()"></a>
   </footer>
 
 </div>
@@ -1189,6 +1189,7 @@ const TPRO = {
     copyPix: "📋 Copy Pix code",
     tipAgain: "💝 Support project",
     tipDesc: "Thanks for using the app! If you'd like to send another tip:",
+    supportFooter: "💝 Support (Ko-fi / Pix)",
     templatesTitle: "List templates",
     saveAsTemplate: "💾 Save",
     templateSaved: "Template saved 📦",
@@ -1234,6 +1235,7 @@ const TPRO = {
     copyPix: "📋 Copiar Pix copia-e-cola",
     tipAgain: "💝 Apoiar projeto",
     tipDesc: "Obrigado por usar o app! Se quiser mandar mais um cafézinho:",
+    supportFooter: "💝 Apoiar (Ko-fi / Pix)",
     templatesTitle: "Modelos de lista",
     saveAsTemplate: "💾 Salvar",
     templateSaved: "Modelo salvo 📦",
@@ -1279,6 +1281,7 @@ const TPRO = {
     copyPix: "📋 Copiar código Pix",
     tipAgain: "💝 Apoyar proyecto",
     tipDesc: "¡Gracias por usar la app! Si quieres mandar otra propina:",
+    supportFooter: "💝 Apoyar (Ko-fi / Pix)",
     templatesTitle: "Plantillas de lista",
     saveAsTemplate: "💾 Guardar",
     templateSaved: "Plantilla guardada 📦",
@@ -1324,6 +1327,7 @@ const TPRO = {
     copyPix: "📋 Pixコードをコピー",
     tipAgain: "💝 プロジェクトを支援",
     tipDesc: "アプリを使ってくれてありがとう！もう一杯コーヒーをどうぞ：",
+    supportFooter: "💝 支援 (Ko-fi / Pix)",
     templatesTitle: "リストテンプレート",
     saveAsTemplate: "💾 保存",
     templateSaved: "テンプレートを保存 📦",
@@ -1369,6 +1373,7 @@ const TPRO = {
     copyPix: "📋 העתק קוד Pix",
     tipAgain: "💝 תמוך בפרויקט",
     tipDesc: "תודה שאתה משתמש באפליקציה! אם תרצה לשלוח עוד תרומה:",
+    supportFooter: "💝 תמיכה (Ko-fi / Pix)",
     templatesTitle: "תבניות רשימה",
     saveAsTemplate: "💾 שמור",
     templateSaved: "תבנית נשמרה 📦",
@@ -1414,6 +1419,7 @@ const TPRO = {
     copyPix: "📋 Pix 코드 복사",
     tipAgain: "💝 프로젝트 후원",
     tipDesc: "앱을 사용해 주셔서 감사합니다! 또 한 잔의 커피를 보내주세요:",
+    supportFooter: "💝 후원 (Ko-fi / Pix)",
     templatesTitle: "목록 템플릿",
     saveAsTemplate: "💾 저장",
     templateSaved: "템플릿 저장됨 📦",
@@ -2857,6 +2863,7 @@ function refreshProUI(){
   document.getElementById("helpBtn").title = tt.helpBtnTitle
   document.getElementById("refreshBtn").textContent = tt.refreshBtn
   document.getElementById("pasteListBtn").textContent = tt.pasteListBtn
+  document.getElementById("supportFooterLink").textContent = tt.supportFooter
   applyAccent()
   applyBg()
 }
