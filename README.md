@@ -142,15 +142,29 @@ Cola texto de uma receita do WhatsApp em "📥 Colar lista" → parser detecta `
 
 ## 🖼️ Capturas de tela
 
-### Tela inicial — suas listas
+### Tela inicial — versão grátis
 
-> Lista de compras com emoji, contador de itens, busca, backup.
+> Listas com emoji, atalhos pra modelos/stats (PRO), backup, importar texto, footer com apoio.
 
-![Tela inicial](print.png)
+![Tela inicial light](screenshot-home-light.png)
+
+### Tela inicial — PRO destravado, paleta azul
+
+> Cor de destaque personalizada (PRO). 6 paletas disponíveis em ⚙️ Configurações.
+
+![Tela inicial PRO azul](screenshot-home-pro-blue.png)
 
 ### Dentro de uma lista
 
-> Categorias com emoji, itens com quantidade/unidade/preço, total da lista, arrastar pra reordenar.
+> Categorias com emoji custom, itens com quantidade/unidade/preço, pílulas de status, busca, painel "Mais usados" sugerindo itens repetidos entre listas, total da lista.
+
+![Lista light](screenshot-list-light.png)
+
+### Modo escuro + plano de fundo PRO (folhas)
+
+> Dark mode + padrão de fundo PRO (`🌸 Folhas`). Combina com qualquer paleta de cor.
+
+![Lista dark com folhas](screenshot-list-pro-dark.png)
 
 ---
 
