@@ -476,6 +476,32 @@ textarea{ resize:none; min-height:82px; }
 .dark .inflation-banner.down{ background:#0d2e0d; color:#66bb6a; }
 .inflation-banner .ib-label{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
 .inflation-banner .ib-value{ font-size:22px; font-weight:800; }
+
+.hist-table{
+  width:100%; border-collapse:collapse; font-size:13px;
+}
+.hist-table th, .hist-table td{
+  text-align:left; padding:8px 6px; border-bottom:1px solid var(--btn);
+}
+.hist-table th{
+  font-size:10px; font-weight:800; text-transform:uppercase;
+  letter-spacing:.05em; color:var(--muted);
+}
+.hist-table td.trend{ font-weight:700; }
+.hist-table td.trend.up{ color:#d32f2f; }
+.hist-table td.trend.down{ color:#2e7d32; }
+.dark .hist-table td.trend.up{ color:#ef5350; }
+.dark .hist-table td.trend.down{ color:#66bb6a; }
+.hist-total{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:14px; padding:10px 12px; background:var(--btn);
+  border-radius:10px; font-weight:700; font-size:14px;
+}
+.hist-total .trend{ font-weight:800; font-size:15px; }
+.hist-total .trend.up{ color:#d32f2f; }
+.hist-total .trend.down{ color:#2e7d32; }
+.dark .hist-total .trend.up{ color:#ef5350; }
+.dark .hist-total .trend.down{ color:#66bb6a; }
 .license-input{
   width:100%; padding:12px; border-radius:10px;
   border:2px solid transparent; background:var(--card); color:var(--text);
@@ -1225,6 +1251,7 @@ const TPRO = {
     priceDown: "Biggest price drops",
     personalInflation: "Your personal inflation",
     priceTrendsHint: "💡 Mark priced items as ✅ purchased at least 2 times to start seeing price trends.",
+    dateCol: "Date", qtyCol: "Qty", priceCol: "Price", totalVariation: "Total change",
   },
   pt: {
     settingsTitle: "Configurações",
@@ -1275,6 +1302,7 @@ const TPRO = {
     priceDown: "Maior queda de preço",
     personalInflation: "Sua inflação pessoal",
     priceTrendsHint: "💡 Marque itens com preço como ✅ comprado pelo menos 2 vezes pra começar a ver tendências de preço.",
+    dateCol: "Data", qtyCol: "Qtd", priceCol: "Preço", totalVariation: "Variação total",
   },
   es: {
     settingsTitle: "Ajustes",
@@ -1325,6 +1353,7 @@ const TPRO = {
     priceDown: "Mayor caída de precio",
     personalInflation: "Tu inflación personal",
     priceTrendsHint: "💡 Marca ítems con precio como ✅ comprado al menos 2 veces para ver tendencias.",
+    dateCol: "Fecha", qtyCol: "Cant", priceCol: "Precio", totalVariation: "Cambio total",
   },
   ja: {
     settingsTitle: "設定",
@@ -1375,6 +1404,7 @@ const TPRO = {
     priceDown: "価格が最も下落",
     personalInflation: "あなたの個人インフレ",
     priceTrendsHint: "💡 価格付きアイテムを2回以上 ✅ 購入済みにすると価格傾向が表示されます。",
+    dateCol: "日付", qtyCol: "数量", priceCol: "価格", totalVariation: "総変動",
   },
   he: {
     settingsTitle: "הגדרות",
@@ -1425,6 +1455,7 @@ const TPRO = {
     priceDown: "הירידות הגדולות במחיר",
     personalInflation: "האינפלציה האישית שלך",
     priceTrendsHint: "💡 סמן פריטים עם מחיר כ-✅ נרכש לפחות פעמיים כדי לראות מגמות.",
+    dateCol: "תאריך", qtyCol: "כמות", priceCol: "מחיר", totalVariation: "שינוי כולל",
   },
   ko: {
     settingsTitle: "설정",
@@ -1475,6 +1506,7 @@ const TPRO = {
     priceDown: "가격 하락 상위",
     personalInflation: "개인 인플레이션",
     priceTrendsHint: "💡 가격 표시된 항목을 ✅ 구매 완료로 2회 이상 표시하면 가격 추세가 보입니다.",
+    dateCol: "날짜", qtyCol: "수량", priceCol: "가격", totalVariation: "총 변동",
   }
 }
 function tp(){ return TPRO[currentLang] || TPRO.en }
@@ -1973,6 +2005,52 @@ function recordPriceEntry(item){
   if(priceHistory[name].length > 50) priceHistory[name] = priceHistory[name].slice(-50)
   savePriceHistory()
 }
+function openItemHistory(name){
+  const entries = priceHistory[name]
+  if(!entries || !entries.length) return
+  const tt = tp()
+  _uiResolve = null
+  const display = name.charAt(0).toUpperCase() + name.slice(1)
+  const locale = { pt:"pt-BR", en:"en-US", es:"es-ES", ja:"ja-JP", he:"he-IL", ko:"ko-KR" }[currentLang] || "en-US"
+  let prevPrice = null
+  const rows = entries.map(e => {
+    const d = new Date(e.ts).toLocaleDateString(locale, { day:"2-digit", month:"2-digit", year:"2-digit" })
+    const qtyText = e.qty ? (e.qty + (e.unit ? " " + e.unit : "")) : "—"
+    const priceN = parsePrice(e.price)
+    const priceText = formatPrice(e.price) || "—"
+    let delta = "—"
+    let deltaCls = ""
+    if(prevPrice !== null && isFinite(priceN) && prevPrice > 0){
+      const pct = ((priceN - prevPrice) / prevPrice) * 100
+      const sign = pct > 0 ? "+" : ""
+      delta = `${sign}${pct.toFixed(1)}%`
+      deltaCls = pct > 0 ? "up" : (pct < 0 ? "down" : "")
+    }
+    if(isFinite(priceN)) prevPrice = priceN
+    return `<tr><td>${d}</td><td>${_esc(qtyText)}</td><td>${priceText}</td><td class="trend ${deltaCls}">${delta}</td></tr>`
+  }).join("")
+  const first = parsePrice(entries[0].price)
+  const last = parsePrice(entries[entries.length - 1].price)
+  let total = ""
+  if(isFinite(first) && first > 0 && isFinite(last)){
+    const pct = ((last - first) / first) * 100
+    const arrow = pct > 0 ? "📈" : (pct < 0 ? "📉" : "—")
+    const sign = pct > 0 ? "+" : ""
+    const cls = pct > 0 ? "up" : (pct < 0 ? "down" : "")
+    total = `<div class="hist-total"><span>${tt.totalVariation || "Variação total"}</span><span class="trend ${cls}">${arrow} ${sign}${pct.toFixed(1)}%</span></div>`
+  }
+  _uiOpen(display, `
+    <table class="hist-table">
+      <thead><tr><th>${tt.dateCol || "Data"}</th><th>${tt.qtyCol || "Qtd"}</th><th>${tt.priceCol || "Preço"}</th><th>Δ</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${total}
+    <div style="text-align:center;margin-top:14px">
+      <button class="secondary-btn" style="width:auto;padding:8px 18px" onclick="closeModal('uiModal')">${tt.okLabel}</button>
+    </div>
+  `)
+}
+
 function computePriceTrends(){
   const trends = []
   Object.entries(priceHistory).forEach(([name, entries]) => {
@@ -2166,11 +2244,15 @@ function renderItems(){
         (item.unit ? `<span class="unit-badge">${_esc(item.unit)}</span>` : "")
       const priceText = formatPrice(item.price)
       const priceHTML = priceText ? `<span class="price-badge">${priceText}</span>` : ""
+      const histKey = (item.name || "").trim().toLowerCase()
+      const hasHist = pro && histKey && priceHistory[histKey] && priceHistory[histKey].length > 0
+      const histBtn = hasHist ? `<button class="icon-btn" title="📊" onclick="openItemHistory('${histKey.replace(/'/g, "\\'")}')">📊</button>` : ""
       row.innerHTML = `
         <div class="drag">⠿</div>
         <div class="toggle ${tc}" onclick="toggleStatus(${i})"></div>
         <div class="item-name ${tc}" onclick="toggleStatus(${i})">${item.name}${qtyHTML}</div>
         ${priceHTML}
+        ${histBtn}
         <button class="icon-btn" onclick="editItem(${i})">✏️</button>
         <button class="icon-btn" onclick="deleteItem(${i})">❌</button>
       `

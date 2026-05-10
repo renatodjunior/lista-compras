@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v18-price-history"
+const CACHE_NAME = "mylists-v19-history-view"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
