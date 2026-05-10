@@ -1332,6 +1332,10 @@ const TPRO = {
     barcodeUnsupported: "Scanner not supported in this browser",
     barcodeCameraError: "Camera permission denied",
     barcodeDetected: "Code detected:",
+    barcodeLooking: "🔎 Looking up product...",
+    barcodeFound: "✓ Product found:",
+    barcodeAskName: "Product not in database. What's the name?",
+    barcodeSaved: "Product saved ✓ (next scan will auto-recognize)",
   },
   pt: {
     settingsTitle: "Configurações",
@@ -1410,6 +1414,10 @@ const TPRO = {
     barcodeUnsupported: "Scanner não suportado neste navegador",
     barcodeCameraError: "Sem permissão de câmera",
     barcodeDetected: "Código detectado:",
+    barcodeLooking: "🔎 Buscando produto...",
+    barcodeFound: "✓ Produto encontrado:",
+    barcodeAskName: "Produto não cadastrado. Qual é o nome?",
+    barcodeSaved: "Produto salvo ✓ (próxima vez vai reconhecer sozinho)",
   },
   es: {
     settingsTitle: "Ajustes",
@@ -1488,6 +1496,10 @@ const TPRO = {
     barcodeUnsupported: "Escáner no soportado en este navegador",
     barcodeCameraError: "Permiso de cámara denegado",
     barcodeDetected: "Código detectado:",
+    barcodeLooking: "🔎 Buscando producto...",
+    barcodeFound: "✓ Producto encontrado:",
+    barcodeAskName: "Producto no registrado. ¿Cómo se llama?",
+    barcodeSaved: "Producto guardado ✓ (próxima vez se reconocerá solo)",
   },
   ja: {
     settingsTitle: "設定",
@@ -1566,6 +1578,10 @@ const TPRO = {
     barcodeUnsupported: "このブラウザはスキャナー非対応",
     barcodeCameraError: "カメラのアクセスが拒否されました",
     barcodeDetected: "コード検出:",
+    barcodeLooking: "🔎 商品を検索中...",
+    barcodeFound: "✓ 商品が見つかりました:",
+    barcodeAskName: "商品未登録。名前は？",
+    barcodeSaved: "商品を保存 ✓ (次回から自動認識)",
   },
   he: {
     settingsTitle: "הגדרות",
@@ -1644,6 +1660,10 @@ const TPRO = {
     barcodeUnsupported: "הסורק לא נתמך בדפדפן זה",
     barcodeCameraError: "הרשאת מצלמה נדחתה",
     barcodeDetected: "קוד זוהה:",
+    barcodeLooking: "🔎 מחפש מוצר...",
+    barcodeFound: "✓ מוצר נמצא:",
+    barcodeAskName: "מוצר לא רשום. מה השם?",
+    barcodeSaved: "המוצר נשמר ✓ (בפעם הבאה יזוהה אוטומטית)",
   },
   ko: {
     settingsTitle: "설정",
@@ -1722,6 +1742,10 @@ const TPRO = {
     barcodeUnsupported: "이 브라우저는 스캐너 미지원",
     barcodeCameraError: "카메라 권한 거부됨",
     barcodeDetected: "코드 감지됨:",
+    barcodeLooking: "🔎 제품 검색 중...",
+    barcodeFound: "✓ 제품 발견:",
+    barcodeAskName: "제품 미등록. 이름은?",
+    barcodeSaved: "제품 저장됨 ✓ (다음 스캔부터 자동 인식)",
   }
 }
 function tp(){ return TPRO[currentLang] || TPRO.en }
@@ -2483,10 +2507,9 @@ async function dropboxUpload(silent){
   const token = await _dropboxAccessToken()
   if(!token) return false
   const payload = JSON.stringify({
-    lists, templates, priceHistory,
-    categoryEmojisGlobal: undefined,
+    lists, templates, priceHistory, barcodeMap,
     syncedAt: Date.now(),
-    schemaVersion: 1,
+    schemaVersion: 2,
   })
   try {
     const res = await fetch("https://content.dropboxapi.com/2/files/upload", {
@@ -2549,6 +2572,7 @@ async function dropboxPull(initial){
   if(Array.isArray(remote.lists)) lists = remote.lists
   if(Array.isArray(remote.templates)) { templates = remote.templates; localStorage.setItem("templates", JSON.stringify(templates)) }
   if(remote.priceHistory && typeof remote.priceHistory === "object") { priceHistory = remote.priceHistory; savePriceHistory() }
+  if(remote.barcodeMap && typeof remote.barcodeMap === "object") { barcodeMap = remote.barcodeMap; localStorage.setItem("barcodeMap", JSON.stringify(barcodeMap)) }
   save()
   localStorage.setItem("dbx_lastSync", String(Date.now()))
   renderLists()
@@ -2985,8 +3009,8 @@ document.getElementById("copyBtn").addEventListener("click", copyList)
 // ── BACKUP ────────────────────────────────────────
 
 function exportData(){
-  const hasExtras = templates.length || Object.keys(priceHistory).length
-  const payload = hasExtras ? { lists, templates, priceHistory } : lists
+  const hasExtras = templates.length || Object.keys(priceHistory).length || Object.keys(barcodeMap).length
+  const payload = hasExtras ? { lists, templates, priceHistory, barcodeMap } : lists
   const data = JSON.stringify(payload, null, 2)
   const blob = new Blob([data], { type:"application/json" })
   const url = URL.createObjectURL(blob)
@@ -3015,15 +3039,18 @@ function importData(e){
       let arr = data
       let pendingTpl = null
       let pendingHist = null
+      let pendingBc = null
       if(data && !Array.isArray(data) && Array.isArray(data.lists)){
         arr = data.lists
         if(Array.isArray(data.templates)) pendingTpl = data.templates
         if(data.priceHistory && typeof data.priceHistory === "object") pendingHist = data.priceHistory
+        if(data.barcodeMap && typeof data.barcodeMap === "object") pendingBc = data.barcodeMap
       }
       if(!Array.isArray(arr)) throw new Error()
       if(!await uiConfirm(t.confirmImport(arr.length))) return
       if(pendingTpl){ templates = pendingTpl; localStorage.setItem("templates", JSON.stringify(templates)) }
       if(pendingHist){ priceHistory = pendingHist; savePriceHistory() }
+      if(pendingBc){ barcodeMap = pendingBc; localStorage.setItem("barcodeMap", JSON.stringify(barcodeMap)) }
       lists = arr
       save(); renderLists()
       showToast(t.backupImported)
@@ -3611,15 +3638,60 @@ function stopBarcode(){
   closeModal("uiModal")
 }
 
-function handleBarcodeResult(code){
-  stopBarcode()
+let barcodeMap = JSON.parse(localStorage.getItem("barcodeMap") || "{}")
+function saveBarcodeMap(){ localStorage.setItem("barcodeMap", JSON.stringify(barcodeMap)); if(typeof triggerSync==="function") triggerSync() }
+
+async function lookupBarcode(code){
+  if(barcodeMap[code]) return barcodeMap[code]
+  try {
+    const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${encodeURIComponent(code)}.json`)
+    if(!res.ok) return null
+    const data = await res.json()
+    if(data && data.status === 1 && data.product){
+      const localized = data.product["product_name_" + currentLang] || data.product.product_name || ""
+      const brand = (data.product.brands || "").split(",")[0].trim()
+      const qty = data.product.quantity || ""
+      const parts = []
+      if(brand) parts.push(brand)
+      if(localized) parts.push(localized)
+      if(qty && !parts.join(" ").toLowerCase().includes(qty.toLowerCase())) parts.push(qty)
+      const composed = parts.join(" ").trim()
+      if(composed){
+        barcodeMap[code] = composed
+        saveBarcodeMap()
+        return composed
+      }
+    }
+  } catch(e){}
+  return null
+}
+
+function _appendToItemsTextarea(text){
   const ta = document.getElementById("newItems")
   if(!ta) return
   const existing = ta.value.replace(/\s+$/, "")
-  ta.value = (existing ? existing + "\n" : "") + code
+  ta.value = (existing ? existing + "\n" : "") + text
   ta.focus()
+}
+
+async function handleBarcodeResult(code){
+  stopBarcode()
   if(navigator.vibrate) navigator.vibrate(80)
-  showToast(tp().barcodeDetected + " " + code)
+  showToast(tp().barcodeLooking)
+  const name = await lookupBarcode(code)
+  if(name){
+    _appendToItemsTextarea(name)
+    showToast(tp().barcodeFound + " " + name)
+    return
+  }
+  const ask = await uiPrompt(tp().barcodeAskName + " (" + code + ")", "")
+  if(ask === null) return
+  const trimmed = ask.trim()
+  if(!trimmed){ _appendToItemsTextarea(code); return }
+  barcodeMap[code] = trimmed
+  saveBarcodeMap()
+  _appendToItemsTextarea(trimmed)
+  showToast(tp().barcodeSaved)
 }
 
 function checkShareTarget(){
