@@ -250,17 +250,16 @@ textarea{ resize:none; min-height:82px; }
 }
 .dark .orphan-badge{ background:#3a2810; color:#ffb84d; }
 .stat-card.spend .v{ font-size:18px; }
-.period-selector{
-  display:flex; gap:6px; margin-bottom:12px; justify-content:center; flex-wrap:wrap;
+.stats-toolbar{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:10px; margin-bottom:12px; flex-wrap:wrap;
 }
-.period-selector button{
+.period-select{
   background:var(--btn); border:1.5px solid transparent; color:var(--text);
-  font-size:12px; font-weight:700; padding:6px 14px; border-radius:99px;
-  cursor:pointer; transition:background .2s,color .2s,border-color .2s;
+  font-size:12px; font-weight:700; padding:6px 10px; border-radius:99px;
+  cursor:pointer; font-family:inherit;
 }
-.period-selector button.active{
-  background:var(--primary); color:white; border-color:var(--primary);
-}
+.period-select:focus{ outline:none; border-color:var(--primary); }
 .item-name{ flex:1; font-size:15px; font-weight:600; transition:opacity .2s; }
 .item-name.done{ text-decoration:line-through; opacity:.45; }
 .item-name.maybe{ color:var(--warning); }
@@ -4809,17 +4808,19 @@ function openStats(){
     return `<li><span>${arrow} ${t.display}</span><span class="trend ${cls}">${sign}${t.pct.toFixed(1)}%</span></li>`
   }
   const fmt = (n) => formatPrice(String(n)) || (tp().currencySymbol + " 0")
-  const periodBtn = (p, label) =>
-    `<button class="${period === p ? 'active' : ''}" onclick="setStatsPeriod('${p}')">${label}</button>`
+  const opt = (p, label) =>
+    `<option value="${p}" ${period === p ? 'selected' : ''}>${label}</option>`
 
   c.innerHTML = `
-    <div class="period-selector">
-      ${periodBtn("30d", tt.period30d || "30d")}
-      ${periodBtn("90d", tt.period90d || "90d")}
-      ${periodBtn("12m", tt.period12m || "12m")}
-      ${periodBtn("all", tt.periodAll || "All")}
+    <div class="stats-toolbar">
+      <select class="period-select" onchange="setStatsPeriod(this.value)" aria-label="${tt.periodLabel || 'Period'}">
+        ${opt("30d", tt.period30d || "30d")}
+        ${opt("90d", tt.period90d || "90d")}
+        ${opt("12m", tt.period12m || "12m")}
+        ${opt("all", tt.periodAll || "All")}
+      </select>
+      ${hasHistory ? `<button class="secondary-btn" style="width:auto;padding:6px 12px;font-size:11px" onclick="openManagePrices()">🛠️ ${tt.managePricesBtn || "Manage prices"}</button>` : `<span></span>`}
     </div>
-    ${hasHistory ? `<div style="text-align:right;margin-bottom:8px"><button class="secondary-btn" style="width:auto;padding:6px 12px;font-size:11px" onclick="openManagePrices()">🛠️ ${tt.managePricesBtn || "Manage prices"}</button></div>` : ""}
     <div class="stat-grid">
       <div class="stat-card"><div class="v">${totalLists}</div><div class="k">${tt.statTotalLists}</div></div>
       <div class="stat-card"><div class="v">${totalItems}</div><div class="k">${tt.statTotalItems}</div></div>

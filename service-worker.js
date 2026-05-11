@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v35-temporal-inflation"
+const CACHE_NAME = "mylists-v36-stats-toolbar"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
