@@ -250,6 +250,17 @@ textarea{ resize:none; min-height:82px; }
 }
 .dark .orphan-badge{ background:#3a2810; color:#ffb84d; }
 .stat-card.spend .v{ font-size:18px; }
+.period-selector{
+  display:flex; gap:6px; margin-bottom:12px; justify-content:center; flex-wrap:wrap;
+}
+.period-selector button{
+  background:var(--btn); border:1.5px solid transparent; color:var(--text);
+  font-size:12px; font-weight:700; padding:6px 14px; border-radius:99px;
+  cursor:pointer; transition:background .2s,color .2s,border-color .2s;
+}
+.period-selector button.active{
+  background:var(--primary); color:white; border-color:var(--primary);
+}
 .item-name{ flex:1; font-size:15px; font-weight:600; transition:opacity .2s; }
 .item-name.done{ text-decoration:line-through; opacity:.45; }
 .item-name.maybe{ color:var(--warning); }
@@ -1390,6 +1401,12 @@ const TPRO = {
     managePricesCleanOrphans: "Clean orphans",
     managePricesNoOrphans: "No orphan items",
     confirmDeleteHistory: "This item has a price history. Delete it too?",
+    period30d: "30 days",
+    period90d: "90 days",
+    period12m: "12 months",
+    periodAll: "All time",
+    inflationWeightedHint: "Weighted by spending. Based on {n} items with data in the period.",
+    inflationNoDataInPeriod: "Not enough data in this period to calculate inflation.",
     samplesTitle: "✨ Start with an example",
     samplesDesc: "Tap a ready list to add it to your collection. You can edit everything after.",
     samplesCats: "categories",
@@ -1506,6 +1523,12 @@ const TPRO = {
     managePricesCleanOrphans: "Limpar órfãos",
     managePricesNoOrphans: "Nenhum item órfão",
     confirmDeleteHistory: "Este item tem histórico de preços. Apagar também?",
+    period30d: "30 dias",
+    period90d: "90 dias",
+    period12m: "12 meses",
+    periodAll: "Tudo",
+    inflationWeightedHint: "Ponderada por gasto. Calculada sobre {n} itens com dados no período.",
+    inflationNoDataInPeriod: "Sem dados suficientes nesse período pra calcular inflação.",
     samplesTitle: "✨ Comece com um exemplo",
     samplesDesc: "Toque numa lista pronta pra adicionar. Você pode editar tudo depois.",
     samplesCats: "categorias",
@@ -1622,6 +1645,12 @@ const TPRO = {
     managePricesCleanOrphans: "Limpiar huérfanos",
     managePricesNoOrphans: "Sin huérfanos",
     confirmDeleteHistory: "Este item tiene historial de precios. ¿Borrarlo también?",
+    period30d: "30 días",
+    period90d: "90 días",
+    period12m: "12 meses",
+    periodAll: "Todo",
+    inflationWeightedHint: "Ponderada por gasto. Calculada sobre {n} items con datos en el período.",
+    inflationNoDataInPeriod: "Datos insuficientes en este período para calcular inflación.",
     samplesTitle: "✨ Empieza con un ejemplo",
     samplesDesc: "Toca una lista lista para añadirla. Puedes editar todo después.",
     samplesCats: "categorías",
@@ -1738,6 +1767,12 @@ const TPRO = {
     managePricesCleanOrphans: "孤立を削除",
     managePricesNoOrphans: "孤立アイテムなし",
     confirmDeleteHistory: "このアイテムに価格履歴があります。一緒に削除しますか？",
+    period30d: "30日",
+    period90d: "90日",
+    period12m: "12ヶ月",
+    periodAll: "全期間",
+    inflationWeightedHint: "支出で加重平均。期間内に{n}件のアイテムに基づく。",
+    inflationNoDataInPeriod: "この期間ではインフレを計算するデータが不足しています。",
     samplesTitle: "✨ サンプルから始める",
     samplesDesc: "リストをタップして追加。後で全て編集できます。",
     samplesCats: "カテゴリ",
@@ -1854,6 +1889,12 @@ const TPRO = {
     managePricesCleanOrphans: "נקה יתומים",
     managePricesNoOrphans: "אין פריטים יתומים",
     confirmDeleteHistory: "לפריט יש היסטוריית מחירים. למחוק גם אותה?",
+    period30d: "30 ימים",
+    period90d: "90 ימים",
+    period12m: "12 חודשים",
+    periodAll: "הכל",
+    inflationWeightedHint: "משוקלל לפי הוצאות. מבוסס על {n} פריטים עם נתונים בתקופה.",
+    inflationNoDataInPeriod: "אין מספיק נתונים בתקופה זו לחישוב אינפלציה.",
     samplesTitle: "✨ התחל עם דוגמה",
     samplesDesc: "הקש על רשימה מוכנה להוספה. ניתן לערוך הכל אחר כך.",
     samplesCats: "קטגוריות",
@@ -1970,6 +2011,12 @@ const TPRO = {
     managePricesCleanOrphans: "고아 정리",
     managePricesNoOrphans: "고아 항목 없음",
     confirmDeleteHistory: "이 항목에 가격 기록이 있습니다. 함께 삭제하시겠습니까?",
+    period30d: "30일",
+    period90d: "90일",
+    period12m: "12개월",
+    periodAll: "전체",
+    inflationWeightedHint: "지출 가중 평균. 기간 내 {n}개 항목 기반.",
+    inflationNoDataInPeriod: "이 기간에 인플레이션을 계산할 데이터가 부족합니다.",
     samplesTitle: "✨ 예시로 시작하기",
     samplesDesc: "준비된 목록을 탭하여 추가하세요. 나중에 모두 편집할 수 있습니다.",
     samplesCats: "카테고리",
@@ -3095,26 +3142,78 @@ function deletePriceEntry(name, idx){
   }
 }
 
-function computePriceTrends(){
-  const trends = []
-  Object.entries(priceHistory).forEach(([name, entries]) => {
-    if(!entries || entries.length < 2) return
-    const oldest = parsePrice(entries[0].price)
-    const newest = parsePrice(entries[entries.length - 1].price)
-    if(!isFinite(oldest) || !isFinite(newest) || oldest <= 0) return
-    const pct = ((newest - oldest) / oldest) * 100
-    trends.push({
-      name,
-      display: name.charAt(0).toUpperCase() + name.slice(1),
-      oldest, newest,
-      pct,
-      count: entries.length
-    })
-  })
-  return trends
+function _periodStart(period){
+  const now = Date.now()
+  if(period === "30d") return now - 30 * 86400000
+  if(period === "90d") return now - 90 * 86400000
+  if(period === "12m") return now - 365 * 86400000
+  return 0
 }
 
-function computeSpendingStats(){
+function _itemInflationPct(entries){
+  if(!entries || entries.length < 2) return null
+  const sorted = entries.slice().sort((a,b) => a.ts - b.ts)
+  const mid = Math.floor(sorted.length / 2)
+  const oldHalf = sorted.slice(0, mid)
+  const newHalf = sorted.slice(mid)
+  const oldPrices = oldHalf.map(e => parsePrice(e.price)).filter(n => isFinite(n) && n > 0)
+  const newPrices = newHalf.map(e => parsePrice(e.price)).filter(n => isFinite(n) && n > 0)
+  if(!oldPrices.length || !newPrices.length) return null
+  const avg = arr => arr.reduce((s, x) => s + x, 0) / arr.length
+  const o = avg(oldPrices)
+  const n = avg(newPrices)
+  if(o <= 0) return null
+  return ((n - o) / o) * 100
+}
+
+function _itemSpend(entries){
+  let sum = 0
+  entries.forEach(e => {
+    const p = parsePrice(e.price)
+    if(!isFinite(p) || p <= 0) return
+    const q = parseFloat(String(e.qty || "1").replace(",", ".")) || 1
+    sum += p * q
+  })
+  return sum
+}
+
+function computePriceTrends(period){
+  const start = _periodStart(period || "all")
+  const out = []
+  Object.entries(priceHistory).forEach(([name, entries]) => {
+    const filtered = entries.filter(e => e.ts >= start)
+    const pct = _itemInflationPct(filtered)
+    if(pct === null) return
+    out.push({
+      name,
+      display: name.charAt(0).toUpperCase() + name.slice(1),
+      pct,
+      count: filtered.length
+    })
+  })
+  return out
+}
+
+function computeWeightedInflation(period){
+  const start = _periodStart(period || "all")
+  let weightedSum = 0
+  let totalWeight = 0
+  let eligible = 0
+  Object.entries(priceHistory).forEach(([name, entries]) => {
+    const filtered = entries.filter(e => e.ts >= start)
+    const pct = _itemInflationPct(filtered)
+    if(pct === null) return
+    const w = _itemSpend(filtered)
+    if(w <= 0) return
+    weightedSum += pct * w
+    totalWeight += w
+    eligible++
+  })
+  return { pct: totalWeight > 0 ? weightedSum / totalWeight : null, eligible }
+}
+
+function computeSpendingStats(period){
+  const start = _periodStart(period || "all")
   let total = 0
   let thisMonth = 0
   const perItem = {}
@@ -3122,6 +3221,7 @@ function computeSpendingStats(){
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime()
   Object.entries(priceHistory).forEach(([name, entries]) => {
     entries.forEach(e => {
+      if(e.ts < start) return
       const p = parsePrice(e.price)
       if(!isFinite(p) || p <= 0) return
       const q = parseFloat(String(e.qty || "1").replace(",", ".")) || 1
@@ -3138,42 +3238,57 @@ function computeSpendingStats(){
   return { total, thisMonth, top }
 }
 
-function computeOffenders(){
+function computeOffenders(period){
+  const start = _periodStart(period || "all")
   const out = []
   Object.entries(priceHistory).forEach(([name, entries]) => {
-    if(!entries || entries.length < 2) return
-    const oldest = parsePrice(entries[0].price)
-    const newest = parsePrice(entries[entries.length - 1].price)
+    const filtered = entries.filter(e => e.ts >= start)
+    if(filtered.length < 2) return
+    const sorted = filtered.slice().sort((a,b) => a.ts - b.ts)
+    const oldest = parsePrice(sorted[0].price)
+    const newest = parsePrice(sorted[sorted.length - 1].price)
     if(!isFinite(oldest) || !isFinite(newest) || oldest <= 0) return
     const delta = newest - oldest
     if(delta === 0) return
     out.push({
       name, display: name.charAt(0).toUpperCase() + name.slice(1),
-      delta, count: entries.length,
-      impact: Math.abs(delta) * entries.length,
+      delta, count: filtered.length,
+      impact: Math.abs(delta) * filtered.length,
     })
   })
   return out.sort((a,b) => b.impact - a.impact).slice(0, 5)
 }
 
-function computeInflationByList(){
+function computeInflationByList(period){
+  const start = _periodStart(period || "all")
   return lists.map(L => {
     const names = (L.items || []).map(it => (it.name || "").trim().toLowerCase()).filter(Boolean)
-    const pcts = []
+    let weightedSum = 0
+    let totalWeight = 0
+    let eligible = 0
     names.forEach(n => {
       const e = priceHistory[n]
-      if(!e || e.length < 2) return
-      const oldest = parsePrice(e[0].price)
-      const newest = parsePrice(e[e.length - 1].price)
-      if(!isFinite(oldest) || !isFinite(newest) || oldest <= 0) return
-      pcts.push(((newest - oldest) / oldest) * 100)
+      if(!e) return
+      const filtered = e.filter(x => x.ts >= start)
+      const pct = _itemInflationPct(filtered)
+      if(pct === null) return
+      const w = _itemSpend(filtered)
+      if(w <= 0) return
+      weightedSum += pct * w
+      totalWeight += w
+      eligible++
     })
     return {
       name: L.name, emoji: L.emoji || "",
-      count: pcts.length,
-      pct: pcts.length ? pcts.reduce((s, x) => s + x, 0) / pcts.length : null
+      count: eligible,
+      pct: totalWeight > 0 ? weightedSum / totalWeight : null
     }
   }).filter(x => x.pct !== null).sort((a,b) => b.pct - a.pct)
+}
+
+function setStatsPeriod(p){
+  localStorage.setItem("stats_period", p)
+  openStats()
 }
 
 function openManagePrices(){
@@ -4669,6 +4784,7 @@ function openStats(){
   const tt = tp()
   document.getElementById("statsModalTitle").textContent = tt.statsTitle
   const c = document.getElementById("statsContent")
+  const period = localStorage.getItem("stats_period") || "12m"
   const totalLists = lists.length
   const allItems = lists.flatMap(L => L.items)
   const totalItems = allItems.length
@@ -4679,15 +4795,13 @@ function openStats(){
   const counts = {}
   allItems.forEach(it => { const k = (it.name || "").trim().toLowerCase(); if(k) counts[k] = (counts[k] || 0) + 1 })
   const top = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 8)
-  const trends = computePriceTrends()
+  const trends = computePriceTrends(period)
   const ups = trends.filter(t => t.pct > 0).sort((a,b) => b.pct - a.pct).slice(0, 5)
   const downs = trends.filter(t => t.pct < 0).sort((a,b) => a.pct - b.pct).slice(0, 5)
-  const inflation = trends.length
-    ? trends.reduce((s, t) => s + t.pct, 0) / trends.length
-    : null
-  const spending = computeSpendingStats()
-  const offenders = computeOffenders()
-  const inflationByList = computeInflationByList()
+  const infl = computeWeightedInflation(period)
+  const spending = computeSpendingStats(period)
+  const offenders = computeOffenders(period)
+  const inflationByList = computeInflationByList(period)
   const trendRow = (t) => {
     const arrow = t.pct > 0 ? "📈" : "📉"
     const sign = t.pct > 0 ? "+" : ""
@@ -4695,8 +4809,16 @@ function openStats(){
     return `<li><span>${arrow} ${t.display}</span><span class="trend ${cls}">${sign}${t.pct.toFixed(1)}%</span></li>`
   }
   const fmt = (n) => formatPrice(String(n)) || (tp().currencySymbol + " 0")
+  const periodBtn = (p, label) =>
+    `<button class="${period === p ? 'active' : ''}" onclick="setStatsPeriod('${p}')">${label}</button>`
 
   c.innerHTML = `
+    <div class="period-selector">
+      ${periodBtn("30d", tt.period30d || "30d")}
+      ${periodBtn("90d", tt.period90d || "90d")}
+      ${periodBtn("12m", tt.period12m || "12m")}
+      ${periodBtn("all", tt.periodAll || "All")}
+    </div>
     ${hasHistory ? `<div style="text-align:right;margin-bottom:8px"><button class="secondary-btn" style="width:auto;padding:6px 12px;font-size:11px" onclick="openManagePrices()">🛠️ ${tt.managePricesBtn || "Manage prices"}</button></div>` : ""}
     <div class="stat-grid">
       <div class="stat-card"><div class="v">${totalLists}</div><div class="k">${tt.statTotalLists}</div></div>
@@ -4709,11 +4831,13 @@ function openStats(){
       <div class="stat-card spend"><div class="v">${fmt(spending.total)}</div><div class="k">💰 ${tt.statTotalSpent || "Total spent"}</div></div>
       <div class="stat-card spend"><div class="v">${fmt(spending.thisMonth)}</div><div class="k">📅 ${tt.statMonthSpent || "This month"}</div></div>
     </div>` : ""}
-    ${inflation !== null ? `
-    <div class="inflation-banner ${inflation > 0 ? 'up' : (inflation < 0 ? 'down' : '')}">
+    ${infl.pct !== null ? `
+    <div class="inflation-banner ${infl.pct > 0 ? 'up' : (infl.pct < 0 ? 'down' : '')}">
       <span class="ib-label">${tt.personalInflation}</span>
-      <span class="ib-value">${inflation > 0 ? "+" : ""}${inflation.toFixed(1)}%</span>
-    </div>` : ""}
+      <span class="ib-value">${infl.pct > 0 ? "+" : ""}${infl.pct.toFixed(1)}%</span>
+    </div>
+    <p style="font-size:11px;color:var(--muted);margin:4px 0 14px;text-align:center;line-height:1.4">${(tt.inflationWeightedHint || "Weighted by spending. Based on {n} items.").replace("{n}", infl.eligible)}</p>
+    ` : (hasHistory ? `<p style="font-size:12px;color:var(--muted);margin:8px 0 14px;line-height:1.5;text-align:center">${tt.inflationNoDataInPeriod || "Not enough data in this period to calculate inflation."}</p>` : "")}
     ${inflationByList.length ? `
     <div class="settings-section"><h3>🏷️ ${tt.statInflationByList || "Inflation per list"}</h3>
       <ul class="top-items">

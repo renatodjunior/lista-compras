@@ -19,6 +19,8 @@ Filosofia mantém: 100% local, sem servidor, dados crus do `priceHistory` + `lis
 - **Maiores ofensores**: top 5 por `|delta R$| × frequência` (impacto real)
 - **Página "Gerenciar preços"**: lista todos itens com histórico, marca órfãos (sem item vivo), permite apagar histórico inteiro por item ou bulk-clean dos órfãos
 - **Prompt ao deletar item com histórico**: pergunta se quer apagar histórico junto (undo restaura ambos)
+- **Período selector**: chips no topo do Stats (30d / 90d / 12m / Tudo). Tudo abaixo respeita o período: spending, inflação geral, inflação por lista, ofensores, top spending, ups/downs
+- **Inflação temporal (Opção A+C)**: pra cada item dentro do período, entries são ordenadas por `ts`, divididas em metade antiga vs nova; pct = `(avg_new - avg_old) / avg_old × 100`; agregação ponderada por gasto do item no período (`Σ pct_i × spend_i / Σ spend_i`). Mostra # itens elegíveis pra transparência
 
 ---
 
