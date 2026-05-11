@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v32-maybe-btn"
+const CACHE_NAME = "mylists-v33-maybe-right"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [

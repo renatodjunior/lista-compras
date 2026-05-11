@@ -3230,9 +3230,9 @@ function renderItems(){
       row.innerHTML = `
         <div class="drag">⠿</div>
         <div class="toggle ${togCls}" onclick="toggleStatus(${i})"></div>
-        <button class="maybe-btn ${maybeActive}" onclick="toggleMaybe(${i})" aria-label="maybe">?</button>
         <div class="item-name ${tc}" onclick="toggleStatus(${i})">${item.name}${qtyHTML}</div>
         ${priceHTML}
+        <button class="maybe-btn ${maybeActive}" onclick="toggleMaybe(${i})" aria-label="maybe">?</button>
         <button class="icon-btn kebab-btn" onclick="openItemActions(${i})" aria-label="actions">⋮</button>
       `
       wrap.appendChild(row)
