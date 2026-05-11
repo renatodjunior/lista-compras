@@ -243,6 +243,13 @@ textarea{ resize:none; min-height:82px; }
 }
 .hist-del-btn:hover{ opacity:1; }
 .hist-table td.del-col{ text-align:center; width:24px; padding:6px 2px; }
+.orphan-badge{
+  background:#ffe0b2; color:#bf6f00; font-size:9px; font-weight:800;
+  padding:2px 5px; border-radius:4px; margin-right:6px; vertical-align:middle;
+  text-transform:uppercase; letter-spacing:.04em;
+}
+.dark .orphan-badge{ background:#3a2810; color:#ffb84d; }
+.stat-card.spend .v{ font-size:18px; }
 .item-name{ flex:1; font-size:15px; font-weight:600; transition:opacity .2s; }
 .item-name.done{ text-decoration:line-through; opacity:.45; }
 .item-name.maybe{ color:var(--warning); }
@@ -1371,6 +1378,18 @@ const TPRO = {
     dateCol: "Date", qtyCol: "Qty", priceCol: "Price", totalVariation: "Total change",
     historyCleared: "History cleared",
     historyEntryRemoved: "Entry removed",
+    statTotalSpent: "Total spent",
+    statMonthSpent: "This month",
+    statTopSpending: "Top spending items",
+    statInflationByList: "Inflation per list",
+    statOffenders: "Biggest impact items",
+    managePricesBtn: "Manage prices",
+    managePricesTitle: "Manage price history",
+    managePricesEmpty: "No price history yet.",
+    managePricesOrphan: "Orphan",
+    managePricesCleanOrphans: "Clean orphans",
+    managePricesNoOrphans: "No orphan items",
+    confirmDeleteHistory: "This item has a price history. Delete it too?",
     samplesTitle: "✨ Start with an example",
     samplesDesc: "Tap a ready list to add it to your collection. You can edit everything after.",
     samplesCats: "categories",
@@ -1475,6 +1494,18 @@ const TPRO = {
     dateCol: "Data", qtyCol: "Qtd", priceCol: "Preço", totalVariation: "Variação total",
     historyCleared: "Histórico apagado",
     historyEntryRemoved: "Entrada removida",
+    statTotalSpent: "Gasto total",
+    statMonthSpent: "Este mês",
+    statTopSpending: "Itens que mais gastei",
+    statInflationByList: "Inflação por lista",
+    statOffenders: "Maiores ofensores",
+    managePricesBtn: "Gerenciar preços",
+    managePricesTitle: "Gerenciar histórico de preços",
+    managePricesEmpty: "Sem histórico de preços ainda.",
+    managePricesOrphan: "Órfão",
+    managePricesCleanOrphans: "Limpar órfãos",
+    managePricesNoOrphans: "Nenhum item órfão",
+    confirmDeleteHistory: "Este item tem histórico de preços. Apagar também?",
     samplesTitle: "✨ Comece com um exemplo",
     samplesDesc: "Toque numa lista pronta pra adicionar. Você pode editar tudo depois.",
     samplesCats: "categorias",
@@ -1579,6 +1610,18 @@ const TPRO = {
     dateCol: "Fecha", qtyCol: "Cant", priceCol: "Precio", totalVariation: "Cambio total",
     historyCleared: "Historial borrado",
     historyEntryRemoved: "Entrada eliminada",
+    statTotalSpent: "Gasto total",
+    statMonthSpent: "Este mes",
+    statTopSpending: "Items con mayor gasto",
+    statInflationByList: "Inflación por lista",
+    statOffenders: "Mayores impactos",
+    managePricesBtn: "Gestionar precios",
+    managePricesTitle: "Gestionar historial de precios",
+    managePricesEmpty: "Sin historial de precios.",
+    managePricesOrphan: "Huérfano",
+    managePricesCleanOrphans: "Limpiar huérfanos",
+    managePricesNoOrphans: "Sin huérfanos",
+    confirmDeleteHistory: "Este item tiene historial de precios. ¿Borrarlo también?",
     samplesTitle: "✨ Empieza con un ejemplo",
     samplesDesc: "Toca una lista lista para añadirla. Puedes editar todo después.",
     samplesCats: "categorías",
@@ -1683,6 +1726,18 @@ const TPRO = {
     dateCol: "日付", qtyCol: "数量", priceCol: "価格", totalVariation: "総変動",
     historyCleared: "履歴をクリアしました",
     historyEntryRemoved: "エントリを削除しました",
+    statTotalSpent: "総支出",
+    statMonthSpent: "今月",
+    statTopSpending: "支出トップ",
+    statInflationByList: "リスト別インフレ",
+    statOffenders: "最大影響アイテム",
+    managePricesBtn: "価格を管理",
+    managePricesTitle: "価格履歴を管理",
+    managePricesEmpty: "価格履歴がまだありません",
+    managePricesOrphan: "孤立",
+    managePricesCleanOrphans: "孤立を削除",
+    managePricesNoOrphans: "孤立アイテムなし",
+    confirmDeleteHistory: "このアイテムに価格履歴があります。一緒に削除しますか？",
     samplesTitle: "✨ サンプルから始める",
     samplesDesc: "リストをタップして追加。後で全て編集できます。",
     samplesCats: "カテゴリ",
@@ -1787,6 +1842,18 @@ const TPRO = {
     dateCol: "תאריך", qtyCol: "כמות", priceCol: "מחיר", totalVariation: "שינוי כולל",
     historyCleared: "ההיסטוריה נמחקה",
     historyEntryRemoved: "הרשומה הוסרה",
+    statTotalSpent: "סך הוצאות",
+    statMonthSpent: "החודש",
+    statTopSpending: "פריטים בעלי ההוצאה הגבוהה",
+    statInflationByList: "אינפלציה לפי רשימה",
+    statOffenders: "השפעה הגדולה ביותר",
+    managePricesBtn: "ניהול מחירים",
+    managePricesTitle: "ניהול היסטוריית מחירים",
+    managePricesEmpty: "אין היסטוריית מחירים.",
+    managePricesOrphan: "יתום",
+    managePricesCleanOrphans: "נקה יתומים",
+    managePricesNoOrphans: "אין פריטים יתומים",
+    confirmDeleteHistory: "לפריט יש היסטוריית מחירים. למחוק גם אותה?",
     samplesTitle: "✨ התחל עם דוגמה",
     samplesDesc: "הקש על רשימה מוכנה להוספה. ניתן לערוך הכל אחר כך.",
     samplesCats: "קטגוריות",
@@ -1891,6 +1958,18 @@ const TPRO = {
     dateCol: "날짜", qtyCol: "수량", priceCol: "가격", totalVariation: "총 변동",
     historyCleared: "기록이 삭제되었습니다",
     historyEntryRemoved: "항목이 제거되었습니다",
+    statTotalSpent: "총 지출",
+    statMonthSpent: "이번 달",
+    statTopSpending: "지출 상위 항목",
+    statInflationByList: "리스트별 인플레이션",
+    statOffenders: "영향이 큰 항목",
+    managePricesBtn: "가격 관리",
+    managePricesTitle: "가격 기록 관리",
+    managePricesEmpty: "아직 가격 기록이 없습니다.",
+    managePricesOrphan: "고아",
+    managePricesCleanOrphans: "고아 정리",
+    managePricesNoOrphans: "고아 항목 없음",
+    confirmDeleteHistory: "이 항목에 가격 기록이 있습니다. 함께 삭제하시겠습니까?",
     samplesTitle: "✨ 예시로 시작하기",
     samplesDesc: "준비된 목록을 탭하여 추가하세요. 나중에 모두 편집할 수 있습니다.",
     samplesCats: "카테고리",
@@ -3035,6 +3114,137 @@ function computePriceTrends(){
   return trends
 }
 
+function computeSpendingStats(){
+  let total = 0
+  let thisMonth = 0
+  const perItem = {}
+  const now = new Date()
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime()
+  Object.entries(priceHistory).forEach(([name, entries]) => {
+    entries.forEach(e => {
+      const p = parsePrice(e.price)
+      if(!isFinite(p) || p <= 0) return
+      const q = parseFloat(String(e.qty || "1").replace(",", ".")) || 1
+      const amount = p * q
+      total += amount
+      if(e.ts >= monthStart) thisMonth += amount
+      perItem[name] = (perItem[name] || 0) + amount
+    })
+  })
+  const top = Object.entries(perItem)
+    .sort((a,b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([n, v]) => ({ name: n, display: n.charAt(0).toUpperCase() + n.slice(1), total: v }))
+  return { total, thisMonth, top }
+}
+
+function computeOffenders(){
+  const out = []
+  Object.entries(priceHistory).forEach(([name, entries]) => {
+    if(!entries || entries.length < 2) return
+    const oldest = parsePrice(entries[0].price)
+    const newest = parsePrice(entries[entries.length - 1].price)
+    if(!isFinite(oldest) || !isFinite(newest) || oldest <= 0) return
+    const delta = newest - oldest
+    if(delta === 0) return
+    out.push({
+      name, display: name.charAt(0).toUpperCase() + name.slice(1),
+      delta, count: entries.length,
+      impact: Math.abs(delta) * entries.length,
+    })
+  })
+  return out.sort((a,b) => b.impact - a.impact).slice(0, 5)
+}
+
+function computeInflationByList(){
+  return lists.map(L => {
+    const names = (L.items || []).map(it => (it.name || "").trim().toLowerCase()).filter(Boolean)
+    const pcts = []
+    names.forEach(n => {
+      const e = priceHistory[n]
+      if(!e || e.length < 2) return
+      const oldest = parsePrice(e[0].price)
+      const newest = parsePrice(e[e.length - 1].price)
+      if(!isFinite(oldest) || !isFinite(newest) || oldest <= 0) return
+      pcts.push(((newest - oldest) / oldest) * 100)
+    })
+    return {
+      name: L.name, emoji: L.emoji || "",
+      count: pcts.length,
+      pct: pcts.length ? pcts.reduce((s, x) => s + x, 0) / pcts.length : null
+    }
+  }).filter(x => x.pct !== null).sort((a,b) => b.pct - a.pct)
+}
+
+function openManagePrices(){
+  if(!pro){ openUnlock(); return }
+  const tt = tp()
+  const names = Object.keys(priceHistory).filter(n => priceHistory[n] && priceHistory[n].length > 0)
+  if(!names.length){
+    _uiOpen(tt.managePricesTitle || "Manage prices", `<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">${tt.managePricesEmpty || "No price history yet."}</p><div style="text-align:center;margin-top:14px"><button class="secondary-btn" style="width:auto;padding:8px 18px" onclick="closeModal('uiModal')">${tt.okLabel}</button></div>`)
+    return
+  }
+  const living = new Set()
+  lists.forEach(L => (L.items || []).forEach(it => {
+    const k = (it.name || "").trim().toLowerCase()
+    if(k) living.add(k)
+  }))
+  const locale = { pt:"pt-BR", en:"en-US", es:"es-ES", ja:"ja-JP", he:"he-IL", ko:"ko-KR" }[currentLang] || "en-US"
+  const items = names.map(n => {
+    const entries = priceHistory[n]
+    const last = new Date(entries[entries.length - 1].ts).toLocaleDateString(locale, { day:"2-digit", month:"2-digit", year:"2-digit" })
+    return { name: n, display: n.charAt(0).toUpperCase() + n.slice(1), count: entries.length, last, orphan: !living.has(n) }
+  }).sort((a,b) => {
+    if(a.orphan !== b.orphan) return a.orphan ? -1 : 1
+    return a.display.localeCompare(b.display)
+  })
+  const orphanCount = items.filter(it => it.orphan).length
+  const rows = items.map(it => {
+    const badge = it.orphan ? `<span class="orphan-badge">${tt.managePricesOrphan || "Orphan"}</span>` : ""
+    return `<tr><td>${badge}${_esc(it.display)}</td><td>${it.count}</td><td>${it.last}</td><td class="del-col"><button class="hist-del-btn" onclick='deleteAllPriceEntries(${JSON.stringify(it.name)})' aria-label="delete">🗑</button></td></tr>`
+  }).join("")
+  const cleanBtn = orphanCount > 0
+    ? `<div style="text-align:center;margin-bottom:12px"><button class="secondary-btn" style="width:auto;padding:8px 16px;font-size:12px" onclick="cleanOrphanHistories()">🧹 ${tt.managePricesCleanOrphans || "Clean orphans"} (${orphanCount})</button></div>`
+    : ""
+  _uiOpen(tt.managePricesTitle || "Manage prices", `
+    ${cleanBtn}
+    <table class="hist-table">
+      <thead><tr><th>Item</th><th>#</th><th>${tt.dateCol || "Date"}</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="text-align:center;margin-top:14px">
+      <button class="secondary-btn" style="width:auto;padding:8px 18px" onclick="closeModal('uiModal')">${tt.okLabel}</button>
+    </div>
+  `)
+}
+
+function deleteAllPriceEntries(name){
+  if(!priceHistory[name]) return
+  delete priceHistory[name]
+  savePriceHistory()
+  showToast(tp().historyCleared || "History cleared")
+  openManagePrices()
+}
+
+function cleanOrphanHistories(){
+  const living = new Set()
+  lists.forEach(L => (L.items || []).forEach(it => {
+    const k = (it.name || "").trim().toLowerCase()
+    if(k) living.add(k)
+  }))
+  let removed = 0
+  Object.keys(priceHistory).forEach(n => {
+    if(!living.has(n)){ delete priceHistory[n]; removed++ }
+  })
+  if(removed > 0){
+    savePriceHistory()
+    showToast(tp().historyCleared || "History cleared")
+    openManagePrices()
+  } else {
+    showToast(tp().managePricesNoOrphans || "No orphans")
+  }
+}
+
 async function openItemActions(i){
   const item = lists[currentList].items[i]
   if(!item) return
@@ -3062,13 +3272,28 @@ async function editItem(i){
   save(); renderItems()
 }
 
-function deleteItem(i){
+async function deleteItem(i){
   const li = currentList
   const removed = lists[li].items[i]
+  const histKey = (removed.name || "").trim().toLowerCase()
+  const hasHist = histKey && priceHistory[histKey] && priceHistory[histKey].length > 0
+  let removedHist = null
+  if(hasHist){
+    const yes = await uiConfirm(tp().confirmDeleteHistory || "Also delete its price history?")
+    if(yes){
+      removedHist = priceHistory[histKey]
+      delete priceHistory[histKey]
+      savePriceHistory()
+    }
+  }
   lists[li].items.splice(i, 1)
   save(); renderItems()
   showToast(t.itemDeleted, () => {
     lists[li].items.splice(i, 0, removed)
+    if(removedHist){
+      priceHistory[histKey] = removedHist
+      savePriceHistory()
+    }
     save(); renderItems()
     showToast(t.restored)
   })
@@ -4449,7 +4674,8 @@ function openStats(){
   const totalItems = allItems.length
   const bought = allItems.filter(it => it.status === 1).length
   const pct = totalItems ? Math.round((bought/totalItems)*100) : 0
-  if(!totalItems){ c.innerHTML = `<p class="empty-state">${tt.noData}</p>`; document.getElementById("statsModal").classList.remove("hidden"); return }
+  const hasHistory = Object.keys(priceHistory).length > 0
+  if(!totalItems && !hasHistory){ c.innerHTML = `<p class="empty-state">${tt.noData}</p>`; document.getElementById("statsModal").classList.remove("hidden"); return }
   const counts = {}
   allItems.forEach(it => { const k = (it.name || "").trim().toLowerCase(); if(k) counts[k] = (counts[k] || 0) + 1 })
   const top = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 8)
@@ -4459,24 +4685,61 @@ function openStats(){
   const inflation = trends.length
     ? trends.reduce((s, t) => s + t.pct, 0) / trends.length
     : null
+  const spending = computeSpendingStats()
+  const offenders = computeOffenders()
+  const inflationByList = computeInflationByList()
   const trendRow = (t) => {
     const arrow = t.pct > 0 ? "📈" : "📉"
     const sign = t.pct > 0 ? "+" : ""
     const cls = t.pct > 0 ? "up" : "down"
     return `<li><span>${arrow} ${t.display}</span><span class="trend ${cls}">${sign}${t.pct.toFixed(1)}%</span></li>`
   }
+  const fmt = (n) => formatPrice(String(n)) || (tp().currencySymbol + " 0")
 
   c.innerHTML = `
+    ${hasHistory ? `<div style="text-align:right;margin-bottom:8px"><button class="secondary-btn" style="width:auto;padding:6px 12px;font-size:11px" onclick="openManagePrices()">🛠️ ${tt.managePricesBtn || "Manage prices"}</button></div>` : ""}
     <div class="stat-grid">
       <div class="stat-card"><div class="v">${totalLists}</div><div class="k">${tt.statTotalLists}</div></div>
       <div class="stat-card"><div class="v">${totalItems}</div><div class="k">${tt.statTotalItems}</div></div>
       <div class="stat-card"><div class="v">${bought}</div><div class="k">${tt.statBought}</div></div>
       <div class="stat-card"><div class="v">${pct}%</div><div class="k">${tt.statPct}</div></div>
     </div>
+    ${spending.total > 0 ? `
+    <div class="stat-grid">
+      <div class="stat-card spend"><div class="v">${fmt(spending.total)}</div><div class="k">💰 ${tt.statTotalSpent || "Total spent"}</div></div>
+      <div class="stat-card spend"><div class="v">${fmt(spending.thisMonth)}</div><div class="k">📅 ${tt.statMonthSpent || "This month"}</div></div>
+    </div>` : ""}
     ${inflation !== null ? `
     <div class="inflation-banner ${inflation > 0 ? 'up' : (inflation < 0 ? 'down' : '')}">
       <span class="ib-label">${tt.personalInflation}</span>
       <span class="ib-value">${inflation > 0 ? "+" : ""}${inflation.toFixed(1)}%</span>
+    </div>` : ""}
+    ${inflationByList.length ? `
+    <div class="settings-section"><h3>🏷️ ${tt.statInflationByList || "Inflation per list"}</h3>
+      <ul class="top-items">
+        ${inflationByList.map(L => {
+          const sign = L.pct > 0 ? "+" : ""
+          const cls = L.pct > 0 ? "up" : (L.pct < 0 ? "down" : "")
+          return `<li><span>${L.emoji ? L.emoji + " " : ""}${_esc(L.name)}</span><span class="trend ${cls}">${sign}${L.pct.toFixed(1)}%</span></li>`
+        }).join("")}
+      </ul>
+    </div>` : ""}
+    ${spending.top.length ? `
+    <div class="settings-section"><h3>🔝 ${tt.statTopSpending || "Top spending"}</h3>
+      <ul class="top-items">
+        ${spending.top.map(s => `<li><span>${_esc(s.display)}</span><span class="count">${fmt(s.total)}</span></li>`).join("")}
+      </ul>
+    </div>` : ""}
+    ${offenders.length ? `
+    <div class="settings-section"><h3>💢 ${tt.statOffenders || "Biggest impact"}</h3>
+      <ul class="top-items">
+        ${offenders.map(o => {
+          const arrow = o.delta > 0 ? "📈" : "📉"
+          const sign = o.delta > 0 ? "+" : "-"
+          const cls = o.delta > 0 ? "up" : "down"
+          return `<li><span>${arrow} ${_esc(o.display)} <small style="opacity:.6;margin-left:4px">×${o.count}</small></span><span class="trend ${cls}">${sign}${fmt(Math.abs(o.delta))}</span></li>`
+        }).join("")}
+      </ul>
     </div>` : ""}
     <div class="settings-section"><h3>${tt.statTopItems}</h3>
       <ul class="top-items">
@@ -4491,7 +4754,7 @@ function openStats(){
     <div class="settings-section"><h3>📉 ${tt.priceDown}</h3>
       <ul class="top-items">${downs.map(trendRow).join("")}</ul>
     </div>` : ""}
-    ${!ups.length && !downs.length ? `
+    ${!ups.length && !downs.length && spending.total === 0 ? `
     <p style="font-size:12px;color:var(--muted);margin-top:14px;line-height:1.5">${tt.priceTrendsHint}</p>` : ""}
   `
   document.getElementById("statsModal").classList.remove("hidden")

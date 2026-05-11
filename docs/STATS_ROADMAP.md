@@ -12,7 +12,13 @@ Filosofia mantém: 100% local, sem servidor, dados crus do `priceHistory` + `lis
 - Top 8 itens mais repetidos
 - Painel "inflação pessoal" com média % de variação
 - Top 5 alta + top 5 queda
-- Histórico individual por item (modal com tabela + Δ)
+- Histórico individual por item (modal com tabela + Δ + delete por linha)
+- **Cards de gasto**: gasto total all-time + gasto do mês corrente (Σ price × qty)
+- **Top spending items**: top 5 itens por gasto acumulado em R$
+- **Inflação por lista**: média de pct das tendências dos itens de cada lista
+- **Maiores ofensores**: top 5 por `|delta R$| × frequência` (impacto real)
+- **Página "Gerenciar preços"**: lista todos itens com histórico, marca órfãos (sem item vivo), permite apagar histórico inteiro por item ou bulk-clean dos órfãos
+- **Prompt ao deletar item com histórico**: pergunta se quer apagar histórico junto (undo restaura ambos)
 
 ---
 
