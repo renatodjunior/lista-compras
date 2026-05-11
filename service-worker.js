@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v36-stats-toolbar"
+const CACHE_NAME = "mylists-v37-period-style"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
