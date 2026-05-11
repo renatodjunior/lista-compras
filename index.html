@@ -368,6 +368,7 @@ textarea{ resize:none; min-height:82px; }
   display:flex; align-items:center; justify-content:center; padding:20px;
 }
 .help-modal.hidden{ display:none; }
+#uiModal{ z-index:1100; }
 .help-box{
   background:var(--card); border-radius:var(--radius);
   padding:24px; max-width:480px; width:100%;
@@ -4177,7 +4178,6 @@ function buildSyncSectionHTML(){
       <button class="backup-btn" onclick="dropboxPullExplicit()">${tt.syncPull}</button>
       <button class="backup-btn" onclick="dropboxPush()">${tt.syncPush}</button>
     </div>
-    <button class="secondary-btn" style="margin-top:8px;width:100%" onclick="dropboxSmartSync()">🔄 ${tt.syncSmart}</button>
   `
 }
 

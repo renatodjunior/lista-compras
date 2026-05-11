@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v29-sync-conflict"
+const CACHE_NAME = "mylists-v30-sync-ui"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
