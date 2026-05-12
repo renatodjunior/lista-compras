@@ -234,6 +234,10 @@ textarea{ resize:none; min-height:82px; }
 .item{
   display:flex; align-items:center; gap:10px; background:var(--card);
   padding:10px 12px; border-radius:10px; margin-bottom:7px; box-shadow:var(--shadow);
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
+  touch-action:manipulation;
 }
 .drag{ cursor:grab; opacity:.4; font-size:14px; flex-shrink:0; user-select:none; }
 .toggle{
@@ -3953,8 +3957,25 @@ function renderItems(){
     section.appendChild(wrap)
     catContainer.appendChild(section)
 
+    if(!wrap.dataset.ctxBound){
+      wrap.addEventListener("contextmenu", e => {
+        if(e.target.closest(".item")) e.preventDefault()
+      })
+      wrap.dataset.ctxBound = "1"
+    }
     new Sortable(wrap, {
-      handle:".drag", animation:150,
+      animation:150,
+      delay:300,
+      delayOnTouchOnly:true,
+      touchStartThreshold:5,
+      forceFallback:true,
+      fallbackTolerance:4,
+      fallbackOnBody:true,
+      ghostClass:"sortable-ghost",
+      chosenClass:"sortable-chosen",
+      dragClass:"sortable-drag",
+      filter:".toggle, .maybe-btn, .kebab-btn, .icon-btn",
+      preventOnFilter:false,
       onEnd:() => {
         const allItems = []
         document.querySelectorAll("[data-cat] .item").forEach(row => {
