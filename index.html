@@ -750,6 +750,32 @@ textarea{ resize:none; min-height:82px; }
   .copy-btn, .clear-btn{ width:32px; height:32px; font-size:15px; }
 }
 
+/* ── COMPACT ITEM LAYOUT ON NARROW SCREENS ── */
+@media (max-width: 460px){
+  .item{
+    display:grid;
+    grid-template-columns: auto auto 1fr auto auto;
+    grid-template-areas:
+      "drag toggle name  maybe kebab"
+      "drag toggle price price price";
+    column-gap:8px; row-gap:2px;
+    align-items:center;
+    padding:9px 11px;
+  }
+  .item > .drag{ grid-area:drag; }
+  .item > .toggle{ grid-area:toggle; }
+  .item > .item-name{ grid-area:name; min-width:0; word-break:break-word; }
+  .item > .maybe-btn{ grid-area:maybe; }
+  .item > .kebab-btn{ grid-area:kebab; }
+  .item > .price-badge{
+    grid-area:price; justify-self:start; align-self:center;
+    margin:0; padding:2px 8px;
+    font-size:11px;
+  }
+  .item-name.done + .price-badge{ opacity:.5; }
+  .qty-badge, .unit-badge{ font-size:10px; padding:1px 6px; margin-left:5px; }
+}
+
 /* ── PRINT ── */
 @media print {
   @page { margin: 12mm; }
