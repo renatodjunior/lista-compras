@@ -4018,7 +4018,7 @@ function renderItems(){
         (item.qty ? `<span class="qty-badge">×${_esc(item.qty)}</span>` : "") +
         (item.unit ? `<span class="unit-badge">${_esc(item.unit)}</span>` : "")
       const priceText = formatPrice(item.price)
-      const priceHTML = priceText ? `<span class="price-badge" onclick="event.stopPropagation();editItemPrice(${i})" role="button" tabindex="0" aria-label="${tt.priceLabel}">${priceText}</span>` : ""
+      const priceHTML = priceText ? `<span class="price-badge" onclick="event.stopPropagation();editItemPrice(${i})" role="button" tabindex="0" aria-label="${tp().priceLabel}">${priceText}</span>` : ""
       row.innerHTML = `
         <div class="drag">⠿</div>
         <div class="toggle ${togCls}" onclick="toggleStatus(${i})"></div>
