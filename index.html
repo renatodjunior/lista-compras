@@ -119,12 +119,12 @@ body{
   -webkit-user-select:none;
   user-select:none;
 }
-.sortable-ghost{ opacity:.25; }
+.sortable-ghost{ opacity:0 !important; }
 .sortable-chosen{ cursor:grabbing; }
+.sortable-chosen:active{ transform:none !important; }
 .sortable-drag{
   opacity:.95;
   box-shadow:0 12px 28px rgba(0,0,0,0.25);
-  transform:scale(1.02);
   cursor:grabbing;
 }
 .list-emoji{ font-size:26px; }
