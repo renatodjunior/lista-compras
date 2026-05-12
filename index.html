@@ -243,7 +243,9 @@ textarea{ resize:none; min-height:82px; }
   -webkit-user-select:none;
   user-select:none;
   touch-action:manipulation;
+  transition:transform .15s;
 }
+.item:active{ transform:scale(.985); }
 .drag{ cursor:grab; opacity:.4; font-size:14px; flex-shrink:0; user-select:none; }
 .toggle{
   width:22px; height:22px; border-radius:50%; border:2.5px solid #aaa;
