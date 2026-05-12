@@ -38,7 +38,7 @@
   --btn:#2a3d2a;
   --shadow:0 2px 12px rgba(0,0,0,0.3);
 }
-*{ box-sizing:border-box; }
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 body{
   margin:0;
   font-family:'Nunito',system-ui,sans-serif;
@@ -46,6 +46,11 @@ body{
   color:var(--text);
   min-height:100vh;
   transition:background .3s,color .3s;
+  -webkit-tap-highlight-color:transparent;
+}
+.list-card, .list-card *, .item, .item *{
+  -webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;
 }
 .container{ max-width:520px; margin:auto; padding:20px 16px 60px; }
 .header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
@@ -1472,6 +1477,8 @@ const TPRO = {
     barcodeSaved: "Product saved ✓ (next scan will auto-recognize)",
     actionEdit: "✏️ Edit item",
     actionEditDesc: "Name, quantity, unit, price",
+    actionCopy: "📋 Copy item",
+    actionCopyDesc: "Copy name, qty and price to clipboard",
     actionHistory: "📊 Price history",
     actionHistoryDesc: "See price evolution and variation",
     actionDelete: "❌ Delete item",
@@ -1611,6 +1618,8 @@ const TPRO = {
     barcodeSaved: "Produto salvo ✓ (próxima vez vai reconhecer sozinho)",
     actionEdit: "✏️ Editar item",
     actionEditDesc: "Nome, quantidade, unidade, preço",
+    actionCopy: "📋 Copiar item",
+    actionCopyDesc: "Copia nome, quantidade e preço",
     actionHistory: "📊 Histórico de preços",
     actionHistoryDesc: "Ver evolução de preços e variação",
     actionDelete: "❌ Excluir item",
@@ -1750,6 +1759,8 @@ const TPRO = {
     barcodeSaved: "Producto guardado ✓ (próxima vez se reconocerá solo)",
     actionEdit: "✏️ Editar ítem",
     actionEditDesc: "Nombre, cantidad, unidad, precio",
+    actionCopy: "📋 Copiar ítem",
+    actionCopyDesc: "Copia nombre, cantidad y precio",
     actionHistory: "📊 Historial de precios",
     actionHistoryDesc: "Ver evolución de precios y variación",
     actionDelete: "❌ Eliminar ítem",
@@ -1889,6 +1900,8 @@ const TPRO = {
     barcodeSaved: "商品を保存 ✓ (次回から自動認識)",
     actionEdit: "✏️ アイテム編集",
     actionEditDesc: "名前・数量・単位・価格",
+    actionCopy: "📋 アイテムをコピー",
+    actionCopyDesc: "名前・数量・価格をコピー",
     actionHistory: "📊 価格履歴",
     actionHistoryDesc: "価格の推移と変動を表示",
     actionDelete: "❌ アイテム削除",
@@ -2028,6 +2041,8 @@ const TPRO = {
     barcodeSaved: "המוצר נשמר ✓ (בפעם הבאה יזוהה אוטומטית)",
     actionEdit: "✏️ ערוך פריט",
     actionEditDesc: "שם, כמות, יחידה, מחיר",
+    actionCopy: "📋 העתק פריט",
+    actionCopyDesc: "העתק שם, כמות ומחיר",
     actionHistory: "📊 היסטוריית מחירים",
     actionHistoryDesc: "ראה התפתחות מחירים ושינויים",
     actionDelete: "❌ מחק פריט",
@@ -2167,6 +2182,8 @@ const TPRO = {
     barcodeSaved: "제품 저장됨 ✓ (다음 스캔부터 자동 인식)",
     actionEdit: "✏️ 항목 편집",
     actionEditDesc: "이름, 수량, 단위, 가격",
+    actionCopy: "📋 항목 복사",
+    actionCopyDesc: "이름, 수량, 가격 복사",
     actionHistory: "📊 가격 기록",
     actionHistoryDesc: "가격 변동 및 추이 보기",
     actionDelete: "❌ 항목 삭제",
@@ -3743,13 +3760,30 @@ async function openItemActions(i){
   const histKey = (item.name || "").trim().toLowerCase()
   const hasHist = pro && histKey && priceHistory[histKey] && priceHistory[histKey].length > 0
   const opts = [{ label: tt.actionEdit, desc: tt.actionEditDesc }]
+  opts.push({ label: tt.actionCopy, desc: tt.actionCopyDesc })
   if(hasHist) opts.push({ label: tt.actionHistory, desc: tt.actionHistoryDesc })
   opts.push({ label: tt.actionDelete, desc: tt.actionDeleteDesc })
   const choice = await uiChoice(item.name, opts)
   if(choice === null) return
   if(choice === 0) return editItem(i)
-  if(hasHist && choice === 1) return openItemHistory(histKey)
+  if(choice === 1) return copyItem(i)
+  if(hasHist && choice === 2) return openItemHistory(histKey)
   return deleteItem(i)
+}
+
+function copyItem(i){
+  const item = lists[currentList].items[i]
+  if(!item) return
+  const parts = [item.name]
+  if(item.qty) parts.push(`×${item.qty}${item.unit ? " " + item.unit : ""}`)
+  else if(item.unit) parts.push(item.unit)
+  const price = formatPrice(item.price)
+  if(price) parts.push(price)
+  const text = parts.join(" ")
+  const done = () => showToast(t.copied)
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text))
+  } else { fallbackCopy(text) }
 }
 
 async function editItem(i){
