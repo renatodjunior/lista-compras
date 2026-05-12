@@ -329,8 +329,14 @@ textarea{ resize:none; min-height:82px; }
 .item-name{ cursor:pointer; user-select:none; }
 .item-meta{
   display:inline-flex; align-items:center; gap:6px;
-  flex-shrink:0;
+  flex-shrink:0; order:4;
 }
+.item-controls{ display:contents; }
+.item-controls > .drag{ order:1; }
+.item-controls > .toggle{ order:2; }
+.item-controls > .maybe-btn{ order:5; }
+.item-controls > .kebab-btn{ order:6; }
+.item > .item-name{ order:3; }
 .qty-badge, .unit-badge{
   display:inline-block; font-size:11px; font-weight:600;
   padding:2px 7px; border-radius:99px;
@@ -753,39 +759,32 @@ textarea{ resize:none; min-height:82px; }
   .copy-btn, .clear-btn{ width:32px; height:32px; font-size:15px; }
 }
 
-/* ── COMPACT ITEM LAYOUT ON NARROW SCREENS ── */
+/* ── 3-TIER STACKED ITEM ON NARROW SCREENS ── */
 @media (max-width: 460px){
   .item{
-    display:grid;
-    grid-template-columns: auto auto 1fr auto auto;
-    grid-template-areas:
-      "name     name   name name  name"
-      "drag     toggle .    maybe kebab"
-      "meta     meta   meta meta  meta";
-    column-gap:8px; row-gap:8px;
-    align-items:center;
-    padding:10px 12px;
+    flex-direction:column;
+    align-items:stretch;
+    gap:8px;
+    padding:11px 12px;
   }
-  .item > .drag{ grid-area:drag; align-self:center; }
-  .item > .toggle{ grid-area:toggle; align-self:center; }
   .item > .item-name{
-    grid-area:name; min-width:0; word-break:break-word;
-    line-height:1.25;
+    order:1; text-align:center; width:100%;
+    flex:none; line-height:1.25; word-break:break-word;
   }
-  .item > .maybe-btn{ grid-area:maybe; }
-  .item > .kebab-btn{ grid-area:kebab; }
+  .item > .item-controls{
+    display:flex; align-items:center; justify-content:center;
+    gap:14px; order:2; width:100%;
+  }
   .item > .item-meta{
-    grid-area:meta; justify-self:start;
-    flex-wrap:wrap; gap:6px;
+    order:3; justify-content:center; flex-wrap:wrap;
+    width:100%; gap:6px;
+  }
+  .item-controls > .drag, .item-controls > .toggle,
+  .item-controls > .maybe-btn, .item-controls > .kebab-btn{
+    order:initial;
   }
   .qty-badge, .unit-badge{ font-size:11px; padding:2px 7px; }
   .price-badge{ font-size:11px; padding:2px 7px; }
-  .item:not(:has(.item-meta)){
-    grid-template-areas:
-      "name name   name name  name"
-      "drag toggle .    maybe kebab";
-    row-gap:6px;
-  }
 }
 
 /* ── PRINT ── */
@@ -4059,12 +4058,14 @@ function renderItems(){
       const priceHTML = priceText ? `<span class="price-badge" onclick="event.stopPropagation();editItemPrice(${i})" role="button" tabindex="0" aria-label="${tp().priceLabel}">${priceText}</span>` : ""
       const metaHTML = (qtyHTML || priceHTML) ? `<div class="item-meta">${qtyHTML}${priceHTML}</div>` : ""
       row.innerHTML = `
-        <div class="drag">⠿</div>
-        <div class="toggle ${togCls}" onclick="toggleStatus(${i})"></div>
         <div class="item-name ${tc}" onclick="toggleStatus(${i})">${item.name}</div>
+        <div class="item-controls">
+          <div class="drag">⠿</div>
+          <div class="toggle ${togCls}" onclick="toggleStatus(${i})"></div>
+          <button class="maybe-btn ${maybeActive}" onclick="toggleMaybe(${i})" aria-label="maybe">?</button>
+          <button class="icon-btn kebab-btn" onclick="openItemActions(${i})" aria-label="actions">⋮</button>
+        </div>
         ${metaHTML}
-        <button class="maybe-btn ${maybeActive}" onclick="toggleMaybe(${i})" aria-label="maybe">?</button>
-        <button class="icon-btn kebab-btn" onclick="openItemActions(${i})" aria-label="actions">⋮</button>
       `
       wrap.appendChild(row)
     })
