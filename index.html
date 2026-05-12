@@ -327,16 +327,20 @@ textarea{ resize:none; min-height:82px; }
 .stat-pill.warn{ background:#fff3d6; color:#a76b00; }
 .dark .stat-pill.warn{ background:#3a2e0a; color:#f5c452; }
 .item-name{ cursor:pointer; user-select:none; }
+.item-meta{
+  display:inline-flex; align-items:center; gap:6px;
+  flex-shrink:0;
+}
 .qty-badge, .unit-badge{
   display:inline-block; font-size:11px; font-weight:600;
-  padding:2px 7px; border-radius:99px; margin-left:6px;
+  padding:2px 7px; border-radius:99px;
   vertical-align:middle; letter-spacing:0;
 }
 .qty-badge{ background:var(--primary-light); color:var(--primary); font-variant-numeric:tabular-nums; }
 .unit-badge{ background:var(--primary-light); color:var(--primary); }
 .price-badge{
   font-size:12px; font-weight:700; color:var(--muted);
-  white-space:nowrap; margin:0 6px; flex-shrink:0;
+  white-space:nowrap; flex-shrink:0;
   cursor:pointer; padding:3px 8px; border-radius:8px;
   background:transparent; border:1px dashed transparent;
   transition:background .15s, border-color .15s, transform .12s;
@@ -344,8 +348,7 @@ textarea{ resize:none; min-height:82px; }
 }
 .price-badge:hover{ background:var(--primary-light); border-color:var(--primary-light); }
 .price-badge:active{ transform:scale(.94); }
-.item-name.done .qty-badge,
-.item-name.done + .price-badge{ opacity:.5; }
+.item-name.done ~ .item-meta{ opacity:.5; }
 .stat-pill.money{ background:#e6f5e6; color:#1b6f1b; }
 .dark .stat-pill.money{ background:#1a3a1a; color:#7fdc7f; }
 .qty-hint{
@@ -756,24 +759,33 @@ textarea{ resize:none; min-height:82px; }
     display:grid;
     grid-template-columns: auto auto 1fr auto auto;
     grid-template-areas:
-      "drag toggle name  maybe kebab"
-      "drag toggle price price price";
-    column-gap:8px; row-gap:2px;
+      "name     name   name name  name"
+      "drag     toggle .    maybe kebab"
+      "meta     meta   meta meta  meta";
+    column-gap:8px; row-gap:8px;
     align-items:center;
-    padding:9px 11px;
+    padding:10px 12px;
   }
-  .item > .drag{ grid-area:drag; }
-  .item > .toggle{ grid-area:toggle; }
-  .item > .item-name{ grid-area:name; min-width:0; word-break:break-word; }
+  .item > .drag{ grid-area:drag; align-self:center; }
+  .item > .toggle{ grid-area:toggle; align-self:center; }
+  .item > .item-name{
+    grid-area:name; min-width:0; word-break:break-word;
+    line-height:1.25;
+  }
   .item > .maybe-btn{ grid-area:maybe; }
   .item > .kebab-btn{ grid-area:kebab; }
-  .item > .price-badge{
-    grid-area:price; justify-self:start; align-self:center;
-    margin:0; padding:2px 8px;
-    font-size:11px;
+  .item > .item-meta{
+    grid-area:meta; justify-self:start;
+    flex-wrap:wrap; gap:6px;
   }
-  .item-name.done + .price-badge{ opacity:.5; }
-  .qty-badge, .unit-badge{ font-size:10px; padding:1px 6px; margin-left:5px; }
+  .qty-badge, .unit-badge{ font-size:11px; padding:2px 7px; }
+  .price-badge{ font-size:11px; padding:2px 7px; }
+  .item:not(:has(.item-meta)){
+    grid-template-areas:
+      "name name   name name  name"
+      "drag toggle .    maybe kebab";
+    row-gap:6px;
+  }
 }
 
 /* ── PRINT ── */
@@ -4045,11 +4057,12 @@ function renderItems(){
         (item.unit ? `<span class="unit-badge">${_esc(item.unit)}</span>` : "")
       const priceText = formatPrice(item.price)
       const priceHTML = priceText ? `<span class="price-badge" onclick="event.stopPropagation();editItemPrice(${i})" role="button" tabindex="0" aria-label="${tp().priceLabel}">${priceText}</span>` : ""
+      const metaHTML = (qtyHTML || priceHTML) ? `<div class="item-meta">${qtyHTML}${priceHTML}</div>` : ""
       row.innerHTML = `
         <div class="drag">⠿</div>
         <div class="toggle ${togCls}" onclick="toggleStatus(${i})"></div>
-        <div class="item-name ${tc}" onclick="toggleStatus(${i})">${item.name}${qtyHTML}</div>
-        ${priceHTML}
+        <div class="item-name ${tc}" onclick="toggleStatus(${i})">${item.name}</div>
+        ${metaHTML}
         <button class="maybe-btn ${maybeActive}" onclick="toggleMaybe(${i})" aria-label="maybe">?</button>
         <button class="icon-btn kebab-btn" onclick="openItemActions(${i})" aria-label="actions">⋮</button>
       `
