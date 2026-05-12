@@ -337,7 +337,13 @@ textarea{ resize:none; min-height:82px; }
 .price-badge{
   font-size:12px; font-weight:700; color:var(--muted);
   white-space:nowrap; margin:0 6px; flex-shrink:0;
+  cursor:pointer; padding:3px 8px; border-radius:8px;
+  background:transparent; border:1px dashed transparent;
+  transition:background .15s, border-color .15s, transform .12s;
+  -webkit-tap-highlight-color:transparent; user-select:none;
 }
+.price-badge:hover{ background:var(--primary-light); border-color:var(--primary-light); }
+.price-badge:active{ transform:scale(.94); }
 .item-name.done .qty-badge,
 .item-name.done + .price-badge{ opacity:.5; }
 .stat-pill.money{ background:#e6f5e6; color:#1b6f1b; }
@@ -3799,6 +3805,40 @@ async function editItem(i){
   save(); renderItems()
 }
 
+function editItemPrice(i){
+  const item = lists[currentList].items[i]
+  if(!item) return
+  const tt = tp()
+  _uiResolve = null
+  _uiOpen(tt.priceLabel, `
+    <label class="field-label">${_esc(item.name)}</label>
+    <input id="_uiPriceQuick" class="ui-input" inputmode="decimal" placeholder="${tt.pricePh}" value="${_esc(item.price)}">
+    <div class="ui-row">
+      <button class="secondary-btn" onclick="uiCancel()">${tt.cancelLabel}</button>
+      <button class="primary-btn" onclick="_savePriceQuick(${i})">${tt.okLabel}</button>
+    </div>`)
+  setTimeout(() => {
+    const p = document.getElementById("_uiPriceQuick")
+    if(p){
+      p.focus(); p.select()
+      p.onkeydown = ev => {
+        if(ev.key === "Enter"){ ev.preventDefault(); _savePriceQuick(i) }
+        else if(ev.key === "Escape"){ ev.preventDefault(); uiCancel() }
+      }
+    }
+  }, 50)
+}
+function _savePriceQuick(i){
+  const p = document.getElementById("_uiPriceQuick")
+  const val = p ? p.value.trim() : ""
+  const item = lists[currentList].items[i]
+  if(item){
+    item.price = val
+    save(); renderItems()
+  }
+  closeModal("uiModal")
+}
+
 async function deleteItem(i){
   const li = currentList
   const removed = lists[li].items[i]
@@ -3978,7 +4018,7 @@ function renderItems(){
         (item.qty ? `<span class="qty-badge">×${_esc(item.qty)}</span>` : "") +
         (item.unit ? `<span class="unit-badge">${_esc(item.unit)}</span>` : "")
       const priceText = formatPrice(item.price)
-      const priceHTML = priceText ? `<span class="price-badge">${priceText}</span>` : ""
+      const priceHTML = priceText ? `<span class="price-badge" onclick="event.stopPropagation();editItemPrice(${i})" role="button" tabindex="0" aria-label="${tt.priceLabel}">${priceText}</span>` : ""
       row.innerHTML = `
         <div class="drag">⠿</div>
         <div class="toggle ${togCls}" onclick="toggleStatus(${i})"></div>
@@ -4010,7 +4050,7 @@ function renderItems(){
       ghostClass:"sortable-ghost",
       chosenClass:"sortable-chosen",
       dragClass:"sortable-drag",
-      filter:".toggle, .maybe-btn, .kebab-btn, .icon-btn",
+      filter:".toggle, .maybe-btn, .kebab-btn, .icon-btn, .price-badge",
       preventOnFilter:false,
       onEnd:() => {
         const allItems = []
