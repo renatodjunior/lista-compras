@@ -107,9 +107,26 @@ body{
   display:flex; justify-content:space-between; align-items:center;
   background:var(--card); padding:14px; border-radius:var(--radius);
   margin-bottom:10px; box-shadow:var(--shadow); transition:transform .15s;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
+  touch-action:manipulation;
 }
 .list-card:active{ transform:scale(.98); }
-.list-card-left{ display:flex; align-items:center; gap:10px; flex:1; cursor:pointer; }
+.list-card-left{
+  display:flex; align-items:center; gap:10px; flex:1; cursor:pointer;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
+}
+.sortable-ghost{ opacity:.25; }
+.sortable-chosen{ cursor:grabbing; }
+.sortable-drag{
+  opacity:.95;
+  box-shadow:0 12px 28px rgba(0,0,0,0.25);
+  transform:scale(1.02);
+  cursor:grabbing;
+}
 .list-emoji{ font-size:26px; }
 .list-info{ display:flex; flex-direction:column; }
 .list-name{ font-weight:700; font-size:16px; }
@@ -2569,11 +2586,23 @@ function renderLists(){
     container.appendChild(div)
   })
   if(window._listsSortable){ try { window._listsSortable.destroy() } catch(e){} }
+  if(!container.dataset.ctxBound){
+    container.addEventListener("contextmenu", e => {
+      if(e.target.closest(".list-card")) e.preventDefault()
+    })
+    container.dataset.ctxBound = "1"
+  }
   window._listsSortable = new Sortable(container, {
     animation: 150,
     delay: 300,
     delayOnTouchOnly: true,
     touchStartThreshold: 5,
+    forceFallback: true,
+    fallbackTolerance: 4,
+    fallbackOnBody: true,
+    ghostClass: "sortable-ghost",
+    chosenClass: "sortable-chosen",
+    dragClass: "sortable-drag",
     filter: ".kebab-btn, .icon-btn",
     preventOnFilter: false,
     onEnd: () => {
