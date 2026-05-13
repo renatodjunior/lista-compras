@@ -4574,16 +4574,29 @@ function applyAccent(){
   const target = document.body
   target.style.removeProperty("--primary")
   target.style.removeProperty("--primary-light")
-  if(!pro || !accentColor) return
-  const preset = ACCENT_PRESETS.find(p => p.name === accentColor)
-  if(!preset) return
-  if(darkMode){
-    target.style.setProperty("--primary", preset.dPrimary)
-    target.style.setProperty("--primary-light", preset.dLight)
-  } else {
-    target.style.setProperty("--primary", preset.primary)
-    target.style.setProperty("--primary-light", preset.light)
+  let themeColor = null
+  if(pro && accentColor){
+    const preset = ACCENT_PRESETS.find(p => p.name === accentColor)
+    if(preset){
+      if(darkMode){
+        target.style.setProperty("--primary", preset.dPrimary)
+        target.style.setProperty("--primary-light", preset.dLight)
+        themeColor = preset.dPrimary
+      } else {
+        target.style.setProperty("--primary", preset.primary)
+        target.style.setProperty("--primary-light", preset.light)
+        themeColor = preset.primary
+      }
+    }
   }
+  if(!themeColor) themeColor = darkMode ? "#4caf50" : "#3a9e4a"
+  let meta = document.querySelector('meta[name="theme-color"]')
+  if(!meta){
+    meta = document.createElement("meta")
+    meta.setAttribute("name", "theme-color")
+    document.head.appendChild(meta)
+  }
+  meta.setAttribute("content", themeColor)
 }
 
 const BG_PRESETS = ["", "dots", "grid", "paws", "stars", "hearts", "leaves"]
