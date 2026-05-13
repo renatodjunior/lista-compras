@@ -4570,21 +4570,51 @@ const ACCENT_PRESETS = [
   { name:"teal",   primary:"#00897b", light:"#e0f2f1", dPrimary:"#26a69a", dLight:"#0a2825" },
 ]
 
+function _hexToHSL(hex){
+  const m = hex.replace("#","")
+  const r = parseInt(m.slice(0,2),16)/255
+  const g = parseInt(m.slice(2,4),16)/255
+  const b = parseInt(m.slice(4,6),16)/255
+  const max = Math.max(r,g,b), min = Math.min(r,g,b)
+  let h=0, s=0, l=(max+min)/2
+  if(max !== min){
+    const d = max-min
+    s = l>0.5 ? d/(2-max-min) : d/(max+min)
+    switch(max){
+      case r: h = (g-b)/d + (g<b ? 6 : 0); break
+      case g: h = (b-r)/d + 2; break
+      case b: h = (r-g)/d + 4; break
+    }
+    h *= 60
+  }
+  return [Math.round(h), Math.round(s*100), Math.round(l*100)]
+}
+
 function applyAccent(){
   const target = document.body
-  target.style.removeProperty("--primary")
-  target.style.removeProperty("--primary-light")
+  ;["--primary","--primary-light","--bg","--card","--text","--muted","--btn"].forEach(v => target.style.removeProperty(v))
   let themeColor = null
   if(pro && accentColor){
     const preset = ACCENT_PRESETS.find(p => p.name === accentColor)
     if(preset){
       if(darkMode){
+        const [h] = _hexToHSL(preset.dPrimary)
         target.style.setProperty("--primary", preset.dPrimary)
-        target.style.setProperty("--primary-light", preset.dLight)
+        target.style.setProperty("--primary-light", `hsl(${h} 28% 17%)`)
+        target.style.setProperty("--bg", `hsl(${h} 26% 10%)`)
+        target.style.setProperty("--card", `hsl(${h} 23% 14%)`)
+        target.style.setProperty("--text", `hsl(${h} 20% 90%)`)
+        target.style.setProperty("--muted", `hsl(${h} 14% 55%)`)
+        target.style.setProperty("--btn", `hsl(${h} 20% 20%)`)
         themeColor = preset.dPrimary
       } else {
+        const [h] = _hexToHSL(preset.primary)
         target.style.setProperty("--primary", preset.primary)
         target.style.setProperty("--primary-light", preset.light)
+        target.style.setProperty("--bg", `hsl(${h} 28% 95%)`)
+        target.style.setProperty("--text", `hsl(${h} 32% 14%)`)
+        target.style.setProperty("--muted", `hsl(${h} 18% 55%)`)
+        target.style.setProperty("--btn", `hsl(${h} 22% 92%)`)
         themeColor = preset.primary
       }
     }
