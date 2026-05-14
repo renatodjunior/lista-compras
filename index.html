@@ -650,7 +650,7 @@ textarea{ resize:none; min-height:82px; }
 .dark .hist-total .trend.down{ color:#66bb6a; }
 
 .sample-fab{
-  position:fixed; bottom:24px; right:88px;
+  position:fixed; bottom:88px; right:24px;
   width:48px; height:48px; border-radius:50%;
   background:linear-gradient(135deg, #ffb300, #ff7a00);
   color:white; border:none; cursor:pointer;
@@ -669,7 +669,7 @@ textarea{ resize:none; min-height:82px; }
   0%, 100%{ box-shadow:0 4px 16px rgba(255,122,0,.4); }
   50%{ box-shadow:0 4px 16px rgba(255,122,0,.4), 0 0 0 12px rgba(255,122,0,.15); }
 }
-[dir=rtl] .sample-fab{ right:auto; left:88px; }
+[dir=rtl] .sample-fab{ right:auto; left:24px; }
 
 .add-fab{
   position:fixed; bottom:20px; right:20px;
@@ -685,21 +685,7 @@ textarea{ resize:none; min-height:82px; }
 .add-fab:active{ transform:scale(.92); }
 [dir=rtl] .add-fab{ right:auto; left:20px; }
 
-.scroll-top-fab{
-  position:fixed; bottom:88px; right:26px;
-  width:44px; height:44px; border-radius:50%;
-  background:var(--card); color:var(--text); border:1px solid var(--btn);
-  cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.18);
-  display:flex; align-items:center; justify-content:center;
-  opacity:0; visibility:hidden; transform:translateY(8px);
-  transition:opacity .2s, transform .2s, visibility .2s, background .15s;
-  z-index:100;
-}
-.scroll-top-fab.visible{ opacity:1; visibility:visible; transform:translateY(0); }
-.scroll-top-fab:hover{ background:var(--primary); color:white; border-color:var(--primary); }
-.scroll-top-fab:active{ transform:scale(.92); }
-.scroll-top-fab svg{ width:22px; height:22px; }
-[dir=rtl] .scroll-top-fab{ right:auto; left:26px; }
+.add-fab.scroll-mode{ font-size:28px; }
 
 .sample-row{
   display:flex; align-items:center; gap:12px;
@@ -1147,11 +1133,8 @@ textarea{ resize:none; min-height:82px; }
   </div>
 
   <button class="sample-fab" id="sampleFab" onclick="openSamples()" aria-label="Examples" title="Examples">✨</button>
-  <button class="add-fab" id="addFab" onclick="quickAddJump()" aria-label="Add" title="Add">+</button>
-  <button class="add-fab" id="addListFab" onclick="quickAddListJump()" aria-label="Add list" title="Nova lista">+</button>
-  <button class="scroll-top-fab" id="scrollTopFab" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Topo" title="Topo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-  </button>
+  <button class="add-fab" id="addFab" onclick="onAddFabClick('items')" aria-label="Add" title="Add">+</button>
+  <button class="add-fab" id="addListFab" onclick="onAddFabClick('home')" aria-label="Add list" title="Nova lista">+</button>
 
   <footer class="site-footer">
     <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()"></button><br>
@@ -5561,20 +5544,34 @@ function openStats(){
   setTimeout(advance, durations[0])
 })()
 
-// ── SCROLL-TO-TOP FAB ─────────────────────────────
-;(function(){
-  const fab = document.getElementById("scrollTopFab")
-  if(!fab) return
-  let raf = 0
-  function update(){
-    raf = 0
-    if(window.scrollY > 320) fab.classList.add("visible")
-    else fab.classList.remove("visible")
+// ── FAB SCROLL MODE (+ doubles as scroll-up) ──────
+let _addFabScrolled = false
+function _updateAddFabIcon(){
+  const scrolled = window.scrollY > 320
+  if(scrolled === _addFabScrolled) return
+  _addFabScrolled = scrolled
+  ;["addFab","addListFab"].forEach(id => {
+    const el = document.getElementById(id)
+    if(!el) return
+    el.textContent = scrolled ? "↑" : "+"
+    el.classList.toggle("scroll-mode", scrolled)
+  })
+}
+function onAddFabClick(page){
+  if(window.scrollY > 320){
+    window.scrollTo({ top:0, behavior:"smooth" })
+  } else if(page === "items"){
+    quickAddJump()
+  } else {
+    quickAddListJump()
   }
+}
+;(function(){
+  let raf = 0
   window.addEventListener("scroll", () => {
-    if(!raf) raf = requestAnimationFrame(update)
+    if(!raf) raf = requestAnimationFrame(() => { raf = 0; _updateAddFabIcon() })
   }, { passive:true })
-  update()
+  _updateAddFabIcon()
 })()
 
 // ── INIT ──────────────────────────────────────────
