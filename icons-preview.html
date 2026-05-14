@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Icons Preview · MyOwnLists</title>
+<style>
+:root{
+  --primary:#3a9e4a;
+  --primary-light:#e8f5e9;
+  --bg:#f0f4f0;
+  --card:#ffffff;
+  --text:#1a2e1a;
+  --muted:#7a957a;
+}
+.dark{
+  --primary:#4caf50;
+  --primary-light:#1a2e1a;
+  --bg:#141f14;
+  --card:#1e2e1e;
+  --text:#e0ece0;
+  --muted:#6a8f6a;
+}
+*{ box-sizing:border-box; }
+body{
+  margin:0; font-family:system-ui,-apple-system,sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; padding:24px;
+  transition:background .25s,color .25s;
+}
+h1{ font-size:20px; margin:0 0 8px; }
+p.lede{ color:var(--muted); margin:0 0 24px; font-size:14px; }
+.controls{
+  display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;
+  padding:14px; background:var(--card); border-radius:12px;
+}
+.controls button{
+  font-family:inherit; font-weight:700; font-size:13px;
+  padding:8px 14px; border-radius:99px; border:none; cursor:pointer;
+  background:var(--primary-light); color:var(--primary);
+  transition:transform .1s, filter .1s;
+}
+.controls button:hover{ filter:brightness(.95); }
+.controls button:active{ transform:scale(.96); }
+.controls .swatch{
+  width:34px; height:34px; padding:0; border-radius:50%;
+  border:2px solid var(--card); box-shadow:0 0 0 1px rgba(0,0,0,.1);
+}
+.controls .swatch.active{ box-shadow:0 0 0 2px var(--text); }
+.icon-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
+  gap:14px;
+}
+.icon-card{
+  background:var(--card); border-radius:14px; padding:20px 16px;
+  text-align:center; box-shadow:0 2px 12px rgba(0,0,0,.07);
+}
+.icon-card svg{
+  width:56px; height:56px; color:var(--primary); margin-bottom:10px;
+}
+.icon-card .label{
+  font-size:13px; font-weight:700; color:var(--text); margin-bottom:6px;
+}
+.icon-card .ctx{ font-size:11px; color:var(--muted); }
+.btn-row{
+  display:flex; flex-direction:column; gap:10px; margin-top:24px;
+  padding:14px; background:var(--card); border-radius:12px;
+}
+.btn-row h2{ font-size:14px; margin:0 0 4px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+.demo-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--primary-light); border:1.5px solid var(--primary);
+  padding:8px 16px; border-radius:10px; color:var(--primary);
+  font-family:inherit; font-size:13px; font-weight:800;
+  cursor:pointer; align-self:flex-start;
+}
+.demo-btn svg{ width:18px; height:18px; }
+.demo-btn:hover{ background:var(--primary); color:white; }
+.demo-btn:hover svg{ color:white; }
+</style>
+</head>
+<body>
+
+<h1>🎨 Preview: ícones duotone</h1>
+<p class="lede">Hover/clica nas swatches pra trocar accent. Botão "🌓" alterna dark mode.</p>
+
+<div class="controls">
+  <button class="swatch" style="background:#3a9e4a" data-p="#3a9e4a" data-pl="#e8f5e9" data-dp="#4caf50" data-dpl="#1a2e1a"></button>
+  <button class="swatch" style="background:#1e88e5" data-p="#1e88e5" data-pl="#e3f2fd" data-dp="#42a5f5" data-dpl="#0d1f33"></button>
+  <button class="swatch" style="background:#8e24aa" data-p="#8e24aa" data-pl="#f3e5f5" data-dp="#ba68c8" data-dpl="#2a1a33"></button>
+  <button class="swatch" style="background:#fb8c00" data-p="#fb8c00" data-pl="#fff3e0" data-dp="#ffa726" data-dpl="#332010"></button>
+  <button class="swatch" style="background:#e91e63" data-p="#e91e63" data-pl="#fce4ec" data-dp="#f06292" data-dpl="#33101e"></button>
+  <button class="swatch" style="background:#00897b" data-p="#00897b" data-pl="#e0f2f1" data-dp="#26a69a" data-dpl="#0a2825"></button>
+  <button id="darkToggle">🌓 Tema</button>
+</div>
+
+<div class="icon-grid">
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" fill="currentColor" opacity=".18" stroke="none"/>
+      <path d="M20 12a8 8 0 0 1-13.66 5.66"/>
+      <path d="M4 12a8 8 0 0 1 13.66-5.66"/>
+      <polyline points="20,3 20,8 15,8"/>
+      <polyline points="4,21 4,16 9,16"/>
+    </svg>
+    <div class="label">Atualizar app</div>
+    <div class="ctx">refreshBtn</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="4" width="14" height="17" rx="2" fill="currentColor" opacity=".18" stroke="none"/>
+      <rect x="5" y="4" width="14" height="17" rx="2"/>
+      <rect x="9" y="2" width="6" height="4" rx="1" fill="currentColor" stroke="none"/>
+      <line x1="8" y1="11" x2="16" y2="11"/>
+      <line x1="8" y1="14.5" x2="15" y2="14.5"/>
+      <line x1="8" y1="18" x2="13" y2="18"/>
+    </svg>
+    <div class="label">Colar lista de texto</div>
+    <div class="ctx">pasteListBtn</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" fill="currentColor" opacity=".18"/>
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+      <path d="M12 4v10M7 9l5 5 5-5"/>
+    </svg>
+    <div class="label">Importar backup</div>
+    <div class="ctx">importBackup</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" fill="currentColor" opacity=".18"/>
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+      <path d="M12 16V4M7 9l5-5 5 5"/>
+    </svg>
+    <div class="label">Exportar backup</div>
+    <div class="ctx">exportBackup</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor" opacity=".18" stroke="none"/>
+      <rect x="3" y="3" width="8" height="8" rx="1.5"/>
+      <rect x="13" y="3" width="8" height="8" rx="1.5" fill="currentColor" opacity=".18" stroke="none"/>
+      <rect x="13" y="3" width="8" height="8" rx="1.5"/>
+      <rect x="3" y="13" width="8" height="8" rx="1.5" fill="currentColor" opacity=".18" stroke="none"/>
+      <rect x="3" y="13" width="8" height="8" rx="1.5"/>
+      <rect x="13" y="13" width="8" height="8" rx="1.5" fill="currentColor" opacity=".18" stroke="none"/>
+      <rect x="13" y="13" width="8" height="8" rx="1.5"/>
+    </svg>
+    <div class="label">Desmarcar todos</div>
+    <div class="ctx">uncheckAllBtn</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z" fill="currentColor" opacity=".18"/>
+      <path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z"/>
+      <path d="M12 22V13M8 16l4-4 4 4"/>
+    </svg>
+    <div class="label">Upload Dropbox</div>
+    <div class="ctx">syncPush</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 14a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 14H7z" fill="currentColor" opacity=".18"/>
+      <path d="M7 14a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 14H7z"/>
+      <path d="M12 13v9M8 18l4 4 4-4"/>
+    </svg>
+    <div class="label">Download Dropbox</div>
+    <div class="ctx">syncPull</div>
+  </div>
+
+</div>
+
+<div class="btn-row">
+  <h2>Exemplo em botões reais</h2>
+  <button class="demo-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" fill="currentColor" opacity=".18" stroke="none"/>
+      <path d="M20 12a8 8 0 0 1-13.66 5.66"/>
+      <path d="M4 12a8 8 0 0 1 13.66-5.66"/>
+      <polyline points="20,3 20,8 15,8"/>
+      <polyline points="4,21 4,16 9,16"/>
+    </svg>
+    Atualizar app
+  </button>
+  <button class="demo-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="4" width="14" height="17" rx="2" fill="currentColor" opacity=".18" stroke="none"/>
+      <rect x="5" y="4" width="14" height="17" rx="2"/>
+      <rect x="9" y="2" width="6" height="4" rx="1" fill="currentColor" stroke="none"/>
+      <line x1="8" y1="11" x2="16" y2="11"/>
+      <line x1="8" y1="14.5" x2="15" y2="14.5"/>
+      <line x1="8" y1="18" x2="13" y2="18"/>
+    </svg>
+    Colar lista de texto
+  </button>
+  <button class="demo-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z" fill="currentColor" opacity=".18"/>
+      <path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z"/>
+      <path d="M12 22V13M8 16l4-4 4 4"/>
+    </svg>
+    Enviar pro Dropbox
+  </button>
+</div>
+
+<script>
+document.querySelectorAll(".swatch").forEach(b => {
+  b.onclick = () => {
+    document.documentElement.style.setProperty("--primary", b.dataset.p)
+    document.documentElement.style.setProperty("--primary-light", b.dataset.pl)
+    if(document.body.classList.contains("dark")){
+      document.documentElement.style.setProperty("--primary", b.dataset.dp)
+      document.documentElement.style.setProperty("--primary-light", b.dataset.dpl)
+    }
+    document.querySelectorAll(".swatch").forEach(x => x.classList.remove("active"))
+    b.classList.add("active")
+  }
+})
+document.getElementById("darkToggle").onclick = () => {
+  document.body.classList.toggle("dark")
+  const active = document.querySelector(".swatch.active")
+  if(active) active.click()
+}
+</script>
+</body>
+</html>
