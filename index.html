@@ -327,16 +327,22 @@ textarea{ resize:none; min-height:82px; }
 .stat-pill.warn{ background:#fff3d6; color:#a76b00; }
 .dark .stat-pill.warn{ background:#3a2e0a; color:#f5c452; }
 .item-name{ cursor:pointer; user-select:none; }
-.item-meta{
-  display:inline-flex; align-items:center; gap:6px;
+.item-qu{
+  display:inline-flex; flex-direction:column;
+  align-items:flex-end; gap:3px;
   flex-shrink:0; order:4;
 }
+.item-qu .qty-badge, .item-qu .unit-badge{ margin:0; }
 .item-controls{ display:contents; }
 .item-controls > .drag{ order:1; }
 .item-controls > .toggle{ order:2; }
-.item-controls > .maybe-btn{ order:5; }
-.item-controls > .kebab-btn{ order:6; }
-.item > .item-name{ order:3; }
+.item-controls > .maybe-btn{ order:6; }
+.item-controls > .kebab-btn{ order:7; }
+.item > .item-name{
+  order:3; flex:1; min-width:0;
+  overflow-wrap:anywhere; word-break:break-word;
+}
+.item > .price-badge{ order:5; }
 .qty-badge, .unit-badge{
   display:inline-block; font-size:11px; font-weight:600;
   padding:2px 7px; border-radius:99px;
@@ -354,7 +360,7 @@ textarea{ resize:none; min-height:82px; }
 }
 .price-badge:hover{ background:var(--primary-light); border-color:var(--primary-light); }
 .price-badge:active{ transform:scale(.94); }
-.item-name.done ~ .item-meta{ opacity:.5; }
+.item-name.done ~ .item-qu, .item-name.done ~ .price-badge{ opacity:.5; }
 .stat-pill.money{ background:#e6f5e6; color:#1b6f1b; }
 .dark .stat-pill.money{ background:#1a3a1a; color:#7fdc7f; }
 .qty-hint{
@@ -757,35 +763,6 @@ textarea{ resize:none; min-height:82px; }
   .theme-btn{ width:30px; height:30px; font-size:14px; }
   .back-btn{ height:32px; padding:0 8px; font-size:12px; }
   .copy-btn, .clear-btn{ width:32px; height:32px; font-size:15px; }
-}
-
-/* ── 3-TIER STACKED ITEM ON NARROW SCREENS ── */
-@media (max-width: 360px){
-  .item{
-    flex-direction:column;
-    align-items:stretch;
-    gap:8px;
-    padding:11px 12px;
-  }
-  .item > .item-name{
-    order:1; text-align:center; width:100%;
-    flex:none; line-height:1.25; word-break:break-word;
-  }
-  .item > .item-controls{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:10px; order:2; width:100%;
-    padding:0 4px;
-  }
-  .item > .item-meta{
-    order:3; justify-content:center; flex-wrap:wrap;
-    width:100%; gap:6px;
-  }
-  .item-controls > .drag, .item-controls > .toggle,
-  .item-controls > .maybe-btn, .item-controls > .kebab-btn{
-    order:initial;
-  }
-  .qty-badge, .unit-badge{ font-size:11px; padding:2px 7px; }
-  .price-badge{ font-size:11px; padding:2px 7px; }
 }
 
 /* ── PRINT ── */
@@ -4052,12 +4029,11 @@ function renderItems(){
       const tc = item.status===1?"done":item.status===2?"maybe":""
       const togCls = item.status===1?"done":""
       const maybeActive = item.status===2?"active":""
-      const qtyHTML =
-        (item.qty ? `<span class="qty-badge">×${_esc(item.qty)}</span>` : "") +
-        (item.unit ? `<span class="unit-badge">${_esc(item.unit)}</span>` : "")
+      const qtyBadge = item.qty ? `<span class="qty-badge">×${_esc(item.qty)}</span>` : ""
+      const unitBadge = item.unit ? `<span class="unit-badge">${_esc(item.unit)}</span>` : ""
+      const quHTML = (qtyBadge || unitBadge) ? `<div class="item-qu">${qtyBadge}${unitBadge}</div>` : ""
       const priceText = formatPrice(item.price)
       const priceHTML = priceText ? `<span class="price-badge" onclick="event.stopPropagation();editItemPrice(${i})" role="button" tabindex="0" aria-label="${tp().priceLabel}">${priceText}</span>` : ""
-      const metaHTML = (qtyHTML || priceHTML) ? `<div class="item-meta">${qtyHTML}${priceHTML}</div>` : ""
       row.innerHTML = `
         <div class="item-name ${tc}" onclick="toggleStatus(${i})">${item.name}</div>
         <div class="item-controls">
@@ -4066,7 +4042,8 @@ function renderItems(){
           <button class="maybe-btn ${maybeActive}" onclick="toggleMaybe(${i})" aria-label="maybe">?</button>
           <button class="icon-btn kebab-btn" onclick="openItemActions(${i})" aria-label="actions">⋮</button>
         </div>
-        ${metaHTML}
+        ${quHTML}
+        ${priceHTML}
       `
       wrap.appendChild(row)
     })
