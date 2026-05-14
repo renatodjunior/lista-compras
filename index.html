@@ -1148,7 +1148,7 @@ const ICONS = {
   paste: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="14.5" x2="15" y2="14.5"/><line x1="8" y1="18" x2="13" y2="18"/></svg>',
   import: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/><path d="M12 4v10M7 9l5 5 5-5"/></svg>',
   export: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/><path d="M12 16V4M7 9l5-5 5 5"/></svg>',
-  uncheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>',
+  uncheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="3.5"/><circle cx="17" cy="7" r="3.5"/><circle cx="7" cy="17" r="3.5"/><circle cx="17" cy="17" r="3.5"/></svg>',
   cloudUp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z"/><path d="M12 22V13M8 16l4-4 4 4"/></svg>',
   cloudDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 14H7z"/><path d="M12 13v9M8 18l4 4 4-4"/></svg>',
 }
@@ -1157,7 +1157,7 @@ const ICON_COLORS = {
   paste:    "#f59e0b",
   import:   "#6366f1",
   export:   "#10b981",
-  uncheck:  "#a855f7",
+  uncheck:  "#aaa",
   cloudUp:  "#0ea5e9",
   cloudDown:"#14b8a6",
 }
@@ -2537,11 +2537,20 @@ function setIconBtn(id, fullText){
   el.setAttribute("aria-label", fullText || "")
 }
 
-function showToast(msg, actionFn, actionLabel){
+function showToast(msg, actionFn, actionLabel, iconKey){
   const el = document.getElementById("toast")
   el.innerHTML = ""
+  if(iconKey && ICONS[iconKey]){
+    const icon = document.createElement("span")
+    icon.className = "btn-icon"
+    icon.style.marginRight = "8px"
+    icon.style.color = "#fff"
+    icon.innerHTML = ICONS[iconKey]
+    el.appendChild(icon)
+  }
   const span = document.createElement("span")
-  span.textContent = msg
+  const cleaned = iconKey ? String(msg || "").replace(/[⬆⬇☁🔄]️?/gu, "").trim() : msg
+  span.textContent = cleaned
   el.appendChild(span)
   if(actionFn){
     const btn = document.createElement("button")
@@ -3447,7 +3456,7 @@ async function dropboxUpload(silent){
     if(meta && meta.rev) localStorage.setItem("dbx_remoteRev", meta.rev)
     localStorage.setItem("dbx_lastSync", String(Date.now()))
     _setDbxDirty(false)
-    if(!silent) showToast(tp().syncUploaded)
+    if(!silent) showToast(tp().syncUploaded, null, null, "cloudUp")
     return true
   } catch(e){
     if(!silent) showToast(tp().syncError)
@@ -3498,7 +3507,7 @@ async function dropboxPull(initial){
   if(!dl){
     if(initial && lists.length > 0){
       await dropboxUpload(true)
-      showToast(tp().syncFirstUpload)
+      showToast(tp().syncFirstUpload, null, null, "cloudUp")
     } else if(!initial){
       showToast(tp().syncNoRemote)
     }
@@ -3513,7 +3522,7 @@ async function dropboxPull(initial){
   }
   const rev = await _resolveRev(dl.rev)
   _applyRemote(dl.data, rev)
-  showToast(tp().syncDownloaded)
+  showToast(tp().syncDownloaded, null, null, "cloudDown")
 }
 
 async function dropboxPush(force){
@@ -3537,7 +3546,7 @@ async function dropboxPush(force){
   }
   showToast(tt.syncRunning)
   const ok = await dropboxUpload(true)
-  if(ok) showToast(tt.syncPushed)
+  if(ok) showToast(tt.syncPushed, null, null, "cloudUp")
   refreshProUI()
 }
 
@@ -3558,7 +3567,7 @@ async function dropboxPullExplicit(skipConfirm){
   if(!dl){ showToast(tt.syncNoRemote); refreshProUI(); return }
   const rev = await _resolveRev(dl.rev)
   _applyRemote(dl.data, rev)
-  showToast(tt.syncPulled)
+  showToast(tt.syncPulled, null, null, "cloudDown")
   refreshProUI()
 }
 
@@ -5540,7 +5549,7 @@ if("serviceWorker" in navigator){
   navigator.serviceWorker.register("service-worker.js")
     .then(reg => {
       function notifyUpdate(worker){
-        showToast(tp().newVersion, () => worker.postMessage({ action: "skipWaiting" }), tp().reload)
+        showToast(tp().newVersion, () => worker.postMessage({ action: "skipWaiting" }), tp().reload, "refresh")
       }
       if(reg.waiting && navigator.serviceWorker.controller) notifyUpdate(reg.waiting)
       reg.addEventListener("updatefound", () => {
