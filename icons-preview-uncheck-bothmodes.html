@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Preview · Cores que servem light + dark</title>
+<style>
+*{ box-sizing:border-box; }
+body{
+  margin:0; padding:20px; font-family:system-ui,sans-serif;
+  background:#f7f7fa; color:#1a1a1a; min-height:100vh;
+}
+h1{ font-size:18px; margin:0 0 6px; }
+.lede{ font-size:13px; color:#666; margin:0 0 18px; }
+.grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:12px;
+}
+.card{
+  border-radius:14px; padding:14px;
+  background:#fff; box-shadow:0 2px 12px rgba(0,0,0,.06);
+  display:flex; flex-direction:column; gap:10px;
+}
+.row{
+  display:flex; gap:10px; align-items:center;
+}
+.chip{
+  width:42px; height:42px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.light-bg{ background:#e8ede8; }
+.dark-bg{ background:#2a3d2a; }
+.midlight-bg{ background:#f0f4f0; }
+.middark-bg{ background:#1e2e1e; }
+.chip svg{ width:62%; height:62%; }
+.meta{ flex:1; font-size:12px; }
+.name{ font-weight:700; font-size:13px; margin-bottom:2px; }
+.hex{ font-family:ui-monospace,monospace; font-size:11px; color:#666; }
+.pair-label{ font-size:10px; color:#888; text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+.bothmodes{
+  display:grid; grid-template-columns:1fr 1fr; gap:6px;
+}
+.cell{
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:8px 4px; border-radius:8px;
+}
+.cell.light-side{ background:#f0f4f0; color:#1a2e1a; }
+.cell.dark-side{ background:#141f14; color:#e0ece0; }
+</style>
+</head>
+<body>
+
+<h1>🎯 Cores neutras pro botão uncheck (light + dark)</h1>
+<p class="lede">Cada card mostra a cor no fundo light (var(--btn) light) à esquerda e no fundo dark (var(--btn) dark) à direita.</p>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const ICON = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-13.66 5.66"/><path d="M4 12a8 8 0 0 1 13.66-5.66"/><polyline points="20,3 20,8 15,8"/><polyline points="4,21 4,16 9,16"/><polyline points="9,12 11,14 15,10"/></svg>'
+
+const COLORS = [
+  { name:"Slate 500",      hex:"#64748b" },
+  { name:"Slate 400",      hex:"#94a3b8" },
+  { name:"Gray 500",       hex:"#6b7280" },
+  { name:"Zinc 400",       hex:"#a1a1aa" },
+  { name:"Cool Slate",     hex:"#7c8493" },
+  { name:"Lavender Gray",  hex:"#8b8da0" },
+  { name:"Mauve Gray",     hex:"#9b9eae" },
+  { name:"Lilac",          hex:"#ccc9d8" },
+  { name:"Steel",          hex:"#708090" },
+  { name:"Storm",          hex:"#5b6b7c" },
+  { name:"Smoke",          hex:"#a0a4ad" },
+  { name:"Cool Beige",     hex:"#a39e9c" },
+  { name:"Taupe",          hex:"#8b8580" },
+  { name:"Periwinkle Mid", hex:"#9090a8" },
+  { name:"Blue-Gray Dark", hex:"#5e6b80" },
+  { name:"Ash",            hex:"#888c95" },
+]
+
+const grid = document.getElementById("grid")
+COLORS.forEach(c => {
+  const card = document.createElement("div")
+  card.className = "card"
+  card.innerHTML = `
+    <div class="row">
+      <div class="meta">
+        <div class="name">${c.name}</div>
+        <div class="hex">${c.hex}</div>
+      </div>
+    </div>
+    <div class="bothmodes">
+      <div class="cell light-side">
+        <div class="pair-label">LIGHT</div>
+        <div class="chip light-bg" style="color:${c.hex}">${ICON}</div>
+      </div>
+      <div class="cell dark-side">
+        <div class="pair-label">DARK</div>
+        <div class="chip dark-bg" style="color:${c.hex}">${ICON}</div>
+      </div>
+    </div>
+  `
+  grid.appendChild(card)
+})
+</script>
+</body>
+</html>
