@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v53-uncheck-lilac"
+const CACHE_NAME = "mylists-v54-uncheck-mode-aware"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
