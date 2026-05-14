@@ -94,12 +94,25 @@ p.lede{ color:var(--muted); margin:0 0 24px; font-size:14px; }
 .demo-btn svg{ width:18px; height:18px; }
 .demo-btn:hover{ background:var(--primary); color:white; }
 .demo-btn:hover svg{ color:white; }
+.style-sub{ font-size:12px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin:18px 0 8px; }
+.style-sub:first-child{ margin-top:0; }
 </style>
 </head>
 <body>
 
-<h1>🎨 Preview: 3 estilos de ícones</h1>
-<p class="lede">Compara estilos. Hover/clica swatches pra trocar accent. Botão 🌓 alterna dark mode.</p>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="var(--m-1, #f8f8f8)"/>
+      <stop offset="45%"  stop-color="var(--m-2, #9a9a9a)"/>
+      <stop offset="55%"  stop-color="var(--m-3, #5a5a5a)"/>
+      <stop offset="100%" stop-color="var(--m-4, #b0b0b0)"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<h1>🎨 Preview: 4 estilos de ícones</h1>
+<p class="lede">Compara estilos. Hover/clica swatches pra trocar accent. Botão 🌓 alterna dark mode. Metálico tem 3 sub-variantes.</p>
 
 <div class="controls">
   <button class="swatch active" style="background:#3a9e4a" data-p="#3a9e4a" data-pl="#e8f5e9" data-dp="#4caf50" data-dpl="#1a2e1a"></button>
@@ -115,6 +128,13 @@ p.lede{ color:var(--muted); margin:0 0 24px; font-size:14px; }
   <button class="tab" data-tab="line">1 · Linha fina</button>
   <button class="tab" data-tab="filled">2 · Preenchido</button>
   <button class="tab active" data-tab="duo">3 · Duotone</button>
+  <button class="tab" data-tab="metal">4 · Metálico</button>
+</div>
+
+<div class="controls" style="margin-bottom:18px">
+  <label style="font-size:13px; font-weight:700; color:var(--text);">Metálico:</label>
+  <button id="metalTint" data-mode="silver">Cromado (silver)</button>
+  <button id="metalAccent" data-mode="accent">Tom do accent</button>
 </div>
 
 <!-- ─── LINE ──────────────────────────────────────────── -->
@@ -347,6 +367,214 @@ p.lede{ color:var(--muted); margin:0 0 24px; font-size:14px; }
 </div>
 </section>
 
+<!-- ─── METAL ─────────────────────────────────────────── -->
+<section class="section" data-section="metal">
+
+<div class="style-sub">Linha · Metálico</div>
+<div class="icon-grid">
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 12a8 8 0 0 1-13.66 5.66"/>
+      <path d="M4 12a8 8 0 0 1 13.66-5.66"/>
+      <polyline points="20,3 20,8 15,8"/>
+      <polyline points="4,21 4,16 9,16"/>
+    </svg>
+    <div class="label">Atualizar app</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="4" width="14" height="17" rx="2"/>
+      <rect x="9" y="2" width="6" height="4" rx="1"/>
+      <line x1="8" y1="11" x2="16" y2="11"/>
+      <line x1="8" y1="14.5" x2="15" y2="14.5"/>
+      <line x1="8" y1="18" x2="13" y2="18"/>
+    </svg>
+    <div class="label">Colar lista</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+      <path d="M12 4v10M7 9l5 5 5-5"/>
+    </svg>
+    <div class="label">Importar</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+      <path d="M12 16V4M7 9l5-5 5 5"/>
+    </svg>
+    <div class="label">Exportar</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="8" height="8" rx="1.5"/>
+      <rect x="13" y="3" width="8" height="8" rx="1.5"/>
+      <rect x="3" y="13" width="8" height="8" rx="1.5"/>
+      <rect x="13" y="13" width="8" height="8" rx="1.5"/>
+    </svg>
+    <div class="label">Desmarcar</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z"/>
+      <path d="M12 22V13M8 16l4-4 4 4"/>
+    </svg>
+    <div class="label">Upload</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 14a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 14H7z"/>
+      <path d="M12 13v9M8 18l4 4 4-4"/>
+    </svg>
+    <div class="label">Download</div>
+  </div>
+
+</div>
+
+<div class="style-sub">Preenchido · Metálico</div>
+<div class="icon-grid">
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="url(#metal)">
+      <path d="M12 4a8 8 0 0 1 7.07 4.27l.93-.93V13h-5.4l1.92-1.92A6 6 0 0 0 6 12a1 1 0 1 1-2 0 8 8 0 0 1 8-8zm0 16a8 8 0 0 1-7.07-4.27L4 16.66V11h5.4l-1.92 1.92A6 6 0 0 0 18 12a1 1 0 1 1 2 0 8 8 0 0 1-8 8z"/>
+    </svg>
+    <div class="label">Atualizar app</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="url(#metal)">
+      <path d="M9 2a1 1 0 0 0-1 1v1H6a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V3a1 1 0 0 0-1-1H9zm-1 9a1 1 0 0 1 1-1h7a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1zm0 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1zm0 4a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1z"/>
+    </svg>
+    <div class="label">Colar lista</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="url(#metal)">
+      <path d="M11 3a1 1 0 1 1 2 0v8.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.42L11 11.6V3zM4 14a1 1 0 0 1 2 0v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 1 1 2 0v3a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-3z"/>
+    </svg>
+    <div class="label">Importar</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="url(#metal)">
+      <path d="M12.7 3.3a1 1 0 0 0-1.4 0l-4 4a1 1 0 1 0 1.4 1.4L11 6.42V15a1 1 0 1 0 2 0V6.42l2.3 2.28a1 1 0 1 0 1.4-1.4l-4-4zM4 14a1 1 0 0 1 2 0v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 1 1 2 0v3a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-3z"/>
+    </svg>
+    <div class="label">Exportar</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="url(#metal)">
+      <rect x="3" y="3" width="8" height="8" rx="1.5"/>
+      <rect x="13" y="3" width="8" height="8" rx="1.5"/>
+      <rect x="3" y="13" width="8" height="8" rx="1.5"/>
+      <rect x="13" y="13" width="8" height="8" rx="1.5"/>
+    </svg>
+    <div class="label">Desmarcar</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="url(#metal)">
+      <path d="M12 4a6 6 0 0 0-5.88 4.85A4 4 0 0 0 7 17h3v-3.59l-1.3 1.3a1 1 0 1 1-1.4-1.42l3-3a1 1 0 0 1 1.4 0l3 3a1 1 0 1 1-1.4 1.42L12 13.42V17h5a4 4 0 0 0 .88-7.9A6 6 0 0 0 12 4zm-1 13v5a1 1 0 1 0 2 0v-5h-2z"/>
+    </svg>
+    <div class="label">Upload</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="url(#metal)">
+      <path d="M12 2a6 6 0 0 0-5.88 4.85A4 4 0 0 0 7 15h3v-3.59L8.7 12.7a1 1 0 1 1-1.4-1.4l3-3a1 1 0 0 1 1.4 0l3 3a1 1 0 1 1-1.4 1.4L12 11.42V15h5a4 4 0 0 0 .88-7.9A6 6 0 0 0 12 2zm-1 16v-6h2v6l1.3-1.3a1 1 0 1 1 1.4 1.4l-3 3a1 1 0 0 1-1.4 0l-3-3a1 1 0 1 1 1.4-1.4L11 18z"/>
+    </svg>
+    <div class="label">Download</div>
+  </div>
+
+</div>
+
+<div class="style-sub">Duotone · Metálico</div>
+<div class="icon-grid">
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" fill="url(#metal)" opacity=".35" stroke="none"/>
+      <path d="M20 12a8 8 0 0 1-13.66 5.66"/>
+      <path d="M4 12a8 8 0 0 1 13.66-5.66"/>
+      <polyline points="20,3 20,8 15,8"/>
+      <polyline points="4,21 4,16 9,16"/>
+    </svg>
+    <div class="label">Atualizar app</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="4" width="14" height="17" rx="2" fill="url(#metal)" opacity=".35" stroke="none"/>
+      <rect x="5" y="4" width="14" height="17" rx="2"/>
+      <rect x="9" y="2" width="6" height="4" rx="1" fill="url(#metal)" stroke="none"/>
+      <line x1="8" y1="11" x2="16" y2="11"/>
+      <line x1="8" y1="14.5" x2="15" y2="14.5"/>
+      <line x1="8" y1="18" x2="13" y2="18"/>
+    </svg>
+    <div class="label">Colar lista</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" fill="url(#metal)" opacity=".35"/>
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+      <path d="M12 4v10M7 9l5 5 5-5"/>
+    </svg>
+    <div class="label">Importar</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" fill="url(#metal)" opacity=".35"/>
+      <path d="M4 14v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+      <path d="M12 16V4M7 9l5-5 5 5"/>
+    </svg>
+    <div class="label">Exportar</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="8" height="8" rx="1.5" fill="url(#metal)" opacity=".35" stroke="none"/>
+      <rect x="3" y="3" width="8" height="8" rx="1.5"/>
+      <rect x="13" y="3" width="8" height="8" rx="1.5" fill="url(#metal)" opacity=".35" stroke="none"/>
+      <rect x="13" y="3" width="8" height="8" rx="1.5"/>
+      <rect x="3" y="13" width="8" height="8" rx="1.5" fill="url(#metal)" opacity=".35" stroke="none"/>
+      <rect x="3" y="13" width="8" height="8" rx="1.5"/>
+      <rect x="13" y="13" width="8" height="8" rx="1.5" fill="url(#metal)" opacity=".35" stroke="none"/>
+      <rect x="13" y="13" width="8" height="8" rx="1.5"/>
+    </svg>
+    <div class="label">Desmarcar</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z" fill="url(#metal)" opacity=".35"/>
+      <path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z"/>
+      <path d="M12 22V13M8 16l4-4 4 4"/>
+    </svg>
+    <div class="label">Upload</div>
+  </div>
+
+  <div class="icon-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#metal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 14a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 14H7z" fill="url(#metal)" opacity=".35"/>
+      <path d="M7 14a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 14H7z"/>
+      <path d="M12 13v9M8 18l4 4 4-4"/>
+    </svg>
+    <div class="label">Download</div>
+  </div>
+
+</div>
+
+</section>
+
 <div class="btn-row">
   <h2>Botão demo (estilo atual selecionado)</h2>
   <button class="demo-btn" id="demoBtn1"></button>
@@ -400,7 +628,53 @@ document.getElementById("darkToggle").onclick = () => {
   document.body.classList.toggle("dark")
   const active = document.querySelector(".swatch.active")
   if(active) active.click()
+  if(metalMode === "accent") applyMetalAccent()
 }
+
+function hexToHSL(hex){
+  const m = hex.replace("#","")
+  const r = parseInt(m.slice(0,2),16)/255
+  const g = parseInt(m.slice(2,4),16)/255
+  const b = parseInt(m.slice(4,6),16)/255
+  const max = Math.max(r,g,b), min = Math.min(r,g,b)
+  let h=0, s=0, l=(max+min)/2
+  if(max !== min){
+    const d = max-min
+    s = l>0.5 ? d/(2-max-min) : d/(max+min)
+    switch(max){
+      case r: h = (g-b)/d + (g<b ? 6 : 0); break
+      case g: h = (b-r)/d + 2; break
+      case b: h = (r-g)/d + 4; break
+    }
+    h *= 60
+  }
+  return [Math.round(h), Math.round(s*100), Math.round(l*100)]
+}
+let metalMode = "silver"
+function applyMetalSilver(){
+  document.documentElement.style.setProperty("--m-1", "#f8f8f8")
+  document.documentElement.style.setProperty("--m-2", "#9a9a9a")
+  document.documentElement.style.setProperty("--m-3", "#5a5a5a")
+  document.documentElement.style.setProperty("--m-4", "#b0b0b0")
+}
+function applyMetalAccent(){
+  const active = document.querySelector(".swatch.active")
+  if(!active) return
+  const dark = document.body.classList.contains("dark")
+  const hex = dark ? active.dataset.dp : active.dataset.p
+  const [h, s] = hexToHSL(hex)
+  document.documentElement.style.setProperty("--m-1", `hsl(${h} ${Math.min(100,s+5)}% 92%)`)
+  document.documentElement.style.setProperty("--m-2", `hsl(${h} ${s}% 58%)`)
+  document.documentElement.style.setProperty("--m-3", `hsl(${h} ${s}% 30%)`)
+  document.documentElement.style.setProperty("--m-4", `hsl(${h} ${s}% 65%)`)
+}
+applyMetalSilver()
+document.getElementById("metalTint").onclick = () => { metalMode = "silver"; applyMetalSilver() }
+document.getElementById("metalAccent").onclick = () => { metalMode = "accent"; applyMetalAccent() }
+document.querySelectorAll(".swatch").forEach(b => {
+  const orig = b.onclick
+  b.addEventListener("click", () => { if(metalMode === "accent") applyMetalAccent() })
+})
 </script>
 </body>
 </html>
