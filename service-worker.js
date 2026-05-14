@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v41-neutral-bg"
+const CACHE_NAME = "mylists-v42-html-bg-blend"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [

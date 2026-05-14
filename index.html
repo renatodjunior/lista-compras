@@ -25,6 +25,7 @@
     var m = document.querySelector('meta[name="theme-color"]')
     if(!m){ m = document.createElement("meta"); m.setAttribute("name","theme-color"); document.head.appendChild(m) }
     m.setAttribute("content", c)
+    document.documentElement.style.backgroundColor = c
   } catch(e){}
 })()
 </script>
@@ -4608,6 +4609,7 @@ function _setThemeColor(color){
   m.setAttribute("name", "theme-color")
   m.setAttribute("content", color)
   document.head.appendChild(m)
+  document.documentElement.style.backgroundColor = color
 }
 
 function applyAccent(){
