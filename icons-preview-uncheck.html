@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Preview · Desmarcar cinza-azulado</title>
+<style>
+:root{
+  --bg:#f0f4f0; --card:#fff; --text:#1a2e1a; --muted:#7a957a; --btn:#e8ede8;
+}
+.dark{
+  --bg:#141f14; --card:#1e2e1e; --text:#e0ece0; --muted:#6a8f6a; --btn:#2a3d2a;
+}
+*{ box-sizing:border-box; }
+body{
+  margin:0; padding:24px; font-family:system-ui,sans-serif;
+  background:var(--bg); color:var(--text); min-height:100vh;
+  transition:background .25s, color .25s;
+}
+h1{ font-size:18px; margin:0 0 16px; }
+.toolbar{
+  display:flex; gap:8px; margin-bottom:18px;
+  padding:10px 14px; background:var(--card); border-radius:12px;
+}
+.toolbar button{
+  font-family:inherit; font-weight:700; font-size:13px;
+  padding:8px 14px; border-radius:99px; border:none; cursor:pointer;
+  background:var(--btn); color:var(--text);
+}
+.grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+  gap:12px;
+}
+.card{
+  background:var(--card); padding:18px 14px; border-radius:14px;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+}
+.chip{
+  width:42px; height:42px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--btn);
+}
+.chip svg{ width:62%; height:62%; }
+.hex{ font-family:ui-monospace,monospace; font-size:11px; color:var(--muted); }
+.name{ font-size:13px; font-weight:700; }
+</style>
+</head>
+<body>
+
+<h1>🗑️ Variações cinza-azulado · Desmarcar</h1>
+
+<div class="toolbar">
+  <button id="darkBtn">🌓 Tema</button>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="name">Slate 500</div>
+    <div class="hex">#64748b</div>
+  </div>
+  <div class="card">
+    <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="name">Slate 600</div>
+    <div class="hex">#475569</div>
+  </div>
+  <div class="card">
+    <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="name">Slate 400</div>
+    <div class="hex">#94a3b8</div>
+  </div>
+  <div class="card">
+    <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#708090" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="name">Steel</div>
+    <div class="hex">#708090</div>
+  </div>
+  <div class="card">
+    <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#52606d" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="name">Cool gray</div>
+    <div class="hex">#52606d</div>
+  </div>
+  <div class="card">
+    <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#778ca3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="name">Slate mid</div>
+    <div class="hex">#778ca3</div>
+  </div>
+  <div class="card">
+    <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#5b6b7c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="name">Storm</div>
+    <div class="hex">#5b6b7c</div>
+  </div>
+  <div class="card">
+    <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#3f4b5b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="name">Gunmetal</div>
+    <div class="hex">#3f4b5b</div>
+  </div>
+</div>
+
+<script>
+document.getElementById("darkBtn").onclick = () => document.body.classList.toggle("dark")
+</script>
+</body>
+</html>
