@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v38-refresh-btn"
+const CACHE_NAME = "mylists-v39-no-theme-color"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
