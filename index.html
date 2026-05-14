@@ -320,15 +320,15 @@ textarea{ resize:none; min-height:82px; }
 .toast{
   position:fixed; bottom:28px; left:50%;
   transform:translateX(-50%) translateY(10px);
-  background:#1a2e1a; color:#e0ece0; padding:11px 22px;
+  background:var(--primary); color:#fff; padding:11px 22px;
   border-radius:99px; font-size:14px; font-weight:700;
-  opacity:0; transition:opacity .25s,transform .25s;
+  opacity:0; transition:opacity .25s,transform .25s,background .2s;
   pointer-events:none; z-index:1200; white-space:nowrap;
   box-shadow:0 4px 20px rgba(0,0,0,.25);
 }
 .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 .toast-undo{
-  margin-left:14px; background:var(--primary); color:white;
+  margin-left:14px; background:#fff; color:var(--primary);
   border:none; padding:5px 12px; border-radius:99px; cursor:pointer;
   font-family:inherit; font-weight:700; font-size:13px; pointer-events:auto;
 }
