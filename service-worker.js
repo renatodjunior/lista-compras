@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v47-toast-accent"
+const CACHE_NAME = "mylists-v48-line-icons"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
