@@ -5,6 +5,29 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MyOwnLists</title>
 <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3a9e4a">
+<script>
+(function(){
+  try {
+    var accent = localStorage.getItem("accent") || ""
+    var dark = localStorage.getItem("darkMode") === "1"
+    var pro = localStorage.getItem("pro") === "1"
+    var presets = {
+      green:  { p:"#3a9e4a", d:"#4caf50" },
+      blue:   { p:"#1e88e5", d:"#42a5f5" },
+      purple: { p:"#8e24aa", d:"#ba68c8" },
+      orange: { p:"#fb8c00", d:"#ffa726" },
+      pink:   { p:"#e91e63", d:"#f06292" },
+      teal:   { p:"#00897b", d:"#26a69a" },
+    }
+    var c = dark ? "#4caf50" : "#3a9e4a"
+    if(pro && accent && presets[accent]) c = dark ? presets[accent].d : presets[accent].p
+    var m = document.querySelector('meta[name="theme-color"]')
+    if(!m){ m = document.createElement("meta"); m.setAttribute("name","theme-color"); document.head.appendChild(m) }
+    m.setAttribute("content", c)
+  } catch(e){}
+})()
+</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="MyOwnLists">
@@ -4578,30 +4601,45 @@ function _hexToHSL(hex){
   return [Math.round(h), Math.round(s*100), Math.round(l*100)]
 }
 
+function _setThemeColor(color){
+  const old = document.querySelector('meta[name="theme-color"]')
+  if(old) old.remove()
+  const m = document.createElement("meta")
+  m.setAttribute("name", "theme-color")
+  m.setAttribute("content", color)
+  document.head.appendChild(m)
+}
+
 function applyAccent(){
   const target = document.body
   ;["--primary","--primary-light","--bg","--card","--text","--muted","--btn"].forEach(v => target.style.removeProperty(v))
-  if(!pro || !accentColor) return
-  const preset = ACCENT_PRESETS.find(p => p.name === accentColor)
-  if(!preset) return
-  if(darkMode){
-    const [h] = _hexToHSL(preset.dPrimary)
-    target.style.setProperty("--primary", preset.dPrimary)
-    target.style.setProperty("--primary-light", `hsl(${h} 28% 17%)`)
-    target.style.setProperty("--bg", `hsl(${h} 26% 10%)`)
-    target.style.setProperty("--card", `hsl(${h} 23% 14%)`)
-    target.style.setProperty("--text", `hsl(${h} 20% 90%)`)
-    target.style.setProperty("--muted", `hsl(${h} 14% 55%)`)
-    target.style.setProperty("--btn", `hsl(${h} 20% 20%)`)
-  } else {
-    const [h] = _hexToHSL(preset.primary)
-    target.style.setProperty("--primary", preset.primary)
-    target.style.setProperty("--primary-light", preset.light)
-    target.style.setProperty("--bg", `hsl(${h} 28% 95%)`)
-    target.style.setProperty("--text", `hsl(${h} 32% 14%)`)
-    target.style.setProperty("--muted", `hsl(${h} 18% 55%)`)
-    target.style.setProperty("--btn", `hsl(${h} 22% 92%)`)
+  let themeColor = darkMode ? "#4caf50" : "#3a9e4a"
+  if(pro && accentColor){
+    const preset = ACCENT_PRESETS.find(p => p.name === accentColor)
+    if(preset){
+      if(darkMode){
+        const [h] = _hexToHSL(preset.dPrimary)
+        target.style.setProperty("--primary", preset.dPrimary)
+        target.style.setProperty("--primary-light", `hsl(${h} 28% 17%)`)
+        target.style.setProperty("--bg", `hsl(${h} 26% 10%)`)
+        target.style.setProperty("--card", `hsl(${h} 23% 14%)`)
+        target.style.setProperty("--text", `hsl(${h} 20% 90%)`)
+        target.style.setProperty("--muted", `hsl(${h} 14% 55%)`)
+        target.style.setProperty("--btn", `hsl(${h} 20% 20%)`)
+        themeColor = preset.dPrimary
+      } else {
+        const [h] = _hexToHSL(preset.primary)
+        target.style.setProperty("--primary", preset.primary)
+        target.style.setProperty("--primary-light", preset.light)
+        target.style.setProperty("--bg", `hsl(${h} 28% 95%)`)
+        target.style.setProperty("--text", `hsl(${h} 32% 14%)`)
+        target.style.setProperty("--muted", `hsl(${h} 18% 55%)`)
+        target.style.setProperty("--btn", `hsl(${h} 22% 92%)`)
+        themeColor = preset.primary
+      }
+    }
   }
+  _setThemeColor(themeColor)
 }
 
 const BG_PRESETS = ["", "dots", "grid", "paws", "stars", "hearts", "leaves"]
