@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v52-scroll-top-fab"
+const CACHE_NAME = "mylists-v53-uncheck-lilac"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
