@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v43-no-static-meta"
+const CACHE_NAME = "mylists-v44-top-band"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
