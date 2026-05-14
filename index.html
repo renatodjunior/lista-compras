@@ -650,11 +650,11 @@ textarea{ resize:none; min-height:82px; }
 .dark .hist-total .trend.down{ color:#66bb6a; }
 
 .sample-fab{
-  position:fixed; bottom:20px; right:20px;
-  width:56px; height:56px; border-radius:50%;
+  position:fixed; bottom:24px; right:88px;
+  width:48px; height:48px; border-radius:50%;
   background:linear-gradient(135deg, #ffb300, #ff7a00);
   color:white; border:none; cursor:pointer;
-  font-size:26px; line-height:1;
+  font-size:22px; line-height:1;
   display:flex; align-items:center; justify-content:center;
   box-shadow:0 4px 16px rgba(255,122,0,.4);
   transition:transform .15s, box-shadow .2s;
@@ -669,7 +669,7 @@ textarea{ resize:none; min-height:82px; }
   0%, 100%{ box-shadow:0 4px 16px rgba(255,122,0,.4); }
   50%{ box-shadow:0 4px 16px rgba(255,122,0,.4), 0 0 0 12px rgba(255,122,0,.15); }
 }
-[dir=rtl] .sample-fab{ right:auto; left:20px; }
+[dir=rtl] .sample-fab{ right:auto; left:88px; }
 
 .add-fab{
   position:fixed; bottom:20px; right:20px;
@@ -686,7 +686,7 @@ textarea{ resize:none; min-height:82px; }
 [dir=rtl] .add-fab{ right:auto; left:20px; }
 
 .scroll-top-fab{
-  position:fixed; bottom:20px; left:20px;
+  position:fixed; bottom:88px; right:26px;
   width:44px; height:44px; border-radius:50%;
   background:var(--card); color:var(--text); border:1px solid var(--btn);
   cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.18);
@@ -699,7 +699,7 @@ textarea{ resize:none; min-height:82px; }
 .scroll-top-fab:hover{ background:var(--primary); color:white; border-color:var(--primary); }
 .scroll-top-fab:active{ transform:scale(.92); }
 .scroll-top-fab svg{ width:22px; height:22px; }
-[dir=rtl] .scroll-top-fab{ left:auto; right:20px; }
+[dir=rtl] .scroll-top-fab{ right:auto; left:26px; }
 
 .sample-row{
   display:flex; align-items:center; gap:12px;
@@ -1148,6 +1148,7 @@ textarea{ resize:none; min-height:82px; }
 
   <button class="sample-fab" id="sampleFab" onclick="openSamples()" aria-label="Examples" title="Examples">✨</button>
   <button class="add-fab" id="addFab" onclick="quickAddJump()" aria-label="Add" title="Add">+</button>
+  <button class="add-fab" id="addListFab" onclick="quickAddListJump()" aria-label="Add list" title="Nova lista">+</button>
   <button class="scroll-top-fab" id="scrollTopFab" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Topo" title="Topo">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
@@ -3298,6 +3299,7 @@ function useSample(idx){
 function refreshSampleFab(){
   const sampleFab = document.getElementById("sampleFab")
   const addFab = document.getElementById("addFab")
+  const addListFab = document.getElementById("addListFab")
   const onItemsPage = !document.getElementById("itemsPage").classList.contains("hidden")
   if(sampleFab){
     sampleFab.style.display = onItemsPage ? "none" : "flex"
@@ -3307,6 +3309,9 @@ function refreshSampleFab(){
   if(addFab){
     addFab.style.display = onItemsPage ? "flex" : "none"
   }
+  if(addListFab){
+    addListFab.style.display = onItemsPage ? "none" : "flex"
+  }
 }
 
 function quickAddJump(){
@@ -3314,6 +3319,13 @@ function quickAddJump(){
   if(!ta) return
   ta.scrollIntoView({ behavior:"smooth", block:"center" })
   setTimeout(() => ta.focus(), 350)
+}
+
+function quickAddListJump(){
+  const inp = document.getElementById("listName")
+  if(!inp) return
+  window.scrollTo({ top:0, behavior:"smooth" })
+  setTimeout(() => inp.focus(), 350)
 }
 
 // ── DROPBOX SYNC ─────────────────────────────────
