@@ -44,7 +44,8 @@
   --muted:#7a957a;
   --primary:#3a9e4a;
   --primary-light:#e8f5e9;
-  --btn:#dde5dd;
+  --btn:#e8ede8;
+  --btn-strong:#dde5dd;
   --danger:#e53935;
   --warning:#f59e0b;
   --radius:14px;
@@ -58,6 +59,7 @@
   --primary:#4caf50;
   --primary-light:#1a2e1a;
   --btn:#2a3d2a;
+  --btn-strong:#2a3d2a;
   --shadow:0 2px 12px rgba(0,0,0,0.3);
 }
 *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -84,7 +86,7 @@ body{
 .lang-btn{
   display:flex; align-items:center; gap:6px;
   height:38px; padding:0 8px 0 6px; border-radius:10px; border:none;
-  background:var(--btn); color:var(--text); cursor:pointer;
+  background:var(--btn-strong); color:var(--text); cursor:pointer;
   font-family:inherit; font-size:13px; font-weight:700;
   transition:transform .1s;
 }
@@ -111,7 +113,7 @@ body{
 .lang-picker-row .pcode{ font-size:11px; opacity:.6; font-weight:700; letter-spacing:.05em; }
 .theme-btn{
   width:38px; height:38px; border-radius:10px; border:none;
-  background:var(--btn); cursor:pointer; font-size:18px;
+  background:var(--btn-strong); cursor:pointer; font-size:18px;
   transition:transform .1s;
 }
 .theme-btn:active{ transform:scale(.9); }
@@ -470,7 +472,7 @@ textarea{ resize:none; min-height:82px; }
 .field-group .ui-input{ margin-bottom:0; }
 .backup-row{ display:flex; gap:8px; margin-top:12px; }
 .backup-btn{
-  flex:1; padding:10px; border:none; border-radius:10px; background:var(--btn);
+  flex:1; padding:10px; border:none; border-radius:10px; background:var(--btn-strong);
   color:var(--text); font-family:inherit; font-size:13px; font-weight:700;
   cursor:pointer; transition:transform .1s;
   display:inline-flex; align-items:center; justify-content:center; gap:6px;
@@ -4703,7 +4705,7 @@ function _setThemeColor(color){
 
 function applyAccent(){
   const target = document.body
-  ;["--primary","--primary-light","--bg","--card","--text","--muted","--btn"].forEach(v => target.style.removeProperty(v))
+  ;["--primary","--primary-light","--bg","--card","--text","--muted","--btn","--btn-strong"].forEach(v => target.style.removeProperty(v))
   let themeColor = darkMode ? "#4caf50" : "#3a9e4a"
   if(pro && accentColor){
     const preset = ACCENT_PRESETS.find(p => p.name === accentColor)
@@ -4717,6 +4719,7 @@ function applyAccent(){
         target.style.setProperty("--text", `hsl(${h} 20% 90%)`)
         target.style.setProperty("--muted", `hsl(${h} 14% 55%)`)
         target.style.setProperty("--btn", `hsl(${h} 20% 20%)`)
+        target.style.setProperty("--btn-strong", `hsl(${h} 20% 20%)`)
         themeColor = preset.dPrimary
       } else {
         const [h] = _hexToHSL(preset.primary)
@@ -4725,7 +4728,8 @@ function applyAccent(){
         target.style.setProperty("--bg", `hsl(${h} 28% 95%)`)
         target.style.setProperty("--text", `hsl(${h} 32% 14%)`)
         target.style.setProperty("--muted", `hsl(${h} 18% 55%)`)
-        target.style.setProperty("--btn", `hsl(${h} 22% 87%)`)
+        target.style.setProperty("--btn", `hsl(${h} 22% 92%)`)
+        target.style.setProperty("--btn-strong", `hsl(${h} 22% 87%)`)
         themeColor = preset.primary
       }
     }
