@@ -660,6 +660,7 @@ textarea{ resize:none; min-height:82px; }
   transition:transform .15s, box-shadow .2s;
   z-index:100;
 }
+.sample-fab svg{ width:24px; height:24px; display:block; }
 .sample-fab:hover{ transform:scale(1.05); }
 .sample-fab:active{ transform:scale(.92); }
 .sample-fab.empty-pulse{
@@ -1145,7 +1146,7 @@ textarea{ resize:none; min-height:82px; }
     </div>
   </div>
 
-  <button class="sample-fab" id="sampleFab" onclick="openSamples()" aria-label="Examples" title="Examples">✨</button>
+  <button class="sample-fab" id="sampleFab" onclick="openSamples()" aria-label="Examples" title="Examples"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.7 5.3 5.3 1.7-5.3 1.7L12 16.5l-1.7-5.3L5 9.5l5.3-1.7z"/><path d="M18.5 14.5l.8 2.4 2.4.8-2.4.8-.8 2.4-.8-2.4-2.4-.8 2.4-.8z"/><path d="M5 2.5l.55 1.65L7.2 4.7l-1.65.55L5 6.9l-.55-1.65L2.8 4.7l1.65-.55z"/></svg></button>
   <button class="add-fab" id="addFab" onclick="quickAddJump()" aria-label="Add" title="Add">+</button>
   <button class="add-fab" id="addListFab" onclick="quickAddListJump()" aria-label="Add list" title="Nova lista">+</button>
   <button class="scroll-top-pill" id="scrollTopPill" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Topo" title="Topo">
@@ -1171,6 +1172,7 @@ const ICONS = {
   uncheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-13.66 5.66"/><path d="M4 12a8 8 0 0 1 13.66-5.66"/><polyline points="20,3 20,8 15,8"/><polyline points="4,21 4,16 9,16"/><polyline points="9,12 11,14 15,10"/></svg>',
   cloudUp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z"/><path d="M12 22V13M8 16l4-4 4 4"/></svg>',
   cloudDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 14H7z"/><path d="M12 13v9M8 18l4 4 4-4"/></svg>',
+  sparkles: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.7 5.3 5.3 1.7-5.3 1.7L12 16.5l-1.7-5.3L5 9.5l5.3-1.7z"/><path d="M18.5 14.5l.8 2.4 2.4.8-2.4.8-.8 2.4-.8-2.4-2.4-.8 2.4-.8z"/><path d="M5 2.5l.55 1.65L7.2 4.7l-1.65.55L5 6.9l-.55-1.65L2.8 4.7l1.65-.55z"/></svg>',
 }
 const ICON_COLORS = {
   refresh:  "#06b6d4",
