@@ -5266,6 +5266,8 @@ const BARCODE_AVAILABLE = ("BarcodeDetector" in window) && IS_MOBILE && (locatio
 let _bcStream = null
 let _bcRunning = false
 let _bcDetector = null
+let _bcCam = null
+function _bcFocusCenter(){ if(_bcCam && _bcCam.focusAt) _bcCam.focusAt(0.5, 0.5) }
 
 function initBarcode(){
   const b = document.getElementById("barcodeBtn")
@@ -5277,13 +5279,7 @@ async function startBarcode(){
   if(!BARCODE_AVAILABLE){ showToast(tp().barcodeUnsupported); return }
   try {
     _bcStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: { ideal: "environment" },
-        width:  { ideal: 1920 },
-        height: { ideal: 1080 },
-        focusMode: "continuous",
-        advanced: [{ focusMode: "continuous" }, { focusMode: "auto" }],
-      },
+      video: { facingMode: { ideal: "environment" } },
       audio: false,
     })
     _bcDetector = new BarcodeDetector({
@@ -5297,12 +5293,15 @@ async function startBarcode(){
           <input id="_bcZoom" type="range" min="1" max="1" step="0.1" value="1" style="width:100%">
         </div>
       </div>
-      <p style="text-align:center;font-size:12px;color:var(--muted);margin:10px 0 14px;line-height:1.4">${tp().barcodeAimAt} · tap para focar</p>
-      <button class="secondary-btn" onclick="stopBarcode()">${tp().cancelLabel}</button>
+      <p style="text-align:center;font-size:12px;color:var(--muted);margin:10px 0 14px;line-height:1.4">${tp().barcodeAimAt} · tap pra focar</p>
+      <div class="ui-row" style="margin-bottom:8px">
+        <button class="secondary-btn" onclick="stopBarcode()">${tp().cancelLabel}</button>
+        <button class="secondary-btn" id="_bcFocusBtn" onclick="_bcFocusCenter()">🎯 Focar</button>
+      </div>
     `)
     const video = document.getElementById("_bcVideo")
     video.srcObject = _bcStream
-    _setupCameraControls(_bcStream, video, "_bcZoomWrap", "_bcZoom")
+    _bcCam = _setupCameraControls(_bcStream, video, "_bcZoomWrap", "_bcZoom")
     _bcRunning = true
     detectBarcodeLoop(video)
   } catch(e){
@@ -5788,22 +5787,17 @@ async function nfceStartScan(){
         <input id="nfceZoom" type="range" min="1" max="1" step="0.1" value="1" style="width:100%">
       </div>
     </div>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.4">📷 ${tt.nfceScanBtn} · tap para focar</p>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.4">📷 ${tt.nfceScanBtn} · tap pra focar</p>
     <div class="ui-row" style="margin-top:12px">
       <button class="secondary-btn" onclick="openNfceImport()">${tt.cancelLabel}</button>
+      <button class="secondary-btn" id="nfceFocusBtn" onclick="_nfceFocusCenter()">🎯 Focar</button>
       <button class="secondary-btn" onclick="nfceShowKeyInput()">⌨️ ${tt.nfceTypeBtn}</button>
     </div>
   `
   try {
     await _ensureJsQR()
     _nfceStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: { ideal: "environment" },
-        width:  { ideal: 1920 },
-        height: { ideal: 1080 },
-        focusMode: "continuous",
-        advanced: [{ focusMode: "continuous" }, { focusMode: "auto" }],
-      },
+      video: { facingMode: { ideal: "environment" } },
       audio: false,
     })
     const video = document.getElementById("nfceVideo")
@@ -5821,9 +5815,13 @@ function _setupCameraControls(stream, video, zoomWrapId, zoomInputId){
   const track = stream && stream.getVideoTracks && stream.getVideoTracks()[0]
   if(!track) return
   const caps = (track.getCapabilities && track.getCapabilities()) || {}
-  if(Array.isArray(caps.focusMode) && caps.focusMode.includes("continuous")){
-    track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }).catch(() => {})
+  const focusModes = Array.isArray(caps.focusMode) ? caps.focusMode : []
+  const hasFocusCap = focusModes.length > 0
+  const continuous = () => {
+    if(!focusModes.includes("continuous") && !focusModes.includes("auto")) return
+    track.applyConstraints({ advanced: [{ focusMode: focusModes.includes("continuous") ? "continuous" : "auto" }] }).catch(() => {})
   }
+  if(hasFocusCap) continuous()
   if(caps.zoom && zoomWrapId && zoomInputId){
     const wrap = document.getElementById(zoomWrapId)
     const input = document.getElementById(zoomInputId)
@@ -5838,31 +5836,31 @@ function _setupCameraControls(stream, video, zoomWrapId, zoomInputId){
       }
     }
   }
+  const focusAt = (x, y) => {
+    if(!hasFocusCap) return
+    const adv = []
+    if(focusModes.includes("single-shot")) adv.push({ focusMode: "single-shot" })
+    else if(focusModes.includes("manual")) adv.push({ focusMode: "manual" })
+    else if(focusModes.includes("auto")) adv.push({ focusMode: "auto" })
+    else return
+    if(typeof x === "number" && typeof y === "number" && caps.pointsOfInterest) adv.push({ pointsOfInterest: [{ x, y }] })
+    track.applyConstraints({ advanced: adv })
+      .then(() => setTimeout(continuous, 1200))
+      .catch(() => {})
+  }
   if(video){
     video.onclick = ev => {
       const rect = video.getBoundingClientRect()
-      const x = (ev.clientX - rect.left) / rect.width
-      const y = (ev.clientY - rect.top) / rect.height
-      const advanced = []
-      if(Array.isArray(caps.focusMode) && (caps.focusMode.includes("single-shot") || caps.focusMode.includes("manual"))){
-        advanced.push({ focusMode: caps.focusMode.includes("single-shot") ? "single-shot" : "manual" })
-      }
-      if(caps.pointsOfInterest){
-        advanced.push({ pointsOfInterest: [{ x, y }] })
-      }
-      if(advanced.length){
-        track.applyConstraints({ advanced }).then(() => {
-          if(Array.isArray(caps.focusMode) && caps.focusMode.includes("continuous")){
-            setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }).catch(() => {}), 1200)
-          }
-        }).catch(() => {})
-      }
+      focusAt((ev.clientX - rect.left) / rect.width, (ev.clientY - rect.top) / rect.height)
     }
   }
+  return { focusAt, hasFocusCap }
 }
+let _nfceCam = null
 function _nfceSetupCameraControls(video){
-  _setupCameraControls(_nfceStream, video, "nfceZoomWrap", "nfceZoom")
+  _nfceCam = _setupCameraControls(_nfceStream, video, "nfceZoomWrap", "nfceZoom")
 }
+function _nfceFocusCenter(){ if(_nfceCam && _nfceCam.focusAt) _nfceCam.focusAt(0.5, 0.5) }
 
 function _ensureJsQR(){
   if(window.jsQR) return Promise.resolve()
