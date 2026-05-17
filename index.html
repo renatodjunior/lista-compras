@@ -2421,7 +2421,7 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
       listBought: t => `Comprado: ${t}`,
       finalizePurchaseBtn: "Finalizar compra",
       finalizeNothing: "Nenhum item marcado ainda 😊",
-      finalizeConfirm: (n, total) => `Finalizar compra com ${n} item(s)?\nTotal: ${total}\n\nA compra ficará salva no histórico. A lista não será alterada.`,
+      finalizeConfirm: (n, total) => `Finalizar compra com ${n} item(s)?\nTotal: ${total}\n\nA compra fica salva no histórico e os itens serão desmarcados.`,
       finalizeDone: total => `Compra finalizada · ${total} 🧾`,
       purchaseHistoryTitle: "Histórico de compras",
       purchaseHistoryEmpty: "Nenhuma compra registrada ainda 🧾",
@@ -2432,7 +2432,7 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
       listBought: t => `Bought: ${t}`,
       finalizePurchaseBtn: "Finish purchase",
       finalizeNothing: "No items checked yet 😊",
-      finalizeConfirm: (n, total) => `Finish purchase with ${n} item(s)?\nTotal: ${total}\n\nPurchase will be saved to history. The list won't change.`,
+      finalizeConfirm: (n, total) => `Finish purchase with ${n} item(s)?\nTotal: ${total}\n\nPurchase saved to history and items will be unchecked.`,
       finalizeDone: total => `Purchase saved · ${total} 🧾`,
       purchaseHistoryTitle: "Purchase history",
       purchaseHistoryEmpty: "No purchases recorded yet 🧾",
@@ -2443,7 +2443,7 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
       listBought: t => `Comprado: ${t}`,
       finalizePurchaseBtn: "Finalizar compra",
       finalizeNothing: "Ningún ítem marcado aún 😊",
-      finalizeConfirm: (n, total) => `¿Finalizar compra con ${n} ítem(s)?\nTotal: ${total}\n\nLa compra se guardará en el historial. La lista no cambiará.`,
+      finalizeConfirm: (n, total) => `¿Finalizar compra con ${n} ítem(s)?\nTotal: ${total}\n\nLa compra se guardará en el historial y los ítems se desmarcarán.`,
       finalizeDone: total => `Compra guardada · ${total} 🧾`,
       purchaseHistoryTitle: "Historial de compras",
       purchaseHistoryEmpty: "Ninguna compra registrada aún 🧾",
@@ -2454,7 +2454,7 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
       listBought: t => `購入済み: ${t}`,
       finalizePurchaseBtn: "購入を確定",
       finalizeNothing: "チェック済みアイテムなし 😊",
-      finalizeConfirm: (n, total) => `${n}件で購入を確定しますか？\n合計: ${total}\n\n履歴に保存されます。リストは変更されません。`,
+      finalizeConfirm: (n, total) => `${n}件で購入を確定しますか？\n合計: ${total}\n\n履歴に保存され、アイテムのチェックが外れます。`,
       finalizeDone: total => `購入を保存しました · ${total} 🧾`,
       purchaseHistoryTitle: "購入履歴",
       purchaseHistoryEmpty: "購入記録なし 🧾",
@@ -2465,7 +2465,7 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
       listBought: t => `נרכש: ${t}`,
       finalizePurchaseBtn: "סיים קנייה",
       finalizeNothing: "אין פריטים מסומנים עדיין 😊",
-      finalizeConfirm: (n, total) => `לסיים קנייה עם ${n} פריטים?\nסה״כ: ${total}\n\nהקנייה תישמר בהיסטוריה. הרשימה לא תשתנה.`,
+      finalizeConfirm: (n, total) => `לסיים קנייה עם ${n} פריטים?\nסה״כ: ${total}\n\nהקנייה תישמר בהיסטוריה והסימון יוסר מהפריטים.`,
       finalizeDone: total => `קנייה נשמרה · ${total} 🧾`,
       purchaseHistoryTitle: "היסטוריית קניות",
       purchaseHistoryEmpty: "אין קניות שמורות עדיין 🧾",
@@ -2476,7 +2476,7 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
       listBought: t => `구매: ${t}`,
       finalizePurchaseBtn: "구매 완료",
       finalizeNothing: "체크된 항목이 없습니다 😊",
-      finalizeConfirm: (n, total) => `${n}개 항목으로 구매를 완료할까요?\n합계: ${total}\n\n기록에 저장됩니다. 목록은 변경되지 않습니다.`,
+      finalizeConfirm: (n, total) => `${n}개 항목으로 구매를 완료할까요?\n합계: ${total}\n\n기록에 저장되고 항목의 체크가 해제됩니다.`,
       finalizeDone: total => `구매 저장됨 · ${total} 🧾`,
       purchaseHistoryTitle: "구매 기록",
       purchaseHistoryEmpty: "기록된 구매 없음 🧾",
@@ -4181,6 +4181,8 @@ async function finalizePurchase(){
   if(purchases.length > 500) purchases = purchases.slice(-500)
   savePurchases()
   checked.forEach(it => { if(isFinite(parsePrice(it.price))) recordPriceEntry(it) })
+  checked.forEach(it => { it.status = 0 })
+  save(); renderItems()
   showToast(tt.finalizeDone(totalText))
 }
 
