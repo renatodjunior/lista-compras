@@ -5277,19 +5277,32 @@ async function startBarcode(){
   if(!BARCODE_AVAILABLE){ showToast(tp().barcodeUnsupported); return }
   try {
     _bcStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment" }
+      video: {
+        facingMode: { ideal: "environment" },
+        width:  { ideal: 1920 },
+        height: { ideal: 1080 },
+        focusMode: "continuous",
+        advanced: [{ focusMode: "continuous" }, { focusMode: "auto" }],
+      },
+      audio: false,
     })
     _bcDetector = new BarcodeDetector({
       formats: ["ean_13", "ean_8", "code_128", "code_39", "qr_code", "upc_a", "upc_e", "code_93", "itf"]
     })
     _uiResolve = null
     _uiOpen(tp().barcodeTitle, `
-      <video id="_bcVideo" autoplay playsinline muted style="width:100%;border-radius:12px;background:#000;max-height:340px;object-fit:cover"></video>
-      <p style="text-align:center;font-size:13px;color:var(--muted);margin:10px 0 14px;line-height:1.5">${tp().barcodeAimAt}</p>
+      <div style="position:relative">
+        <video id="_bcVideo" autoplay playsinline muted style="width:100%;border-radius:12px;background:#000;max-height:340px;object-fit:cover;cursor:crosshair"></video>
+        <div id="_bcZoomWrap" style="display:none;position:absolute;left:8px;right:8px;bottom:8px;background:rgba(0,0,0,.5);padding:6px 10px;border-radius:8px">
+          <input id="_bcZoom" type="range" min="1" max="1" step="0.1" value="1" style="width:100%">
+        </div>
+      </div>
+      <p style="text-align:center;font-size:12px;color:var(--muted);margin:10px 0 14px;line-height:1.4">${tp().barcodeAimAt} · tap para focar</p>
       <button class="secondary-btn" onclick="stopBarcode()">${tp().cancelLabel}</button>
     `)
     const video = document.getElementById("_bcVideo")
     video.srcObject = _bcStream
+    _setupCameraControls(_bcStream, video, "_bcZoomWrap", "_bcZoom")
     _bcRunning = true
     detectBarcodeLoop(video)
   } catch(e){
@@ -5804,46 +5817,51 @@ async function nfceStartScan(){
   }
 }
 
-function _nfceSetupCameraControls(video){
-  const track = _nfceStream && _nfceStream.getVideoTracks()[0]
+function _setupCameraControls(stream, video, zoomWrapId, zoomInputId){
+  const track = stream && stream.getVideoTracks && stream.getVideoTracks()[0]
   if(!track) return
   const caps = (track.getCapabilities && track.getCapabilities()) || {}
   if(Array.isArray(caps.focusMode) && caps.focusMode.includes("continuous")){
     track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }).catch(() => {})
   }
-  if(caps.zoom){
-    const wrap = document.getElementById("nfceZoomWrap")
-    const input = document.getElementById("nfceZoom")
+  if(caps.zoom && zoomWrapId && zoomInputId){
+    const wrap = document.getElementById(zoomWrapId)
+    const input = document.getElementById(zoomInputId)
     if(wrap && input){
       wrap.style.display = "block"
       input.min = caps.zoom.min || 1
       input.max = caps.zoom.max || 1
       input.step = caps.zoom.step || 0.1
-      input.value = track.getSettings().zoom || 1
+      input.value = (track.getSettings && track.getSettings().zoom) || 1
       input.oninput = () => {
         track.applyConstraints({ advanced: [{ zoom: parseFloat(input.value) }] }).catch(() => {})
       }
     }
   }
-  video.onclick = ev => {
-    const rect = video.getBoundingClientRect()
-    const x = (ev.clientX - rect.left) / rect.width
-    const y = (ev.clientY - rect.top) / rect.height
-    const advanced = []
-    if(Array.isArray(caps.focusMode) && (caps.focusMode.includes("single-shot") || caps.focusMode.includes("manual"))){
-      advanced.push({ focusMode: caps.focusMode.includes("single-shot") ? "single-shot" : "manual" })
-    }
-    if(caps.pointsOfInterest){
-      advanced.push({ pointsOfInterest: [{ x, y }] })
-    }
-    if(advanced.length){
-      track.applyConstraints({ advanced }).then(() => {
-        if(Array.isArray(caps.focusMode) && caps.focusMode.includes("continuous")){
-          setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }).catch(() => {}), 1200)
-        }
-      }).catch(() => {})
+  if(video){
+    video.onclick = ev => {
+      const rect = video.getBoundingClientRect()
+      const x = (ev.clientX - rect.left) / rect.width
+      const y = (ev.clientY - rect.top) / rect.height
+      const advanced = []
+      if(Array.isArray(caps.focusMode) && (caps.focusMode.includes("single-shot") || caps.focusMode.includes("manual"))){
+        advanced.push({ focusMode: caps.focusMode.includes("single-shot") ? "single-shot" : "manual" })
+      }
+      if(caps.pointsOfInterest){
+        advanced.push({ pointsOfInterest: [{ x, y }] })
+      }
+      if(advanced.length){
+        track.applyConstraints({ advanced }).then(() => {
+          if(Array.isArray(caps.focusMode) && caps.focusMode.includes("continuous")){
+            setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }).catch(() => {}), 1200)
+          }
+        }).catch(() => {})
+      }
     }
   }
+}
+function _nfceSetupCameraControls(video){
+  _setupCameraControls(_nfceStream, video, "nfceZoomWrap", "nfceZoom")
 }
 
 function _ensureJsQR(){
