@@ -5768,11 +5768,14 @@ async function nfceStartScan(){
   const content = document.getElementById("nfceContent")
   content.innerHTML = `
     <div style="position:relative">
-      <video id="nfceVideo" playsinline autoplay muted style="width:100%;border-radius:10px;background:#000;aspect-ratio:1/1;object-fit:cover"></video>
+      <video id="nfceVideo" playsinline autoplay muted style="width:100%;border-radius:10px;background:#000;aspect-ratio:1/1;object-fit:cover;cursor:crosshair"></video>
       <canvas id="nfceCanvas" style="display:none"></canvas>
       <div style="position:absolute;inset:14% 14%;border:2px solid #ffffff80;border-radius:10px;pointer-events:none"></div>
+      <div id="nfceZoomWrap" style="display:none;position:absolute;left:8px;right:8px;bottom:8px;background:rgba(0,0,0,.5);padding:6px 10px;border-radius:8px">
+        <input id="nfceZoom" type="range" min="1" max="1" step="0.1" value="1" style="width:100%">
+      </div>
     </div>
-    <p style="font-size:12px;color:var(--muted);text-align:center;margin:10px 0 0">📷 ${tt.nfceScanBtn}</p>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.4">📷 ${tt.nfceScanBtn} · tap para focar</p>
     <div class="ui-row" style="margin-top:12px">
       <button class="secondary-btn" onclick="openNfceImport()">${tt.cancelLabel}</button>
       <button class="secondary-btn" onclick="nfceShowKeyInput()">⌨️ ${tt.nfceTypeBtn}</button>
@@ -5780,14 +5783,66 @@ async function nfceStartScan(){
   `
   try {
     await _ensureJsQR()
-    _nfceStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false })
+    _nfceStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { ideal: "environment" },
+        width:  { ideal: 1920 },
+        height: { ideal: 1080 },
+        focusMode: "continuous",
+        advanced: [{ focusMode: "continuous" }, { focusMode: "auto" }],
+      },
+      audio: false,
+    })
     const video = document.getElementById("nfceVideo")
     video.srcObject = _nfceStream
     await video.play()
+    _nfceSetupCameraControls(video)
     _nfceScanLoop(video)
   } catch(e){
     showToast(/JsQR|jsQR|script/.test(String(e)) ? tt.nfceLibError : tt.nfceCameraError)
     openNfceImport()
+  }
+}
+
+function _nfceSetupCameraControls(video){
+  const track = _nfceStream && _nfceStream.getVideoTracks()[0]
+  if(!track) return
+  const caps = (track.getCapabilities && track.getCapabilities()) || {}
+  if(Array.isArray(caps.focusMode) && caps.focusMode.includes("continuous")){
+    track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }).catch(() => {})
+  }
+  if(caps.zoom){
+    const wrap = document.getElementById("nfceZoomWrap")
+    const input = document.getElementById("nfceZoom")
+    if(wrap && input){
+      wrap.style.display = "block"
+      input.min = caps.zoom.min || 1
+      input.max = caps.zoom.max || 1
+      input.step = caps.zoom.step || 0.1
+      input.value = track.getSettings().zoom || 1
+      input.oninput = () => {
+        track.applyConstraints({ advanced: [{ zoom: parseFloat(input.value) }] }).catch(() => {})
+      }
+    }
+  }
+  video.onclick = ev => {
+    const rect = video.getBoundingClientRect()
+    const x = (ev.clientX - rect.left) / rect.width
+    const y = (ev.clientY - rect.top) / rect.height
+    const advanced = []
+    if(Array.isArray(caps.focusMode) && (caps.focusMode.includes("single-shot") || caps.focusMode.includes("manual"))){
+      advanced.push({ focusMode: caps.focusMode.includes("single-shot") ? "single-shot" : "manual" })
+    }
+    if(caps.pointsOfInterest){
+      advanced.push({ pointsOfInterest: [{ x, y }] })
+    }
+    if(advanced.length){
+      track.applyConstraints({ advanced }).then(() => {
+        if(Array.isArray(caps.focusMode) && caps.focusMode.includes("continuous")){
+          setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }).catch(() => {}), 1200)
+        }
+      }).catch(() => {})
+    }
   }
 }
 
