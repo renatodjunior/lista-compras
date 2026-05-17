@@ -228,6 +228,8 @@ textarea{ resize:none; min-height:82px; }
 }
 .copy-btn:active, .clear-btn:active{ transform:scale(.94); }
 #clearBtn{ color:var(--danger); }
+#finalizeBtn{ color:#16a34a; }
+.dark #finalizeBtn{ color:#4ade80; }
 .list-title-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
 .list-title-row h2{ margin:0; font-size:22px; font-weight:800; }
 .progress-bar-wrap{
@@ -489,6 +491,8 @@ textarea{ resize:none; min-height:82px; }
 #uncheckBtn .btn-icon{ width:100%; height:100%; }
 #uncheckBtn .btn-icon svg{ width:62%; height:62%; }
 .dark #uncheckBtn .btn-icon{ color:#ccc9d8 !important; }
+#finalizeBtn .btn-icon{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+#finalizeBtn .btn-icon svg{ width:62%; height:62%; }
 
 /* ── HELP MODAL ── */
 .help-modal{
@@ -650,6 +654,33 @@ textarea{ resize:none; min-height:82px; }
 .hist-total .trend.down{ color:#2e7d32; }
 .dark .hist-total .trend.up{ color:#ef5350; }
 .dark .hist-total .trend.down{ color:#66bb6a; }
+
+.purchase-row{
+  display:flex; align-items:center; gap:10px;
+  width:100%; padding:12px;
+  background:var(--card); border:1px solid var(--btn);
+  border-radius:12px; margin-bottom:8px;
+  cursor:pointer; font-family:inherit; text-align:start;
+  transition:transform .1s, background .15s;
+}
+.purchase-row:hover{ background:var(--btn); }
+.purchase-row:active{ transform:scale(.98); }
+.purchase-row .pr-emoji{ font-size:22px; flex-shrink:0; }
+.purchase-row .pr-main{
+  display:flex; flex-direction:column; flex:1; min-width:0; gap:2px;
+}
+.purchase-row .pr-name{
+  font-weight:700; font-size:14px; color:var(--text);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.purchase-row .pr-meta{
+  font-size:11px; color:var(--muted);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.purchase-row .pr-total{
+  font-weight:800; font-size:15px; color:var(--primary);
+  flex-shrink:0; white-space:nowrap;
+}
 
 .sample-fab{
   position:fixed; bottom:84px; right:24px;
@@ -1004,6 +1035,28 @@ textarea{ resize:none; min-height:82px; }
   </div>
 </div>
 
+<!-- PURCHASE HISTORY MODAL -->
+<div class="help-modal hidden" id="purchasesModal" onclick="closeOnBg(event,'purchasesModal')">
+  <div class="help-box">
+    <div class="help-box-header">
+      <span class="help-box-title" id="purchasesTitle"></span>
+      <button class="help-x-btn" onclick="closeModal('purchasesModal')">✕</button>
+    </div>
+    <div id="purchasesContent"></div>
+  </div>
+</div>
+
+<!-- PURCHASE DETAIL MODAL -->
+<div class="help-modal hidden" id="purchaseDetailModal" onclick="closeOnBg(event,'purchaseDetailModal')">
+  <div class="help-box">
+    <div class="help-box-header">
+      <span class="help-box-title" id="purchaseDetailTitle"></span>
+      <button class="help-x-btn" onclick="closeModal('purchaseDetailModal')">✕</button>
+    </div>
+    <div id="purchaseDetailContent"></div>
+  </div>
+</div>
+
 <!-- TEMPLATES MODAL -->
 <div class="help-modal hidden" id="templatesModal" onclick="closeOnBg(event,'templatesModal')">
   <div class="help-box">
@@ -1062,6 +1115,7 @@ textarea{ resize:none; min-height:82px; }
         <button class="backup-btn" onclick="openStats()" id="statsBtn"></button>
       </div>
     </div>
+    <button class="backup-btn" onclick="openPurchases()" id="purchasesBtn" style="margin-top:8px;width:100%;display:none"></button>
     <div class="section-title" id="sectionNewList"></div>
     <div class="form-row">
       <input id="listName" maxlength="30">
@@ -1081,6 +1135,7 @@ textarea{ resize:none; min-height:82px; }
     <div class="top-row">
       <button class="back-btn" id="backBtn" onclick="back()"></button>
       <div class="top-actions">
+        <button class="clear-btn" id="finalizeBtn" onclick="finalizePurchase()"></button>
         <button class="clear-btn" id="saveTplBtn" onclick="saveAsTemplate()" style="display:none"></button>
         <button class="clear-btn" id="uncheckBtn" onclick="uncheckAll()"></button>
         <button class="clear-btn" id="clearBtn" onclick="clearDone()"></button>
@@ -1175,6 +1230,8 @@ const ICONS = {
   cloudUp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 18H7z"/><path d="M12 22V13M8 16l4-4 4 4"/></svg>',
   cloudDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14a4 4 0 0 1-.88-7.9 6 6 0 0 1 11.76 0A4 4 0 0 1 17 14H7z"/><path d="M12 13v9M8 18l4 4 4-4"/></svg>',
   sparkles: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.7 5.3 5.3 1.7-5.3 1.7L12 16.5l-1.7-5.3L5 9.5l5.3-1.7z"/><path d="M18.5 14.5l.8 2.4 2.4.8-2.4.8-.8 2.4-.8-2.4-2.4-.8 2.4-.8z"/><path d="M5 2.5l.55 1.65L7.2 4.7l-1.65.55L5 6.9l-.55-1.65L2.8 4.7l1.65-.55z"/></svg>',
+  receipt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21h14V4l-1.75-1.4L15.5 4l-1.75-1.4L12 4l-1.75-1.4L8.5 4l-1.75-1.4L5 4v15a2 2 0 0 0 2 2z"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="14.5" x2="15" y2="14.5"/><line x1="8" y1="18" x2="13" y2="18"/></svg>',
+  cartCheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 3.5h2.2l1.6 2"/><path d="M6.3 5.5h15L19 14.5a2 2 0 0 1-2 1.5H9.4a2 2 0 0 1-2-1.5L5.2 5"/><circle cx="9.5" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/><polyline points="10 9.5 12.5 12 16.5 7.5"/></svg>',
 }
 const ICON_COLORS = {
   refresh:  "#06b6d4",
@@ -1184,11 +1241,15 @@ const ICON_COLORS = {
   uncheck:  "#7a7a7a",
   cloudUp:  "#0ea5e9",
   cloudDown:"#14b8a6",
+  receipt:  "#16a34a",
+  cartCheck:"#16a34a",
 }
 function _stripLeadingEmoji(s){
   s = String(s || "").trim()
   const parts = s.split(/\s+/)
-  return parts.length > 1 ? parts.slice(1).join(" ") : s
+  if(parts.length < 2) return s
+  if(/[\p{L}\p{N}]/u.test(parts[0])) return s
+  return parts.slice(1).join(" ")
 }
 function iconLabel(key, fullText){
   const color = ICON_COLORS[key] || "currentColor"
@@ -2353,6 +2414,79 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
   Object.entries(ext).forEach(([k,v]) => Object.assign(TPRO[k], v))
 })();
 
+// v4 purchase/finalize strings
+;(function(){
+  const ext = {
+    pt: {
+      listBought: t => `Comprado: ${t}`,
+      finalizePurchaseBtn: "Finalizar compra",
+      finalizeNothing: "Nenhum item marcado ainda 😊",
+      finalizeConfirm: (n, total) => `Finalizar compra com ${n} item(s)?\nTotal: ${total}\n\nA compra ficará salva no histórico. A lista não será alterada.`,
+      finalizeDone: total => `Compra finalizada · ${total} 🧾`,
+      purchaseHistoryTitle: "Histórico de compras",
+      purchaseHistoryEmpty: "Nenhuma compra registrada ainda 🧾",
+      purchaseDelete: "Apagar",
+      purchaseDeleteConfirm: "Apagar este registro de compra?",
+    },
+    en: {
+      listBought: t => `Bought: ${t}`,
+      finalizePurchaseBtn: "Finish purchase",
+      finalizeNothing: "No items checked yet 😊",
+      finalizeConfirm: (n, total) => `Finish purchase with ${n} item(s)?\nTotal: ${total}\n\nPurchase will be saved to history. The list won't change.`,
+      finalizeDone: total => `Purchase saved · ${total} 🧾`,
+      purchaseHistoryTitle: "Purchase history",
+      purchaseHistoryEmpty: "No purchases recorded yet 🧾",
+      purchaseDelete: "Delete",
+      purchaseDeleteConfirm: "Delete this purchase record?",
+    },
+    es: {
+      listBought: t => `Comprado: ${t}`,
+      finalizePurchaseBtn: "Finalizar compra",
+      finalizeNothing: "Ningún ítem marcado aún 😊",
+      finalizeConfirm: (n, total) => `¿Finalizar compra con ${n} ítem(s)?\nTotal: ${total}\n\nLa compra se guardará en el historial. La lista no cambiará.`,
+      finalizeDone: total => `Compra guardada · ${total} 🧾`,
+      purchaseHistoryTitle: "Historial de compras",
+      purchaseHistoryEmpty: "Ninguna compra registrada aún 🧾",
+      purchaseDelete: "Eliminar",
+      purchaseDeleteConfirm: "¿Eliminar este registro de compra?",
+    },
+    ja: {
+      listBought: t => `購入済み: ${t}`,
+      finalizePurchaseBtn: "購入を確定",
+      finalizeNothing: "チェック済みアイテムなし 😊",
+      finalizeConfirm: (n, total) => `${n}件で購入を確定しますか？\n合計: ${total}\n\n履歴に保存されます。リストは変更されません。`,
+      finalizeDone: total => `購入を保存しました · ${total} 🧾`,
+      purchaseHistoryTitle: "購入履歴",
+      purchaseHistoryEmpty: "購入記録なし 🧾",
+      purchaseDelete: "削除",
+      purchaseDeleteConfirm: "この購入記録を削除しますか？",
+    },
+    he: {
+      listBought: t => `נרכש: ${t}`,
+      finalizePurchaseBtn: "סיים קנייה",
+      finalizeNothing: "אין פריטים מסומנים עדיין 😊",
+      finalizeConfirm: (n, total) => `לסיים קנייה עם ${n} פריטים?\nסה״כ: ${total}\n\nהקנייה תישמר בהיסטוריה. הרשימה לא תשתנה.`,
+      finalizeDone: total => `קנייה נשמרה · ${total} 🧾`,
+      purchaseHistoryTitle: "היסטוריית קניות",
+      purchaseHistoryEmpty: "אין קניות שמורות עדיין 🧾",
+      purchaseDelete: "מחק",
+      purchaseDeleteConfirm: "למחוק את רשומת הקנייה?",
+    },
+    ko: {
+      listBought: t => `구매: ${t}`,
+      finalizePurchaseBtn: "구매 완료",
+      finalizeNothing: "체크된 항목이 없습니다 😊",
+      finalizeConfirm: (n, total) => `${n}개 항목으로 구매를 완료할까요?\n합계: ${total}\n\n기록에 저장됩니다. 목록은 변경되지 않습니다.`,
+      finalizeDone: total => `구매 저장됨 · ${total} 🧾`,
+      purchaseHistoryTitle: "구매 기록",
+      purchaseHistoryEmpty: "기록된 구매 없음 🧾",
+      purchaseDelete: "삭제",
+      purchaseDeleteConfirm: "이 구매 기록을 삭제할까요?",
+    },
+  }
+  Object.entries(ext).forEach(([k,v]) => Object.assign(TPRO[k], v))
+})();
+
 // ── HELP CONTENT ─────────────────────────────────
 const HELP = {
   pt: `
@@ -2626,6 +2760,7 @@ function applyLang(){
   document.getElementById("importBtn").innerHTML = iconLabel("import", t.importBackup)
   document.getElementById("backBtn").textContent = t.back
   setIconBtn("clearBtn", t.clearDone)
+  iconOnlyBtn("finalizeBtn", "cartCheck", tp().finalizePurchaseBtn)
   setIconBtn("copyBtn", t.copy)
   document.getElementById("sectionAddItems").textContent = t.addItems
   document.getElementById("newCategory").placeholder = t.categoryPlaceholder
@@ -2931,7 +3066,6 @@ function toggleStatus(i){
   const item = lists[currentList].items[i]
   const prev = item.status
   item.status = (prev === 1) ? 0 : 1
-  if(prev !== 1 && item.status === 1) recordPriceEntry(item)
   save(); renderItems()
 }
 
@@ -2943,6 +3077,8 @@ function toggleMaybe(i){
 
 let priceHistory = JSON.parse(localStorage.getItem("priceHistory") || "{}")
 function savePriceHistory(){ localStorage.setItem("priceHistory", JSON.stringify(priceHistory)); if(typeof triggerSync==="function") triggerSync() }
+let purchases = JSON.parse(localStorage.getItem("purchases") || "[]")
+function savePurchases(){ localStorage.setItem("purchases", JSON.stringify(purchases)); if(typeof triggerSync==="function") triggerSync(); if(typeof refreshProUI==="function") refreshProUI() }
 function recordPriceEntry(item){
   const name = (item.name || "").trim().toLowerCase()
   if(!name) return
@@ -3469,7 +3605,7 @@ async function dropboxUpload(silent){
   const token = await _dropboxAccessToken()
   if(!token) return false
   const payload = JSON.stringify({
-    lists, templates, priceHistory, barcodeMap,
+    lists, templates, priceHistory, barcodeMap, purchases,
     syncedAt: Date.now(),
     schemaVersion: 2,
   })
@@ -3525,6 +3661,7 @@ function _applyRemote(remote, rev){
   if(Array.isArray(remote.templates)){ templates = remote.templates; localStorage.setItem("templates", JSON.stringify(templates)) }
   if(remote.priceHistory && typeof remote.priceHistory === "object"){ priceHistory = remote.priceHistory; localStorage.setItem("priceHistory", JSON.stringify(priceHistory)) }
   if(remote.barcodeMap && typeof remote.barcodeMap === "object"){ barcodeMap = remote.barcodeMap; localStorage.setItem("barcodeMap", JSON.stringify(barcodeMap)) }
+  if(Array.isArray(remote.purchases)){ purchases = remote.purchases; localStorage.setItem("purchases", JSON.stringify(purchases)) }
   if(rev) localStorage.setItem("dbx_remoteRev", rev)
   localStorage.setItem("dbx_lastSync", String(Date.now()))
   _setDbxDirty(false)
@@ -4018,6 +4155,35 @@ async function clearDone(){
   showToast(t.cleared(doneCount))
 }
 
+async function finalizePurchase(){
+  const list = lists[currentList]
+  if(!list) return
+  const tt = tp()
+  const checked = list.items.filter(it => it.status === 1)
+  if(!checked.length){ showToast(tt.finalizeNothing); return }
+  const total = checked.reduce((s, it) => s + itemLineValue(it), 0)
+  const totalText = total > 0 ? formatPrice(total) : (tt.currencySymbol + " 0")
+  if(!await uiConfirm(tt.finalizeConfirm(checked.length, totalText))) return
+  purchases.push({
+    id: Date.now() + "-" + Math.random().toString(36).slice(2, 8),
+    date: Date.now(),
+    listName: list.name,
+    listEmoji: list.emoji,
+    total,
+    items: checked.map(it => ({
+      name: it.name,
+      qty: it.qty || "",
+      unit: it.unit || "",
+      price: it.price || "",
+      category: it.category || "",
+    })),
+  })
+  if(purchases.length > 500) purchases = purchases.slice(-500)
+  savePurchases()
+  checked.forEach(it => { if(isFinite(parsePrice(it.price))) recordPriceEntry(it) })
+  showToast(tt.finalizeDone(totalText))
+}
+
 // ── CATEGORY ──────────────────────────────────────
 
 function useCategory(cat){
@@ -4060,8 +4226,10 @@ function renderItems(){
       if(done > 0) stats.innerHTML += `<span class="stat-pill">✅ ${t.done(done)}</span>`
       if(maybeC > 0) stats.innerHTML += `<span class="stat-pill warn">🤔 ${t.maybe(maybeC)}</span>`
       if(total && pending === 0 && maybeC === 0) stats.innerHTML = `<span class="stat-pill primary">${t.allDone}</span>`
-      const totalPrice = list.items.reduce((s, it) => { const p = parsePrice(it.price); return s + (isFinite(p) ? p : 0) }, 0)
+      const totalPrice = list.items.reduce((s, it) => s + itemLineValue(it), 0)
+      const boughtPrice = list.items.reduce((s, it) => s + (it.status === 1 ? itemLineValue(it) : 0), 0)
       if(totalPrice > 0) stats.innerHTML += `<span class="stat-pill money">💰 ${tp().listTotal(formatPrice(totalPrice))}</span>`
+      if(boughtPrice > 0) stats.innerHTML += `<span class="stat-pill money bought">🛒 ${tp().listBought(formatPrice(boughtPrice))}</span>`
     }
   }
 
@@ -4251,7 +4419,7 @@ function buildListText(list, withStatus, resetStatus, includeTotal){
     if(cat) lines.push("")
   })
   if(includeTotal){
-    const totalPrice = list.items.reduce((s, it) => { const p = parsePrice(it.price); return s + (isFinite(p) ? p : 0) }, 0)
+    const totalPrice = list.items.reduce((s, it) => s + itemLineValue(it), 0)
     if(totalPrice > 0){
       lines.push("")
       lines.push(tp().listTotal(formatPrice(totalPrice)))
@@ -4352,8 +4520,8 @@ document.getElementById("copyBtn").addEventListener("click", copyList)
 // ── BACKUP ────────────────────────────────────────
 
 function exportData(){
-  const hasExtras = templates.length || Object.keys(priceHistory).length || Object.keys(barcodeMap).length
-  const payload = hasExtras ? { lists, templates, priceHistory, barcodeMap } : lists
+  const hasExtras = templates.length || Object.keys(priceHistory).length || Object.keys(barcodeMap).length || purchases.length
+  const payload = hasExtras ? { lists, templates, priceHistory, barcodeMap, purchases } : lists
   const data = JSON.stringify(payload, null, 2)
   const blob = new Blob([data], { type:"application/json" })
   const url = URL.createObjectURL(blob)
@@ -4383,17 +4551,20 @@ function importData(e){
       let pendingTpl = null
       let pendingHist = null
       let pendingBc = null
+      let pendingPurch = null
       if(data && !Array.isArray(data) && Array.isArray(data.lists)){
         arr = data.lists
         if(Array.isArray(data.templates)) pendingTpl = data.templates
         if(data.priceHistory && typeof data.priceHistory === "object") pendingHist = data.priceHistory
         if(data.barcodeMap && typeof data.barcodeMap === "object") pendingBc = data.barcodeMap
+        if(Array.isArray(data.purchases)) pendingPurch = data.purchases
       }
       if(!Array.isArray(arr)) throw new Error()
       if(!await uiConfirm(t.confirmImport(arr.length))) return
       if(pendingTpl){ templates = pendingTpl; localStorage.setItem("templates", JSON.stringify(templates)) }
       if(pendingHist){ priceHistory = pendingHist; savePriceHistory() }
       if(pendingBc){ barcodeMap = pendingBc; localStorage.setItem("barcodeMap", JSON.stringify(barcodeMap)) }
+      if(pendingPurch){ purchases = pendingPurch; savePurchases() }
       lists = arr
       save(); renderLists()
       showToast(t.backupImported)
@@ -4562,6 +4733,12 @@ function parsePrice(v){
   if(v == null || v === "") return NaN
   const n = parseFloat(String(v).replace(",", "."))
   return isFinite(n) ? n : NaN
+}
+function itemLineValue(it){
+  const p = parsePrice(it && it.price)
+  if(!isFinite(p)) return 0
+  const q = parseFloat(String((it && it.qty) || "").replace(",", "."))
+  return p * (isFinite(q) && q > 0 ? q : 1)
 }
 function formatPrice(v){
   const n = parsePrice(v)
@@ -5139,6 +5316,9 @@ function refreshProUI(){
   const tt = tp()
   document.getElementById("templatesBtn").textContent = "📦 " + tt.templatesTitle
   document.getElementById("statsBtn").textContent = "📊 " + tt.statsTitle
+  const purchasesBtn = document.getElementById("purchasesBtn")
+  purchasesBtn.innerHTML = iconLabel("receipt", tt.purchaseHistoryTitle)
+  purchasesBtn.style.display = purchases.length ? "inline-flex" : "none"
   setIconBtn("saveTplBtn", tt.saveAsTemplate)
   iconOnlyBtn("uncheckBtn", "uncheck", tt.uncheckAllBtn)
   document.getElementById("helpBtn").title = tt.helpBtnTitle
@@ -5385,6 +5565,72 @@ async function saveAsTemplate(){
   })
   saveTemplates()
   showToast(tp().templateSaved)
+}
+
+function _fmtPurchaseDate(ts){
+  try { return new Date(ts).toLocaleString(currentLang === "pt" ? "pt-BR" : currentLang) }
+  catch(e){ return new Date(ts).toLocaleString() }
+}
+
+function openPurchases(){
+  const tt = tp()
+  document.getElementById("purchasesTitle").textContent = "🧾 " + tt.purchaseHistoryTitle
+  const c = document.getElementById("purchasesContent")
+  if(!purchases.length){
+    c.innerHTML = `<p class="empty-state">${tt.purchaseHistoryEmpty}</p>`
+  } else {
+    const sorted = [...purchases].sort((a, b) => b.date - a.date)
+    c.innerHTML = sorted.map(p => {
+      const totalTxt = formatPrice(p.total) || (tt.currencySymbol + " 0")
+      const itemCount = (p.items || []).length
+      return `<button class="purchase-row" onclick="openPurchaseDetail('${p.id}')">
+        <span class="pr-emoji">${_esc(p.listEmoji || "🛒")}</span>
+        <span class="pr-main">
+          <span class="pr-name">${_esc(p.listName || "")}</span>
+          <span class="pr-meta">${_fmtPurchaseDate(p.date)} · ${itemCount} ${tt.statTotalItems.toLowerCase()}</span>
+        </span>
+        <span class="pr-total">${totalTxt}</span>
+      </button>`
+    }).join("")
+  }
+  document.getElementById("purchasesModal").classList.remove("hidden")
+}
+
+function openPurchaseDetail(id){
+  const tt = tp()
+  const p = purchases.find(x => x.id === id)
+  if(!p) return
+  const totalTxt = formatPrice(p.total) || (tt.currencySymbol + " 0")
+  const itemsHTML = (p.items || []).map(it => {
+    const qty = it.qty ? `${_esc(it.qty)}${it.unit ? " " + _esc(it.unit) : ""} ` : ""
+    const lineTotal = itemLineValue(it)
+    const price = lineTotal > 0 ? formatPrice(lineTotal) : ""
+    return `<div style="display:flex;justify-content:space-between;gap:8px;padding:8px 0;font-size:13px;border-bottom:1px solid var(--btn)">
+      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${qty}${_esc(it.name)}</span>
+      <span style="color:var(--muted);white-space:nowrap">${price}</span>
+    </div>`
+  }).join("")
+  document.getElementById("purchaseDetailTitle").textContent = `${p.listEmoji || "🛒"} ${p.listName || ""}`
+  document.getElementById("purchaseDetailContent").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--btn);border-radius:10px;margin-bottom:12px">
+      <span style="font-size:12px;color:var(--muted)">${_fmtPurchaseDate(p.date)}</span>
+      <span style="font-weight:800;color:var(--primary);font-size:16px">${totalTxt}</span>
+    </div>
+    ${itemsHTML || `<p class="empty-state">${tt.purchaseHistoryEmpty}</p>`}
+    <button class="secondary-btn" style="margin-top:14px;width:100%;color:var(--danger)" onclick="deletePurchase('${p.id}')">🗑️ ${tt.purchaseDelete}</button>
+  `
+  document.getElementById("purchaseDetailModal").classList.remove("hidden")
+}
+
+async function deletePurchase(id){
+  const tt = tp()
+  if(!await uiConfirm(tt.purchaseDeleteConfirm)) return
+  const idx = purchases.findIndex(p => p.id === id)
+  if(idx === -1) return
+  purchases.splice(idx, 1)
+  savePurchases()
+  closeModal("purchaseDetailModal")
+  openPurchases()
 }
 
 function openTemplates(){
