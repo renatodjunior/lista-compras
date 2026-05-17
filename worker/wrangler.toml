@@ -1,0 +1,7 @@
+name = "nfce-rj"
+main = "nfce-rj.js"
+compatibility_date = "2025-09-01"
+
+# Optional: restrict CORS to your app origin
+# [vars]
+# ALLOWED_ORIGIN = "https://myownlists.com"
