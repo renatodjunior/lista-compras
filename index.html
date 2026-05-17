@@ -5791,11 +5791,19 @@ async function nfceStartScan(){
   `
   try {
     await _ensureJsQR()
+    const savedDev = localStorage.getItem("nfceCamId")
     try {
-      _nfceStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { exact: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
-        audio: false,
-      })
+      if(savedDev){
+        _nfceStream = await navigator.mediaDevices.getUserMedia({
+          video: { deviceId: { exact: savedDev }, width: { ideal: 1280 }, height: { ideal: 720 } },
+          audio: false,
+        })
+      } else {
+        _nfceStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { exact: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
+          audio: false,
+        })
+      }
     } catch(_) {
       _nfceStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment" }, audio: false,
@@ -5873,6 +5881,7 @@ async function nfceSwitchCamera(){
       video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } },
       audio: false,
     })
+    localStorage.setItem("nfceCamId", deviceId)
     const video = document.getElementById("nfceVideo")
     if(video){
       video.srcObject = _nfceStream

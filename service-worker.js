@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v64-camera-switch"
+const CACHE_NAME = "mylists-v65-persist-camera"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
