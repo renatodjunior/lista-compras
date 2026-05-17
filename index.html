@@ -5278,30 +5278,27 @@ function initBarcode(){
 async function startBarcode(){
   if(!BARCODE_AVAILABLE){ showToast(tp().barcodeUnsupported); return }
   try {
-    _bcStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: "environment" } },
-      audio: false,
-    })
+    try {
+      _bcStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: "environment" } }, audio: false,
+      })
+    } catch(_) {
+      _bcStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }, audio: false,
+      })
+    }
     _bcDetector = new BarcodeDetector({
       formats: ["ean_13", "ean_8", "code_128", "code_39", "qr_code", "upc_a", "upc_e", "code_93", "itf"]
     })
     _uiResolve = null
     _uiOpen(tp().barcodeTitle, `
-      <div style="position:relative">
-        <video id="_bcVideo" autoplay playsinline muted style="width:100%;border-radius:12px;background:#000;max-height:340px;object-fit:cover;cursor:crosshair"></video>
-        <div id="_bcZoomWrap" style="display:none;position:absolute;left:8px;right:8px;bottom:8px;background:rgba(0,0,0,.5);padding:6px 10px;border-radius:8px">
-          <input id="_bcZoom" type="range" min="1" max="1" step="0.1" value="1" style="width:100%">
-        </div>
-      </div>
-      <p style="text-align:center;font-size:12px;color:var(--muted);margin:10px 0 14px;line-height:1.4">${tp().barcodeAimAt} · tap pra focar</p>
-      <div class="ui-row" style="margin-bottom:8px">
-        <button class="secondary-btn" onclick="stopBarcode()">${tp().cancelLabel}</button>
-        <button class="secondary-btn" id="_bcFocusBtn" onclick="_bcFocusCenter()">🎯 Focar</button>
-      </div>
+      <video id="_bcVideo" autoplay playsinline muted style="width:100%;border-radius:12px;background:#000;max-height:340px;object-fit:cover;cursor:crosshair"></video>
+      <p style="text-align:center;font-size:12px;color:var(--muted);margin:10px 0 14px;line-height:1.4">${tp().barcodeAimAt}</p>
+      <button class="secondary-btn" onclick="stopBarcode()">${tp().cancelLabel}</button>
     `)
     const video = document.getElementById("_bcVideo")
     video.srcObject = _bcStream
-    _bcCam = _setupCameraControls(_bcStream, video, "_bcZoomWrap", "_bcZoom")
+    _bcCam = _setupCameraControls(_bcStream, video)
     _bcRunning = true
     detectBarcodeLoop(video)
   } catch(e){
@@ -5783,23 +5780,24 @@ async function nfceStartScan(){
       <video id="nfceVideo" playsinline autoplay muted style="width:100%;border-radius:10px;background:#000;aspect-ratio:1/1;object-fit:cover;cursor:crosshair"></video>
       <canvas id="nfceCanvas" style="display:none"></canvas>
       <div style="position:absolute;inset:14% 14%;border:2px solid #ffffff80;border-radius:10px;pointer-events:none"></div>
-      <div id="nfceZoomWrap" style="display:none;position:absolute;left:8px;right:8px;bottom:8px;background:rgba(0,0,0,.5);padding:6px 10px;border-radius:8px">
-        <input id="nfceZoom" type="range" min="1" max="1" step="0.1" value="1" style="width:100%">
-      </div>
     </div>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.4">📷 ${tt.nfceScanBtn} · tap pra focar</p>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.4">📷 ${tt.nfceScanBtn}</p>
     <div class="ui-row" style="margin-top:12px">
       <button class="secondary-btn" onclick="openNfceImport()">${tt.cancelLabel}</button>
-      <button class="secondary-btn" id="nfceFocusBtn" onclick="_nfceFocusCenter()">🎯 Focar</button>
       <button class="secondary-btn" onclick="nfceShowKeyInput()">⌨️ ${tt.nfceTypeBtn}</button>
     </div>
   `
   try {
     await _ensureJsQR()
-    _nfceStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: "environment" } },
-      audio: false,
-    })
+    try {
+      _nfceStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: "environment" } }, audio: false,
+      })
+    } catch(_) {
+      _nfceStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }, audio: false,
+      })
+    }
     const video = document.getElementById("nfceVideo")
     video.srcObject = _nfceStream
     await video.play()
@@ -5811,7 +5809,7 @@ async function nfceStartScan(){
   }
 }
 
-function _setupCameraControls(stream, video, zoomWrapId, zoomInputId){
+function _setupCameraControls(stream, video){
   const track = stream && stream.getVideoTracks && stream.getVideoTracks()[0]
   if(!track) return
   const caps = (track.getCapabilities && track.getCapabilities()) || {}
@@ -5822,20 +5820,6 @@ function _setupCameraControls(stream, video, zoomWrapId, zoomInputId){
     track.applyConstraints({ advanced: [{ focusMode: focusModes.includes("continuous") ? "continuous" : "auto" }] }).catch(() => {})
   }
   if(hasFocusCap) continuous()
-  if(caps.zoom && zoomWrapId && zoomInputId){
-    const wrap = document.getElementById(zoomWrapId)
-    const input = document.getElementById(zoomInputId)
-    if(wrap && input){
-      wrap.style.display = "block"
-      input.min = caps.zoom.min || 1
-      input.max = caps.zoom.max || 1
-      input.step = caps.zoom.step || 0.1
-      input.value = (track.getSettings && track.getSettings().zoom) || 1
-      input.oninput = () => {
-        track.applyConstraints({ advanced: [{ zoom: parseFloat(input.value) }] }).catch(() => {})
-      }
-    }
-  }
   const focusAt = (x, y) => {
     if(!hasFocusCap) return
     const adv = []
@@ -5858,7 +5842,7 @@ function _setupCameraControls(stream, video, zoomWrapId, zoomInputId){
 }
 let _nfceCam = null
 function _nfceSetupCameraControls(video){
-  _nfceCam = _setupCameraControls(_nfceStream, video, "nfceZoomWrap", "nfceZoom")
+  _nfceCam = _setupCameraControls(_nfceStream, video)
 }
 function _nfceFocusCenter(){ if(_nfceCam && _nfceCam.focusAt) _nfceCam.focusAt(0.5, 0.5) }
 
