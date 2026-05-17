@@ -5974,6 +5974,7 @@ async function nfceFetchAndPreview(chave, tpAmb){
 function _renderNfcePreview(data){
   const tt = tp()
   const totalTxt = data.total > 0 ? formatPrice(String(data.total)) : ""
+  const tribTxt = data.tributos > 0 ? formatPrice(String(data.tributos)) : ""
   const itemsHTML = (data.items || []).map(it => {
     const qty = it.qty ? `×${_esc(it.qty)}${it.unit ? " " + _esc(it.unit) : ""} ` : ""
     const totalNum = parseFloat(it.total) || (parseFloat(it.price) || 0) * (parseFloat(it.qty) || 1)
@@ -5992,6 +5993,7 @@ function _renderNfcePreview(data){
       <span style="font-size:12px;color:var(--muted)">${tt.nfceItemsFound((data.items || []).length)}</span>
       <span style="font-weight:800;color:var(--primary);font-size:15px">${totalTxt}</span>
     </div>
+    ${tribTxt ? `<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px;padding:0 2px"><span>Tributos (Lei 12.741)</span><span>${tribTxt}</span></div>` : ""}
     <div style="max-height:40vh;overflow:auto;border:1px solid var(--btn);border-radius:10px;padding:0 10px">${itemsHTML}</div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
       <button class="primary-btn" onclick="nfceSavePurchase()">🧾 ${tt.nfceSaveAsPurchase}</button>
@@ -6024,7 +6026,14 @@ function nfceSavePurchase(){
     listEmoji: "🧾",
     total,
     items,
-    nfce: { chave: data.chave, cnpj: data.cnpj || "", store: data.store || "", date: data.date || "" },
+    nfce: {
+      chave: data.chave,
+      cnpj: data.cnpj || "",
+      store: data.store || "",
+      address: data.address || "",
+      date: data.date || "",
+      tributos: data.tributos || 0,
+    },
   })
   if(purchases.length > 500) purchases = purchases.slice(-500)
   savePurchases()
@@ -6094,11 +6103,13 @@ function openPurchaseDetail(id){
     </div>`
   }).join("")
   document.getElementById("purchaseDetailTitle").textContent = `${p.listEmoji || "🛒"} ${p.listName || ""}`
+  const tribTxt = p.nfce && p.nfce.tributos > 0 ? formatPrice(String(p.nfce.tributos)) : ""
   document.getElementById("purchaseDetailContent").innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--btn);border-radius:10px;margin-bottom:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--btn);border-radius:10px;margin-bottom:8px">
       <span style="font-size:12px;color:var(--muted)">${_fmtPurchaseDate(p.date)}</span>
       <span style="font-weight:800;color:var(--primary);font-size:16px">${totalTxt}</span>
     </div>
+    ${tribTxt ? `<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:0 2px 12px;padding:0 2px"><span>Tributos (Lei 12.741)</span><span>${tribTxt}</span></div>` : ""}
     ${itemsHTML || `<p class="empty-state">${tt.purchaseHistoryEmpty}</p>`}
     <button class="secondary-btn" style="margin-top:14px;width:100%;color:var(--danger)" onclick="deletePurchase('${p.id}')">🗑️ ${tt.purchaseDelete}</button>
   `

@@ -70,52 +70,84 @@ function textOf(html){
 // - Header info: span#u20 (store name), span#u21 (CNPJ), span#u23 (address),
 //   span (date) within #infos / .ui-collapsible.
 // Parse defensively — fall back to regex search if classes change.
-function parseSefazHtml(html){
-  const out = { store:"", cnpj:"", address:"", date:"", items:[], total:0 }
+function stripLabel(s){
+  // Removes label like "<strong>Qtde.:</strong>" and trims, keeping value
+  return textOf(String(s || "").replace(/<strong>[\s\S]*?<\/strong>/gi, "")).trim()
+}
 
-  // Try to find store name
+function parseSefazHtml(html){
+  const out = { store:"", cnpj:"", address:"", date:"", items:[], total:0, tributos:0, itemCount:0 }
+
   let m
-  m = html.match(/<div[^>]*id=["']u20["'][^>]*>([\s\S]*?)<\/div>/i)
+  // Store: <div class="txtTopo" id="u20">NAME</div>
+  m = html.match(/<div[^>]*class=["'][^"']*txtTopo[^"']*["'][^>]*>([\s\S]*?)<\/div>/i)
+    || html.match(/<div[^>]*id=["']u20["'][^>]*>([\s\S]*?)<\/div>/i)
   if(m) out.store = textOf(m[1])
 
-  m = html.match(/CNPJ[:\s]*<[^>]+>\s*([\d./-]+)/i) || html.match(/(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})/)
-  if(m) out.cnpj = m[1].trim()
+  // CNPJ: appears as text inside a <div class="text">CNPJ: 07.760.885/0017-33</div>
+  m = html.match(/(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})/)
+  if(m) out.cnpj = m[1]
 
-  m = html.match(/<div[^>]*id=["']u23["'][^>]*>([\s\S]*?)<\/div>/i)
-  if(m) out.address = textOf(m[1])
+  // Address: <div class="text">...</div> right after the CNPJ block. Use second .text div.
+  const textDivs = [...html.matchAll(/<div[^>]*class=["'][^"']*\btext\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi)]
+  for(const td of textDivs){
+    const t = textOf(td[1])
+    if(/CNPJ/i.test(t)) continue
+    if(!out.address) out.address = t
+    if(out.address) break
+  }
 
-  m = html.match(/Emiss[ãa]o[^<]*<[^>]*>\s*([\d/]{8,10}\s+\d{2}:\d{2}(?::\d{2})?)/i)
+  // Emission date: <strong>Emissão: </strong>15/05/2026 18:43:11-03:00
+  m = html.match(/Emiss[ãa]o:?\s*<\/strong>\s*([\d/]{8,10}\s+\d{2}:\d{2}(?::\d{2})?)/i)
+    || html.match(/Emiss[ãa]o[^<]*<[^>]*>\s*([\d/]{8,10}\s+\d{2}:\d{2}(?::\d{2})?)/i)
     || html.match(/(\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}(?::\d{2})?)/)
   if(m) out.date = m[1].trim()
 
-  // Items
-  const itemRe = /<tr[^>]*class=["'][^"']*toggle-tr[^"']*["'][\s\S]*?<\/tr>/gi
+  // Items: rows with id="Item + N"
+  const itemRe = /<tr[^>]*id=["']Item\s*\+\s*\d+["'][\s\S]*?<\/tr>/gi
   let it
   while((it = itemRe.exec(html)) !== null){
     const row = it[0]
-    const name = (row.match(/class=["'][^"']*txtTit[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
-    const qty  = (row.match(/class=["'][^"']*Rqtd[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
-    const unit = (row.match(/class=["'][^"']*RUN[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
-    const price= (row.match(/class=["'][^"']*RvlUnit[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
-    const total= (row.match(/class=["'][^"']*valor[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
+    const name = (row.match(/<span[^>]*class=["'][^"']*txtTit[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
+    const qtyRaw  = (row.match(/<span[^>]*class=["'][^"']*Rqtd[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
+    const unitRaw = (row.match(/<span[^>]*class=["'][^"']*RUN[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
+    const priceRaw= (row.match(/<span[^>]*class=["'][^"']*RvlUnit[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
+    const totalRaw= (row.match(/<span[^>]*class=["'][^"']*valor[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
+    const codeRaw = (row.match(/<span[^>]*class=["'][^"']*RCod[^"']*["'][^>]*>([\s\S]*?)<\/span>/i) || [])[1]
     if(!name) continue
-    const qNum = parseNumberBR(qty)
-    const pNum = parseNumberBR(price)
-    const tNum = parseNumberBR(total)
+    const qNum = parseNumberBR(stripLabel(qtyRaw))
+    const pNum = parseNumberBR(stripLabel(priceRaw))
+    const tNum = parseNumberBR(stripLabel(totalRaw))
+    const unitTxt = stripLabel(unitRaw).toLowerCase().replace(/[^a-z]/g, "")
+    const codeMatch = String(codeRaw || "").match(/(\d+)/)
     out.items.push({
       name: textOf(name),
       qty: isFinite(qNum) ? String(qNum) : "",
-      unit: textOf(unit).toLowerCase().replace(/[^a-z]/g, ""),
+      unit: unitTxt,
       price: isFinite(pNum) ? pNum.toFixed(2) : "",
       total: isFinite(tNum) ? tNum.toFixed(2) : "",
+      code: codeMatch ? codeMatch[1] : "",
     })
   }
 
-  m = html.match(/Valor\s*[Tt]otal[\s\S]{0,200}?(\d{1,3}(?:\.\d{3})*,\d{2})/)
+  // Total: <label>Valor a pagar R$:</label><span class="totalNumb txtMax">134,60</span>
+  m = html.match(/Valor\s*a\s*pagar[^<]*<\/label>\s*<span[^>]*>\s*([\d.,]+)/i)
+    || html.match(/Valor\s*a\s*pagar[\s\S]{0,200}?(\d{1,3}(?:\.\d{3})*,\d{2})/i)
   if(m) out.total = parseNumberBR(m[1])
   if(!out.total && out.items.length){
     out.total = out.items.reduce((s, x) => s + (parseFloat(x.total) || 0), 0)
   }
+
+  // Tributos (Lei 12.741/2012)
+  m = html.match(/Tributos\s+Totais\s+Incidentes[\s\S]{0,300}?(\d{1,3}(?:\.\d{3})*,\d{2})/i)
+    || html.match(/Lei\s+Federal\s+12\.741[\s\S]{0,300}?(\d{1,3}(?:\.\d{3})*,\d{2})/i)
+  if(m) out.tributos = parseNumberBR(m[1])
+
+  // Total item count from footer (if present)
+  m = html.match(/Qtd\.?\s+total\s+de\s+itens?:?[\s\S]{0,100}?>\s*(\d+)\s*</i)
+  if(m) out.itemCount = parseInt(m[1], 10)
+  if(!out.itemCount) out.itemCount = out.items.length
+
   return out
 }
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v65-persist-camera"
+const CACHE_NAME = "mylists-v66-nfce-parser-tributos"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
