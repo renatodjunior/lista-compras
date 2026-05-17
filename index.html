@@ -5785,6 +5785,7 @@ async function nfceStartScan(){
     <p style="font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.4">📷 ${tt.nfceScanBtn} · afaste ~20cm do QR</p>
     <div class="ui-row" style="margin-top:12px">
       <button class="secondary-btn" onclick="openNfceImport()">${tt.cancelLabel}</button>
+      <button class="secondary-btn" id="nfceSwitchBtn" onclick="nfceSwitchCamera()" style="display:none">🔄 Trocar câmera</button>
       <button class="secondary-btn" onclick="nfceShowKeyInput()">⌨️ ${tt.nfceTypeBtn}</button>
     </div>
   `
@@ -5805,6 +5806,9 @@ async function nfceStartScan(){
     await video.play()
     _nfceSetupCameraControls(video)
     _nfceScanLoop(video)
+    await _nfceListBackCams()
+    const switchBtn = document.getElementById("nfceSwitchBtn")
+    if(switchBtn) switchBtn.style.display = _nfceBackCams.length > 1 ? "inline-flex" : "none"
   } catch(e){
     showToast(/JsQR|jsQR|script/.test(String(e)) ? tt.nfceLibError : tt.nfceCameraError)
     openNfceImport()
@@ -5843,10 +5847,43 @@ function _setupCameraControls(stream, video){
   return { focusAt, hasFocusCap }
 }
 let _nfceCam = null
+let _nfceBackCams = []
+let _nfceCamIdx = 0
 function _nfceSetupCameraControls(video){
   _nfceCam = _setupCameraControls(_nfceStream, video)
 }
 function _nfceFocusCenter(){ if(_nfceCam && _nfceCam.focusAt) _nfceCam.focusAt(0.5, 0.5) }
+
+async function _nfceListBackCams(){
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices()
+    const cams = devices.filter(d => d.kind === "videoinput")
+    const back = cams.filter(d => /back|rear|trás|tras|environment|traseira/i.test(d.label))
+    _nfceBackCams = back.length ? back : cams
+  } catch(_){ _nfceBackCams = [] }
+}
+
+async function nfceSwitchCamera(){
+  if(_nfceBackCams.length < 2) return
+  _nfceCamIdx = (_nfceCamIdx + 1) % _nfceBackCams.length
+  _nfceStop()
+  const deviceId = _nfceBackCams[_nfceCamIdx].deviceId
+  try {
+    _nfceStream = await navigator.mediaDevices.getUserMedia({
+      video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    })
+    const video = document.getElementById("nfceVideo")
+    if(video){
+      video.srcObject = _nfceStream
+      await video.play()
+      _nfceSetupCameraControls(video)
+      _nfceScanLoop(video)
+      const label = _nfceBackCams[_nfceCamIdx].label || `Câmera ${_nfceCamIdx + 1}`
+      showToast("📷 " + label.slice(0, 40))
+    }
+  } catch(e){ showToast(tp().nfceCameraError) }
+}
 
 function _ensureJsQR(){
   if(window.jsQR) return Promise.resolve()
