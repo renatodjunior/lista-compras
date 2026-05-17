@@ -155,7 +155,7 @@ async function fetchSefaz(chave, versao, tpAmb){
   const url = `${SEFAZ_URL}?p=${chave}|${versao}|${tpAmb}`
   const res = await fetch(url, {
     headers: {
-      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+      "User-Agent": "Mozilla/5.0 (Linux; Android 12; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36",
       "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9",
       "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
     },
