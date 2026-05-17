@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v66-nfce-parser-tributos"
+const CACHE_NAME = "mylists-v67-remove-nfce"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [

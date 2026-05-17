@@ -1060,17 +1060,6 @@ textarea{ resize:none; min-height:82px; }
   </div>
 </div>
 
-<!-- NFC-E IMPORT MODAL -->
-<div class="help-modal hidden" id="nfceModal" onclick="if(event.target.id==='nfceModal') closeNfceModal()">
-  <div class="help-box">
-    <div class="help-box-header">
-      <span class="help-box-title" id="nfceModalTitle"></span>
-      <button class="help-x-btn" onclick="closeNfceModal()">✕</button>
-    </div>
-    <div id="nfceContent"></div>
-  </div>
-</div>
-
 <!-- PURCHASE HISTORY MODAL -->
 <div class="help-modal hidden" id="purchasesModal" onclick="closeOnBg(event,'purchasesModal')">
   <div class="help-box">
@@ -1152,7 +1141,6 @@ textarea{ resize:none; min-height:82px; }
       </div>
     </div>
     <button class="backup-btn" onclick="openPurchases()" id="purchasesBtn" style="margin-top:8px;width:100%;display:none"></button>
-    <button class="backup-btn" onclick="openNfceImport()" id="nfceBtn" style="margin-top:8px;width:100%;display:none"></button>
     <div class="section-title" id="sectionNewList"></div>
     <div class="form-row">
       <input id="listName" maxlength="30">
@@ -2453,61 +2441,6 @@ function tp(){ return TPRO[currentLang] || TPRO.en }
   Object.entries(ext).forEach(([k,v]) => Object.assign(TPRO[k], v))
 })();
 
-// v5 NFC-e (Brazil) strings — opt-in feature, kept BR-leaning across langs
-;(function(){
-  const en = {
-    nfceSectionTitle: "Import Brazilian receipt (NFC-e)",
-    nfceToggle: "Enable receipt import",
-    nfceDisclaimer: "Beta. Brazil-only (Rio de Janeiro). Requires your own Cloudflare Worker (free tier). The QR scan stays on your device; only the 44-digit access key is sent to the worker you configured.",
-    nfceWorkerUrlLabel: "Worker URL",
-    nfceWorkerUrlPh: "https://nfce-rj.xxx.workers.dev",
-    nfceDocs: "Deploy instructions",
-    nfceBtnHome: "Import receipt (NFC-e)",
-    nfceModalTitle: "Import NFC-e",
-    nfceScanBtn: "Scan QR code",
-    nfceTypeBtn: "Enter access key",
-    nfceChavePh: "44-digit access key",
-    nfceImportBtn: "Import",
-    nfceLoading: "Fetching receipt…",
-    nfceNoWorker: "Configure the Worker URL in Settings first",
-    nfceErr: msg => `Error: ${msg}`,
-    nfceItemsFound: n => `${n} item${n!==1?"s":""} parsed`,
-    nfceSaveAsPurchase: "Save to purchase history",
-    nfceCreateList: "Create new list with items",
-    nfceCameraError: "Camera access denied",
-    nfceInvalidChave: "Invalid key (44 digits needed)",
-    nfceImportedToast: "Receipt imported 🧾",
-    nfceListImportedToast: "List created from receipt 🧾",
-    nfceLibError: "Failed to load QR scanner",
-  }
-  const pt = {
-    nfceSectionTitle: "Importar Nota Fiscal (NFC-e)",
-    nfceToggle: "Habilitar importação de NFC-e",
-    nfceDisclaimer: "Beta. Só Brasil/RJ. Exige seu próprio Cloudflare Worker (grátis). O scan do QR fica no seu aparelho; só a chave de 44 dígitos é enviada ao worker que você configurar.",
-    nfceWorkerUrlLabel: "URL do worker",
-    nfceWorkerUrlPh: "https://nfce-rj.xxx.workers.dev",
-    nfceDocs: "Como deployar",
-    nfceBtnHome: "Importar Nota Fiscal",
-    nfceModalTitle: "Importar NFC-e",
-    nfceScanBtn: "Escanear QR Code",
-    nfceTypeBtn: "Digitar chave",
-    nfceChavePh: "Chave de 44 dígitos",
-    nfceImportBtn: "Importar",
-    nfceLoading: "Buscando nota fiscal…",
-    nfceNoWorker: "Configure a URL do worker em Configurações",
-    nfceErr: msg => `Erro: ${msg}`,
-    nfceItemsFound: n => `${n} ${n===1?"item":"itens"} encontrado${n===1?"":"s"}`,
-    nfceSaveAsPurchase: "Salvar no histórico de compras",
-    nfceCreateList: "Criar nova lista com os itens",
-    nfceCameraError: "Sem acesso à câmera",
-    nfceInvalidChave: "Chave inválida (44 dígitos)",
-    nfceImportedToast: "Nota importada 🧾",
-    nfceListImportedToast: "Lista criada a partir da nota 🧾",
-    nfceLibError: "Falha ao carregar leitor de QR",
-  }
-  const ext = { pt, en, es: en, ja: en, he: en, ko: en }
-  Object.entries(ext).forEach(([k,v]) => Object.assign(TPRO[k], v))
-})();
 ;(function(){
   const ext = {
     pt: {
@@ -2772,8 +2705,7 @@ let pro = localStorage.getItem("pro") === "1"
 let templates = JSON.parse(localStorage.getItem("templates") || "[]")
 let accentColor = localStorage.getItem("accent") || ""
 let bgPattern = localStorage.getItem("bg") || ""
-let nfceEnabled = localStorage.getItem("nfceEnabled") === "1"
-let nfceWorkerUrl = localStorage.getItem("nfceWorkerUrl") || ""
+;["nfceEnabled","nfceWorkerUrl","nfceCamId"].forEach(k => localStorage.removeItem(k))
 
 if(darkMode){ document.body.classList.add("dark") }
 document.getElementById("themeBtn").textContent = darkMode ? "☀️" : "🌙"
@@ -5428,7 +5360,6 @@ function refreshProUI(){
   const purchasesBtn = document.getElementById("purchasesBtn")
   purchasesBtn.innerHTML = iconLabel("receipt", tt.purchaseHistoryTitle)
   purchasesBtn.style.display = purchases.length ? "inline-flex" : "none"
-  refreshNfceBtn()
   setIconBtn("saveTplBtn", tt.saveAsTemplate)
   iconOnlyBtn("uncheckBtn", "uncheck", tt.uncheckAllBtn)
   document.getElementById("helpBtn").title = tt.helpBtnTitle
@@ -5465,49 +5396,6 @@ function buildSyncSectionHTML(){
   `
 }
 
-function buildNfceSectionHTML(){
-  const tt = tp()
-  return `
-    <div class="settings-section">
-      <h3>${tt.nfceSectionTitle}</h3>
-      <label class="toggle-row" style="margin-bottom:8px">
-        <span class="toggle-switch">
-          <input type="checkbox" id="nfceToggleInput" ${nfceEnabled ? "checked" : ""} onchange="toggleNfce(this.checked)">
-          <span class="slider"></span>
-        </span>
-        <span>${tt.nfceToggle}</span>
-      </label>
-      <p style="font-size:11px;color:var(--muted);line-height:1.5;margin:0 0 10px">${tt.nfceDisclaimer} <a href="https://github.com/renatodjunior/myownlists/tree/main/worker" target="_blank" rel="noopener" style="color:var(--primary)">${tt.nfceDocs} ↗</a></p>
-      <div id="nfceWorkerWrap" style="display:${nfceEnabled ? "block" : "none"}">
-        <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">${tt.nfceWorkerUrlLabel}</label>
-        <input id="nfceWorkerInput" class="ui-input" placeholder="${_esc(tt.nfceWorkerUrlPh)}" value="${_esc(nfceWorkerUrl)}" oninput="setNfceWorkerUrl(this.value)" style="font-family:monospace;font-size:12px">
-      </div>
-    </div>`
-}
-
-function toggleNfce(on){
-  nfceEnabled = !!on
-  if(nfceEnabled) localStorage.setItem("nfceEnabled", "1")
-  else localStorage.removeItem("nfceEnabled")
-  const wrap = document.getElementById("nfceWorkerWrap")
-  if(wrap) wrap.style.display = nfceEnabled ? "block" : "none"
-  refreshNfceBtn()
-}
-
-function setNfceWorkerUrl(v){
-  nfceWorkerUrl = String(v || "").trim()
-  if(nfceWorkerUrl) localStorage.setItem("nfceWorkerUrl", nfceWorkerUrl)
-  else localStorage.removeItem("nfceWorkerUrl")
-}
-
-function refreshNfceBtn(){
-  const btn = document.getElementById("nfceBtn")
-  if(!btn) return
-  const tt = tp()
-  btn.innerHTML = iconLabel("receipt", tt.nfceBtnHome)
-  btn.style.display = nfceEnabled ? "inline-flex" : "none"
-}
-
 function openSettings(){
   const tt = tp()
   document.getElementById("settingsTitle").textContent = tt.settingsTitle
@@ -5537,7 +5425,6 @@ function openSettings(){
     html += `<div class="settings-section"><h3>${tt.syncTitle}</h3>` + buildSyncSectionHTML() + `</div>`
     html += `<button class="unlock-cta" onclick="openTip()">${tt.tipAgain}</button>`
   }
-  html += buildNfceSectionHTML()
   c.innerHTML = html
   if(pro){
     const cr = document.getElementById("colorRow")
@@ -5721,108 +5608,6 @@ async function saveAsTemplate(){
   showToast(tp().templateSaved)
 }
 
-// ── NFC-E IMPORT (Brazilian receipt) ─────────────
-let _nfceStream = null
-let _nfceRAF = null
-let _nfceData = null
-
-function _nfceStop(){
-  if(_nfceRAF){ cancelAnimationFrame(_nfceRAF); _nfceRAF = null }
-  if(_nfceStream){ _nfceStream.getTracks().forEach(t => t.stop()); _nfceStream = null }
-}
-
-function closeNfceModal(){
-  _nfceStop()
-  closeModal("nfceModal")
-}
-
-function openNfceImport(){
-  if(!nfceEnabled) return
-  const tt = tp()
-  document.getElementById("nfceModalTitle").textContent = "🧾 " + tt.nfceModalTitle
-  _nfceData = null
-  document.getElementById("nfceContent").innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <button class="primary-btn" onclick="nfceStartScan()">📷 ${tt.nfceScanBtn}</button>
-      <button class="secondary-btn" onclick="nfceShowKeyInput()">⌨️ ${tt.nfceTypeBtn}</button>
-    </div>
-    <p style="font-size:11px;color:var(--muted);margin:14px 0 0;line-height:1.5">${tt.nfceDisclaimer}</p>
-  `
-  document.getElementById("nfceModal").classList.remove("hidden")
-}
-
-function nfceShowKeyInput(){
-  _nfceStop()
-  const tt = tp()
-  document.getElementById("nfceContent").innerHTML = `
-    <input id="nfceChaveInput" class="ui-input" inputmode="numeric" maxlength="44" placeholder="${_esc(tt.nfceChavePh)}" style="font-family:monospace;font-size:13px;letter-spacing:0.5px">
-    <div class="ui-row" style="margin-top:12px">
-      <button class="secondary-btn" onclick="openNfceImport()">${tt.cancelLabel}</button>
-      <button class="primary-btn" onclick="nfceImportFromInput()">${tt.nfceImportBtn}</button>
-    </div>
-  `
-  setTimeout(() => { const el = document.getElementById("nfceChaveInput"); if(el) el.focus() }, 50)
-}
-
-function nfceImportFromInput(){
-  const el = document.getElementById("nfceChaveInput")
-  if(!el) return
-  const chave = String(el.value || "").replace(/\D/g, "")
-  const tt = tp()
-  if(!/^\d{44}$/.test(chave)){ showToast(tt.nfceInvalidChave); return }
-  nfceFetchAndPreview(chave, "1")
-}
-
-async function nfceStartScan(){
-  const tt = tp()
-  const content = document.getElementById("nfceContent")
-  content.innerHTML = `
-    <div style="position:relative">
-      <video id="nfceVideo" playsinline autoplay muted style="width:100%;border-radius:10px;background:#000;aspect-ratio:1/1;object-fit:cover;cursor:crosshair"></video>
-      <canvas id="nfceCanvas" style="display:none"></canvas>
-      <div style="position:absolute;inset:14% 14%;border:2px solid #ffffff80;border-radius:10px;pointer-events:none"></div>
-    </div>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.4">📷 ${tt.nfceScanBtn} · afaste ~20cm do QR</p>
-    <div class="ui-row" style="margin-top:12px">
-      <button class="secondary-btn" onclick="openNfceImport()">${tt.cancelLabel}</button>
-      <button class="secondary-btn" id="nfceSwitchBtn" onclick="nfceSwitchCamera()" style="display:none">🔄 Trocar câmera</button>
-      <button class="secondary-btn" onclick="nfceShowKeyInput()">⌨️ ${tt.nfceTypeBtn}</button>
-    </div>
-  `
-  try {
-    await _ensureJsQR()
-    const savedDev = localStorage.getItem("nfceCamId")
-    try {
-      if(savedDev){
-        _nfceStream = await navigator.mediaDevices.getUserMedia({
-          video: { deviceId: { exact: savedDev }, width: { ideal: 1280 }, height: { ideal: 720 } },
-          audio: false,
-        })
-      } else {
-        _nfceStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { exact: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
-          audio: false,
-        })
-      }
-    } catch(_) {
-      _nfceStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" }, audio: false,
-      })
-    }
-    const video = document.getElementById("nfceVideo")
-    video.srcObject = _nfceStream
-    await video.play()
-    _nfceSetupCameraControls(video)
-    _nfceScanLoop(video)
-    await _nfceListBackCams()
-    const switchBtn = document.getElementById("nfceSwitchBtn")
-    if(switchBtn) switchBtn.style.display = _nfceBackCams.length > 1 ? "inline-flex" : "none"
-  } catch(e){
-    showToast(/JsQR|jsQR|script/.test(String(e)) ? tt.nfceLibError : tt.nfceCameraError)
-    openNfceImport()
-  }
-}
-
 function _setupCameraControls(stream, video){
   const track = stream && stream.getVideoTracks && stream.getVideoTracks()[0]
   if(!track) return
@@ -5853,210 +5638,6 @@ function _setupCameraControls(stream, video){
     }
   }
   return { focusAt, hasFocusCap }
-}
-let _nfceCam = null
-let _nfceBackCams = []
-let _nfceCamIdx = 0
-function _nfceSetupCameraControls(video){
-  _nfceCam = _setupCameraControls(_nfceStream, video)
-}
-function _nfceFocusCenter(){ if(_nfceCam && _nfceCam.focusAt) _nfceCam.focusAt(0.5, 0.5) }
-
-async function _nfceListBackCams(){
-  try {
-    const devices = await navigator.mediaDevices.enumerateDevices()
-    const cams = devices.filter(d => d.kind === "videoinput")
-    const back = cams.filter(d => /back|rear|trás|tras|environment|traseira/i.test(d.label))
-    _nfceBackCams = back.length ? back : cams
-  } catch(_){ _nfceBackCams = [] }
-}
-
-async function nfceSwitchCamera(){
-  if(_nfceBackCams.length < 2) return
-  _nfceCamIdx = (_nfceCamIdx + 1) % _nfceBackCams.length
-  _nfceStop()
-  const deviceId = _nfceBackCams[_nfceCamIdx].deviceId
-  try {
-    _nfceStream = await navigator.mediaDevices.getUserMedia({
-      video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } },
-      audio: false,
-    })
-    localStorage.setItem("nfceCamId", deviceId)
-    const video = document.getElementById("nfceVideo")
-    if(video){
-      video.srcObject = _nfceStream
-      await video.play()
-      _nfceSetupCameraControls(video)
-      _nfceScanLoop(video)
-      const label = _nfceBackCams[_nfceCamIdx].label || `Câmera ${_nfceCamIdx + 1}`
-      showToast("📷 " + label.slice(0, 40))
-    }
-  } catch(e){ showToast(tp().nfceCameraError) }
-}
-
-function _ensureJsQR(){
-  if(window.jsQR) return Promise.resolve()
-  return new Promise((resolve, reject) => {
-    const s = document.createElement("script")
-    s.src = "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"
-    s.onload = () => resolve()
-    s.onerror = () => reject(new Error("jsQR load failed"))
-    document.head.appendChild(s)
-  })
-}
-
-function _nfceScanLoop(video){
-  const canvas = document.getElementById("nfceCanvas")
-  if(!canvas || !video || !_nfceStream) return
-  const ctx = canvas.getContext("2d", { willReadFrequently: true })
-  const tick = () => {
-    if(!_nfceStream) return
-    if(video.readyState === video.HAVE_ENOUGH_DATA){
-      const w = video.videoWidth, h = video.videoHeight
-      canvas.width = w; canvas.height = h
-      ctx.drawImage(video, 0, 0, w, h)
-      const img = ctx.getImageData(0, 0, w, h)
-      const code = window.jsQR && window.jsQR(img.data, w, h, { inversionAttempts: "dontInvert" })
-      if(code && code.data){
-        const parsed = _parseQRForChave(code.data)
-        if(parsed){
-          _nfceStop()
-          nfceFetchAndPreview(parsed.chave, parsed.tpAmb)
-          return
-        }
-      }
-    }
-    _nfceRAF = requestAnimationFrame(tick)
-  }
-  _nfceRAF = requestAnimationFrame(tick)
-}
-
-function _parseQRForChave(raw){
-  if(!raw) return null
-  const s = String(raw)
-  let m = s.match(/[?&]p=(\d{44})\|([^|]*)\|([^|&]*)/)
-  if(m) return { chave: m[1], versao: m[2] || "3", tpAmb: m[3] || "1" }
-  m = s.match(/chNFe=(\d{44})/i)
-  if(m){
-    const tpAmb = (s.match(/tpAmb=([12])/i) || [])[1] || "1"
-    return { chave: m[1], versao: "3", tpAmb }
-  }
-  m = s.match(/(\d{44})/)
-  if(m) return { chave: m[1], versao: "3", tpAmb: "1" }
-  return null
-}
-
-async function nfceFetchAndPreview(chave, tpAmb){
-  const tt = tp()
-  if(!nfceWorkerUrl){
-    document.getElementById("nfceContent").innerHTML = `<p class="empty-state">${tt.nfceNoWorker}</p>
-      <div class="ui-row" style="margin-top:12px"><button class="secondary-btn" onclick="closeNfceModal()">${tt.cancelLabel}</button></div>`
-    return
-  }
-  document.getElementById("nfceContent").innerHTML = `<p style="text-align:center;color:var(--muted);padding:30px 0">${tt.nfceLoading}</p>`
-  const url = nfceWorkerUrl.replace(/\/+$/, "") + `/?chave=${encodeURIComponent(chave)}&tpAmb=${encodeURIComponent(tpAmb || "1")}`
-  try {
-    const res = await fetch(url, { method: "GET" })
-    const data = await res.json()
-    if(!data || data.ok !== true){
-      document.getElementById("nfceContent").innerHTML = `<p class="empty-state">${tt.nfceErr((data && data.error) || ("HTTP " + res.status))}</p>
-        <div class="ui-row" style="margin-top:12px"><button class="secondary-btn" onclick="openNfceImport()">${tt.cancelLabel}</button></div>`
-      return
-    }
-    _nfceData = data
-    _renderNfcePreview(data)
-  } catch(e){
-    document.getElementById("nfceContent").innerHTML = `<p class="empty-state">${tt.nfceErr(String(e && e.message || e))}</p>
-      <div class="ui-row" style="margin-top:12px"><button class="secondary-btn" onclick="openNfceImport()">${tt.cancelLabel}</button></div>`
-  }
-}
-
-function _renderNfcePreview(data){
-  const tt = tp()
-  const totalTxt = data.total > 0 ? formatPrice(String(data.total)) : ""
-  const tribTxt = data.tributos > 0 ? formatPrice(String(data.tributos)) : ""
-  const itemsHTML = (data.items || []).map(it => {
-    const qty = it.qty ? `×${_esc(it.qty)}${it.unit ? " " + _esc(it.unit) : ""} ` : ""
-    const totalNum = parseFloat(it.total) || (parseFloat(it.price) || 0) * (parseFloat(it.qty) || 1)
-    const price = totalNum > 0 ? formatPrice(String(totalNum)) : ""
-    return `<div style="display:flex;justify-content:space-between;gap:8px;padding:6px 0;font-size:13px;border-bottom:1px solid var(--btn)">
-      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${qty}${_esc(it.name)}</span>
-      <span style="color:var(--muted);white-space:nowrap">${price}</span>
-    </div>`
-  }).join("")
-  document.getElementById("nfceContent").innerHTML = `
-    <div style="background:var(--btn);border-radius:10px;padding:10px 12px;margin-bottom:10px">
-      <div style="font-weight:700;font-size:14px">${_esc(data.store || "—")}</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:2px">${_esc(data.date || "")} ${data.cnpj ? "· " + _esc(data.cnpj) : ""}</div>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <span style="font-size:12px;color:var(--muted)">${tt.nfceItemsFound((data.items || []).length)}</span>
-      <span style="font-weight:800;color:var(--primary);font-size:15px">${totalTxt}</span>
-    </div>
-    ${tribTxt ? `<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px;padding:0 2px"><span>Tributos (Lei 12.741)</span><span>${tribTxt}</span></div>` : ""}
-    <div style="max-height:40vh;overflow:auto;border:1px solid var(--btn);border-radius:10px;padding:0 10px">${itemsHTML}</div>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
-      <button class="primary-btn" onclick="nfceSavePurchase()">🧾 ${tt.nfceSaveAsPurchase}</button>
-      <button class="secondary-btn" onclick="nfceCreateListFromData()">+ ${tt.nfceCreateList}</button>
-    </div>
-  `
-}
-
-function _nfceItemsAsListItems(data){
-  return (data.items || []).map(it => ({
-    name: it.name || "",
-    status: 0,
-    category: "",
-    qty: it.qty || "",
-    unit: it.unit || "",
-    price: it.price || "",
-  }))
-}
-
-function nfceSavePurchase(){
-  if(!_nfceData) return
-  const tt = tp()
-  const data = _nfceData
-  const items = _nfceItemsAsListItems(data)
-  const total = data.total || items.reduce((s, it) => s + itemLineValue(it), 0)
-  purchases.push({
-    id: Date.now() + "-" + Math.random().toString(36).slice(2, 8),
-    date: Date.now(),
-    listName: data.store || "NFC-e",
-    listEmoji: "🧾",
-    total,
-    items,
-    nfce: {
-      chave: data.chave,
-      cnpj: data.cnpj || "",
-      store: data.store || "",
-      address: data.address || "",
-      date: data.date || "",
-      tributos: data.tributos || 0,
-    },
-  })
-  if(purchases.length > 500) purchases = purchases.slice(-500)
-  savePurchases()
-  closeNfceModal()
-  showToast(tt.nfceImportedToast)
-}
-
-function nfceCreateListFromData(){
-  if(!_nfceData) return
-  const tt = tp()
-  const data = _nfceData
-  const items = _nfceItemsAsListItems(data)
-  lists.push({
-    name: (data.store || tt.nfceModalTitle).slice(0, 30),
-    emoji: "🧾",
-    items,
-    categoryOrder: [],
-    categoryEmojis: {},
-    collapsedCats: [],
-  })
-  save(); renderLists()
-  closeNfceModal()
-  showToast(tt.nfceListImportedToast)
 }
 
 function _fmtPurchaseDate(ts){
@@ -6103,13 +5684,11 @@ function openPurchaseDetail(id){
     </div>`
   }).join("")
   document.getElementById("purchaseDetailTitle").textContent = `${p.listEmoji || "🛒"} ${p.listName || ""}`
-  const tribTxt = p.nfce && p.nfce.tributos > 0 ? formatPrice(String(p.nfce.tributos)) : ""
   document.getElementById("purchaseDetailContent").innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--btn);border-radius:10px;margin-bottom:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--btn);border-radius:10px;margin-bottom:12px">
       <span style="font-size:12px;color:var(--muted)">${_fmtPurchaseDate(p.date)}</span>
       <span style="font-weight:800;color:var(--primary);font-size:16px">${totalTxt}</span>
     </div>
-    ${tribTxt ? `<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:0 2px 12px;padding:0 2px"><span>Tributos (Lei 12.741)</span><span>${tribTxt}</span></div>` : ""}
     ${itemsHTML || `<p class="empty-state">${tt.purchaseHistoryEmpty}</p>`}
     <button class="secondary-btn" style="margin-top:14px;width:100%;color:var(--danger)" onclick="deletePurchase('${p.id}')">🗑️ ${tt.purchaseDelete}</button>
   `
