@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v62-bigger-scroll-pill"
+const CACHE_NAME = "mylists-v63-nfce-scanner"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [

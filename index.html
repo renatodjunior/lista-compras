@@ -5280,7 +5280,8 @@ async function startBarcode(){
   try {
     try {
       _bcStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { exact: "environment" } }, audio: false,
+        video: { facingMode: { exact: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
+        audio: false,
       })
     } catch(_) {
       _bcStream = await navigator.mediaDevices.getUserMedia({
@@ -5781,7 +5782,7 @@ async function nfceStartScan(){
       <canvas id="nfceCanvas" style="display:none"></canvas>
       <div style="position:absolute;inset:14% 14%;border:2px solid #ffffff80;border-radius:10px;pointer-events:none"></div>
     </div>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.4">📷 ${tt.nfceScanBtn}</p>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.4">📷 ${tt.nfceScanBtn} · afaste ~20cm do QR</p>
     <div class="ui-row" style="margin-top:12px">
       <button class="secondary-btn" onclick="openNfceImport()">${tt.cancelLabel}</button>
       <button class="secondary-btn" onclick="nfceShowKeyInput()">⌨️ ${tt.nfceTypeBtn}</button>
@@ -5791,7 +5792,8 @@ async function nfceStartScan(){
     await _ensureJsQR()
     try {
       _nfceStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { exact: "environment" } }, audio: false,
+        video: { facingMode: { exact: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
+        audio: false,
       })
     } catch(_) {
       _nfceStream = await navigator.mediaDevices.getUserMedia({
