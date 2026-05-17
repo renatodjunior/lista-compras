@@ -493,6 +493,8 @@ textarea{ resize:none; min-height:82px; }
 .dark #uncheckBtn .btn-icon{ color:#ccc9d8 !important; }
 #finalizeBtn .btn-icon{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
 #finalizeBtn .btn-icon svg{ width:62%; height:62%; }
+#copyBtn .btn-icon{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+#copyBtn .btn-icon svg{ width:62%; height:62%; }
 
 /* ── HELP MODAL ── */
 .help-modal{
@@ -1232,6 +1234,7 @@ const ICONS = {
   sparkles: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.7 5.3 5.3 1.7-5.3 1.7L12 16.5l-1.7-5.3L5 9.5l5.3-1.7z"/><path d="M18.5 14.5l.8 2.4 2.4.8-2.4.8-.8 2.4-.8-2.4-2.4-.8 2.4-.8z"/><path d="M5 2.5l.55 1.65L7.2 4.7l-1.65.55L5 6.9l-.55-1.65L2.8 4.7l1.65-.55z"/></svg>',
   receipt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21h14V4l-1.75-1.4L15.5 4l-1.75-1.4L12 4l-1.75-1.4L8.5 4l-1.75-1.4L5 4v15a2 2 0 0 0 2 2z"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="14.5" x2="15" y2="14.5"/><line x1="8" y1="18" x2="13" y2="18"/></svg>',
   cartCheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 3.5h2.2l1.6 2"/><path d="M6.3 5.5h15L19 14.5a2 2 0 0 1-2 1.5H9.4a2 2 0 0 1-2-1.5L5.2 5"/><circle cx="9.5" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/><polyline points="10 9.5 12.5 12 16.5 7.5"/></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><line x1="8.2" y1="10.8" x2="15.8" y2="6.2"/><line x1="8.2" y1="13.2" x2="15.8" y2="17.8"/></svg>',
 }
 const ICON_COLORS = {
   refresh:  "#06b6d4",
@@ -1243,6 +1246,7 @@ const ICON_COLORS = {
   cloudDown:"#14b8a6",
   receipt:  "#16a34a",
   cartCheck:"#16a34a",
+  share:    "#8b5cf6",
 }
 function _stripLeadingEmoji(s){
   s = String(s || "").trim()
@@ -1278,7 +1282,7 @@ const T = {
     emptyList: "Vazia",
     back: "Voltar",
     clearDone: "🗑️ Limpar",
-    copy: "🔗 Compartilhar",
+    copy: "Compartilhar lista",
     addItems: "Adicionar itens",
     categoryPlaceholder: "Categoria (opcional) — ex: Frutas, Laticínios",
     itemsPlaceholder: "Itens — um por linha\nArroz\nFeijão\nMacarrão",
@@ -1325,7 +1329,7 @@ const T = {
     emptyList: "Empty",
     back: "Back",
     clearDone: "🗑️ Clear done",
-    copy: "🔗 Share",
+    copy: "Share list",
     addItems: "Add items",
     categoryPlaceholder: "Category (optional) — e.g. Fruits, Dairy",
     itemsPlaceholder: "Items — one per line\nRice\nBeans\nPasta",
@@ -1372,7 +1376,7 @@ const T = {
     emptyList: "Vacía",
     back: "Volver",
     clearDone: "🗑️ Limpiar",
-    copy: "🔗 Compartir",
+    copy: "Compartir lista",
     addItems: "Agregar ítems",
     categoryPlaceholder: "Categoría (opcional) — ej: Frutas, Lácteos",
     itemsPlaceholder: "Ítems — uno por línea\nArroz\nFrijoles\nPasta",
@@ -1419,7 +1423,7 @@ const T = {
     emptyList: "空",
     back: "戻る",
     clearDone: "🗑️ 削除",
-    copy: "🔗 共有",
+    copy: "リストを共有",
     addItems: "アイテムを追加",
     categoryPlaceholder: "カテゴリ（任意）— 例：野菜、乳製品",
     itemsPlaceholder: "アイテム — 1行に1つ\nご飯\n牛乳\nパン",
@@ -1466,7 +1470,7 @@ const T = {
     emptyList: "ריקה",
     back: "חזרה",
     clearDone: "🗑️ נקה",
-    copy: "🔗 שתף",
+    copy: "שתף רשימה",
     addItems: "הוסף פריטים",
     categoryPlaceholder: "קטגוריה (אופציונלי) — לדוג׳: פירות, מוצרי חלב",
     itemsPlaceholder: "פריטים — אחד בכל שורה\nאורז\nשמן\nלחם",
@@ -1513,7 +1517,7 @@ const T = {
     emptyList: "비어 있음",
     back: "뒤로",
     clearDone: "🗑️ 완료 삭제",
-    copy: "🔗 공유",
+    copy: "목록 공유",
     addItems: "항목 추가",
     categoryPlaceholder: "카테고리 (선택) — 예: 과일, 유제품",
     itemsPlaceholder: "항목 — 한 줄에 하나씩\n쌀\n우유\n빵",
@@ -2761,7 +2765,7 @@ function applyLang(){
   document.getElementById("backBtn").textContent = t.back
   setIconBtn("clearBtn", t.clearDone)
   iconOnlyBtn("finalizeBtn", "cartCheck", tp().finalizePurchaseBtn)
-  setIconBtn("copyBtn", t.copy)
+  iconOnlyBtn("copyBtn", "share", t.copy)
   document.getElementById("sectionAddItems").textContent = t.addItems
   document.getElementById("newCategory").placeholder = t.categoryPlaceholder
   document.getElementById("newItems").placeholder = t.itemsPlaceholder
@@ -4938,9 +4942,11 @@ function parseTextToList(text){
   const STATUS_RE = /^(?:✅|☑️|✓|🤔|⚪|⬜|☐|✗|\[[xv ]\])\s+/iu
   const BULLET_RE = /^(?:[•\-\*▸◦▪]|\d+[.)])\s+/
   const EMOJI_TITLE_RE = /^([\p{Extended_Pictographic}\u{200D}️]+)\s+(.+)$/u
+  const TOTAL_FOOTER_RE = /^(?:total|合計|סה״כ|합계)\s*[:：][^0-9]*\d/i
   for(const raw of lines){
     let line = raw.trim()
     if(!line) continue
+    if(TOTAL_FOOTER_RE.test(line)) continue
     const headerMatch = line.match(/^(?:#{1,3}|▸|📂)\s+(.+?):?\s*$/u)
     if(headerMatch){
       const title = headerMatch[1].trim()
