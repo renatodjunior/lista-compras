@@ -186,7 +186,18 @@ export default {
     try {
       const html = await fetchSefaz(parsed.chave, parsed.versao, parsed.tpAmb)
       const data = parseSefazHtml(html)
-      if(!data.items.length) return json({ ok:false, error:"no items parsed (SEFAZ layout may have changed)", chave: parsed.chave }, 502, origin)
+      if(!data.items.length){
+        const debug = u.searchParams.get("debug") === "1"
+        const body = {
+          ok: false,
+          error: "no items parsed (SEFAZ layout may have changed)",
+          chave: parsed.chave,
+          htmlSize: html.length,
+          partial: data,
+        }
+        if(debug) body.htmlSnippet = html.slice(0, 8000)
+        return json(body, 502, origin)
+      }
       return json({ ok:true, chave: parsed.chave, ...data }, 200, origin)
     } catch(e){
       return json({ ok:false, error: String(e && e.message || e) }, 502, origin)
