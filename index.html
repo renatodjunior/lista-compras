@@ -5604,7 +5604,7 @@ function openPurchaseDetail(id){
   if(!p) return
   const totalTxt = formatPrice(p.total) || (tt.currencySymbol + " 0")
   const itemsHTML = (p.items || []).map(it => {
-    const qty = it.qty ? `${_esc(it.qty)}${it.unit ? " " + _esc(it.unit) : ""} ` : ""
+    const qty = it.qty ? `×${_esc(it.qty)}${it.unit ? " " + _esc(it.unit) : ""} ` : ""
     const lineTotal = itemLineValue(it)
     const price = lineTotal > 0 ? formatPrice(lineTotal) : ""
     return `<div style="display:flex;justify-content:space-between;gap:8px;padding:8px 0;font-size:13px;border-bottom:1px solid var(--btn)">
