@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylists-v67-remove-nfce"
+const CACHE_NAME = "mylists-v68-toast-icon-align"
 
 // Arquivos para cachear (funcionar offline)
 const FILES = [
